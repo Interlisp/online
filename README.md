@@ -1,2 +1,2 @@
 # online
-Source code for https://onliine.interlisp.org
+Source code for https://online.interlisp.org
