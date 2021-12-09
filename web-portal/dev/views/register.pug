@@ -1,0 +1,37 @@
+extends layout
+
+block variables
+    - var title = "Interlisp Online"
+
+block headeradds
+
+
+
+block content
+
+    div#page-title Register
+
+    div#error-message &nbsp;
+
+    form(action="/user/register", method="post")
+        .field
+            label Email:
+            input#username(type="text" name="username" required)
+            br
+        .field
+            label Password:
+            input#password(type="password" name="password" required)
+            br
+        .field
+            input.submit-btn.main-button(type="submit" value="Register" required)
+
+    script.
+        const urlParams = new URLSearchParams(window.location.search);
+        const info = urlParams.get('info');
+    
+        if(info) {
+          const errorMessage = document.getElementById("error-message");
+          errorMessage.innerText = info;
+          //errorMessage.style.display = "block";
+        }
+

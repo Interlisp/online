@@ -1,0 +1,128 @@
+extends layout
+
+block variables
+    - var title = "Interlisp Online"
+
+block headeradds
+
+    link(rel="stylesheet", href="/stylesheets/modal.css")
+    
+    script.
+        window.addEventListener('load', (event) => {
+            const local_store = window.localStorage;
+            document.getElementById("screen-width").value = local_store.getItem("screen_width") || 1024;
+            document.getElementById("screen-height").value = local_store.getItem("screen_height") || 808;
+            document.getElementById("resume").checked = (local_store.getItem("resume") == "true");
+            //document.getElementById("devmode").checked = (local_store.getItem("devmode") == "true");
+            document.getElementById("dev-options-checkbox").checked = (local_store.getItem("show_dev_options") == "true");
+            show_dev_options_on_click();
+        });
+
+    script.
+        function start_interlisp () {
+            const local_store = window.localStorage;
+            const screen_width = document.getElementById("screen-width").value;
+            const screen_height = document.getElementById("screen-height").value;
+            const resume = document.getElementById("resume").checked ? "true" : "false";
+            //const devmode = document.getElementById("devmode").checked ? "true" : "false";
+            local_store.setItem("screen_width", screen_width);
+            local_store.setItem("screen_height", screen_height);
+            window.location.assign(
+                `/medley/start`
+                + `?screen_width=${screen_width}`
+                + `&screen_height=${screen_height}`
+                + `&resume=${resume}`
+            );
+        }
+
+    script.
+        function start_xterm () {
+            const local_store = window.localStorage;
+            //const screen_width = document.getElementById("screen-width").value;
+            //const screen_height = document.getElementById("screen-height").value;
+            //const devmode = document.getElementById("devmode").checked ? "true" : "false";
+            //local_store.setItem("screen_width", screen_width);
+            //local_store.setItem("screen_height", screen_height);
+            window.location.assign(`/medley/xterm`);
+        }
+
+
+    script.
+        function reset(whichVol) {
+            let req = new Request(`/medley/reset?vol=${whichVol}`);
+            fetch(req)
+                .then((response) => {
+                        if (!response.ok) {
+                            response.text().then(txt => window.alert(`Reset failed! status: ${response.status}  error: ${txt}`));
+                        }
+                        else {
+                            const type = (whichVol == 'il') ? "Source" : "Home Directory";
+                            window.alert(`${type} reset succeeded.`);
+                        }
+                    }
+                );
+        }
+
+    script.
+        function show_dev_options_on_click() {
+           const dev_div = document.getElementById('dev-div');
+           const dev_cb = document.getElementById("dev-options-checkbox");
+           const local_store = window.localStorage;
+           if(dev_cb.checked) {
+                dev_div.style.display = "inline-block";
+                local_store.setItem("show_dev_options", "true");
+            }
+            else {
+                dev_div.style.display = "none";
+                local_store.setItem("show_dev_options", "false");
+           }
+        }
+
+    script.
+        function devmode_on_click() {
+            const local_store = window.localStorage;
+            const devmode = document.getElementById("devmode").checked ? "true" : "false";
+            local_store.setItem("devmode", devmode);
+        }
+
+    script.
+        function resume_on_click() {
+            const local_store = window.localStorage;
+            const resume = document.getElementById("resume").checked ? "true" : "false";
+            local_store.setItem("resume", resume);
+        }
+
+block content
+    .row
+        div(id="logged-in-as").text-center
+            != 'Logged in as: ' + login
+    
+    .row
+        .jumbotron.text-center
+            button(type="button" onclick='start_interlisp();').main-button Start Interlisp
+            div(id="screen-size-div" class="options-div")
+                label with Screen Width: 
+                    input(type="number", id="screen-width", class="number-input", value=1024)
+                label and Screen Height: 
+                    input(type="number", id="screen-height", class="number-input", value=808)
+                label.  
+                    <input type="checkbox" id="resume" onclick="resume_on_click()" class="checkbox-input">&nbsp;Resume previous session
+
+    .row
+        .jumbotron.text-center
+            form(method="POST" action="/user/logout")
+                button(type="submit" id="button_to_link").main-button Logout
+
+    div(id="dev-div-checkbox")
+        .jumbotron.text-center
+            label. 
+                <input type="checkbox" id="dev-options-checkbox" onclick="show_dev_options_on_click();" class="checkbox-input">&nbsp;Show advanced options
+    div(id="dev-div" style="display:none;")
+        .jumbotron.text-center
+             button(type="button" onclick='start_xterm();').main-button Start Xterm & SFTP Server
+        br
+        .jumbotron.text-center
+             button(type="button" onclick='reset("il");').main-button Reset Source Code (~/il directory) to Latest Version
+        br
+        .jumbotron.text-center
+             button(type="button" onclick='reset("home");').main-button Reset Home Directory (except for ~il directory)

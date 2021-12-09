@@ -1,0 +1,53 @@
+extends layout
+
+block variables
+    - var title = "Interlisp Online"
+
+block headeradds
+
+   script.
+        window.addEventListener('load', (event) => {
+
+            const local_store = window.localStorage;
+            document.getElementById("username").value = local_store.getItem("username") || "";
+            
+            const urlParams = new URLSearchParams(window.location.search);
+            const info = urlParams.get('info');
+        
+            if(info) {
+              const errorMessage = document.getElementById("error-message");
+              errorMessage.innerText = info;
+              //errorMessage.style.display = "block";
+            }
+                
+            });
+            
+   script.
+        function loginOnSubmit() {
+            const local_store = window.localStorage;
+            const username = document.getElementById("username").value;
+            local_store.setItem("username", username);
+            return true;
+        }
+
+
+block content
+
+    div#page-title Login
+
+    div#error-message &nbsp;
+
+    form(action="/user/login", method="post", onsubmit="return loginOnSubmit()")
+        .field
+            label Email:
+            input#username(type="text" name="username" required)
+            br
+        .field
+            label Password:
+            input#password(type="password" name="password" required)
+            br
+        .field
+            input.submit-btn.main-button(type="submit" value="LOGIN" required)
+    
+    p#new-user.
+        New user?  Register <a href=/user/register>here</a> 

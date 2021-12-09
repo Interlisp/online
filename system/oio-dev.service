@@ -1,0 +1,15 @@
+[Unit]
+Description=DEV-version online.interlisp.org web portal
+After=network.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+Environment=DEV_OR_PROD=dev
+WorkingDirectory=/home/ubuntu/online/web-portal/dev
+ExecStart=/usr/bin/node js/server.js
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

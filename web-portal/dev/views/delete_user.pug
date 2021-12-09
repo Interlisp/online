@@ -1,0 +1,33 @@
+extends layout
+
+block variables
+    - var title = "Interlisp Online"
+
+block headeradds
+
+
+
+block content
+    h2.text-center Interlisp Online
+    
+    form(action="/admin/delete_user", method="post")
+        .title
+            h3 Delete User
+        .field
+            label Email:
+            input(type="text" name="username")
+            br
+        .field
+            input.submit-btn(type="submit" value="Submit" required)
+    label#error-message
+
+    script.
+        const urlParams = new URLSearchParams(window.location.search);
+        const info = urlParams.get('info');
+    
+        if(info) {
+          const errorMessage = document.getElementById("error-message");
+          errorMessage.innerText = info;
+          errorMessage.style.display = "block";
+        }
+

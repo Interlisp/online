@@ -1,0 +1,8 @@
+#!/bin/bash
+sudo systemctl is-active --quiet oio-dev.service
+if [ $? -eq 0 ]; then
+    sudo systemctl stop oio-dev.service
+fi
+sudo systemctl start oio-dev.service
+journalctl -u oio-dev.service -f
+
