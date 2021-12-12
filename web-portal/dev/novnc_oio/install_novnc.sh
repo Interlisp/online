@@ -1,5 +1,5 @@
 #!/bin/bash
-export TAG=v1.2.0
+export TAG=v1.3.0
 cd ..
 git clone https://github.com/novnc/noVNC.git novnc
 cd novnc

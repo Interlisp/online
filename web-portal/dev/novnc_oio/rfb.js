@@ -25,7 +25,6 @@ import DES from "./des.js";
 import KeyTable from "./input/keysym.js";
 import XtScancode from "./input/xtscancodes.js";
 import { encodings } from "./encodings.js";
-import "./util/polyfill.js";
 
 import RawDecoder from "./decoders/raw.js";
 import CopyRectDecoder from "./decoders/copyrect.js";
@@ -67,20 +66,25 @@ const extendedClipboardActionPeek    = 1 << 26;
 const extendedClipboardActionNotify  = 1 << 27;
 const extendedClipboardActionProvide = 1 << 28;
 
-
 export default class RFB extends EventTargetMixin {
-    constructor(target, url, options) {
+    constructor(target, urlOrChannel, options) {
         if (!target) {
             throw new Error("Must specify target");
         }
-        if (!url) {
-            throw new Error("Must specify URL");
+        if (!urlOrChannel) {
+            throw new Error("Must specify URL, WebSocket or RTCDataChannel");
         }
 
         super();
 
         this._target = target;
-        this._url = url;
+
+        if (typeof urlOrChannel === "string") {
+            this._url = urlOrChannel;
+        } else {
+            this._url = null;
+            this._rawChannel = urlOrChannel;
+        }
 
         // Connection details
         options = options || {};
@@ -130,6 +134,7 @@ export default class RFB extends EventTargetMixin {
         this._flushing = false;         // Display flushing state
         this._keyboard = null;          // Keyboard input handler object
         this._gestures = null;          // Gesture input handler object
+        this._resizeObserver = null;    // Resize observer object
 
         // Timers
         this._disconnTimer = null;      // disconnection timer
@@ -167,7 +172,7 @@ export default class RFB extends EventTargetMixin {
         // Bound event handlers
         this._eventHandlers = {
             focusCanvas: this._focusCanvas.bind(this),
-            windowResize: this._windowResize.bind(this),
+            handleResize: this._handleResize.bind(this),
             handleMouse: this._handleMouse.bind(this),
             handleWheel: this._handleWheel.bind(this),
             handleGesture: this._handleGesture.bind(this),
@@ -187,8 +192,6 @@ export default class RFB extends EventTargetMixin {
         this._canvas.style.margin = 'auto';
         // Some browsers add an outline on focus
         this._canvas.style.outline = 'none';
-        // IE miscalculates width without this :(
-        this._canvas.style.flexShrink = '0';
         this._canvas.width = 0;
         this._canvas.height = 0;
         this._canvas.tabIndex = -1;
@@ -232,58 +235,15 @@ export default class RFB extends EventTargetMixin {
         this._gestures = new GestureHandler();
 
         this._sock = new Websock();
-        this._sock.on('message', () => {
-            this._handleMessage();
-        });
-        this._sock.on('open', () => {
-            if ((this._rfbConnectionState === 'connecting') &&
-                (this._rfbInitState === '')) {
-                this._rfbInitState = 'ProtocolVersion';
-                Log.Debug("Starting VNC handshake");
-            } else {
-                this._fail("Unexpected server connection while " +
-                           this._rfbConnectionState);
-            }
-        });
-        this._sock.on('close', (e) => {
-            Log.Debug("WebSocket on-close event");
-            let msg = "";
-            if (e.code) {
-                msg = "(code: " + e.code;
-                if (e.reason) {
-                    msg += ", reason: " + e.reason;
-                }
-                msg += ")";
-            }
-            switch (this._rfbConnectionState) {
-                case 'connecting':
-                    this._fail("Connection closed " + msg);
-                    break;
-                case 'connected':
-                    // Handle disconnects that were initiated server-side
-                    this._updateConnectionState('disconnecting');
-                    this._updateConnectionState('disconnected');
-                    break;
-                case 'disconnecting':
-                    // Normal disconnection path
-                    this._updateConnectionState('disconnected');
-                    break;
-                case 'disconnected':
-                    this._fail("Unexpected server disconnect " +
-                               "when already disconnected " + msg);
-                    break;
-                default:
-                    this._fail("Unexpected server disconnect before connecting " +
-                               msg);
-                    break;
-            }
-            this._sock.off('close');
-        });
-        this._sock.on('error', e => Log.Warn("WebSocket on-error event"));
+        this._sock.on('open', this._socketOpen.bind(this));
+        this._sock.on('close', this._socketClose.bind(this));
+        this._sock.on('message', this._handleMessage.bind(this));
+        this._sock.on('error', this._socketError.bind(this));
 
-        // Slight delay of the actual connection so that the caller has
-        // time to set up callbacks
-        setTimeout(this._updateConnectionState.bind(this, 'connecting'));
+        this._resizeObserver = new ResizeObserver(this._eventHandlers.handleResize);
+
+        // All prepared, kick off the connection
+        this._updateConnectionState('connecting');
 
         Log.Debug("<< RFB.constructor");
 
@@ -504,16 +464,22 @@ export default class RFB extends EventTargetMixin {
     _connect() {
         Log.Debug(">> RFB.connect");
 
-        Log.Info("connecting to " + this._url);
-
-        try {
-            // WebSocket.onopen transitions to the RFB init states
+        if (this._url) {
+            Log.Info(`connecting to ${this._url}`);
             this._sock.open(this._url, this._wsProtocols);
-        } catch (e) {
-            if (e.name === 'SyntaxError') {
-                this._fail("Invalid host or port (" + e + ")");
-            } else {
-                this._fail("Error when opening socket (" + e + ")");
+        } else {
+            Log.Info(`attaching ${this._rawChannel} to Websock`);
+            this._sock.attach(this._rawChannel);
+
+            if (this._sock.readyState === 'closed') {
+                throw Error("Cannot use already closed WebSocket/RTCDataChannel");
+            }
+
+            if (this._sock.readyState === 'open') {
+                // FIXME: _socketOpen() can in theory call _fail(), which
+                //        isn't allowed this early, but I'm not sure that can
+                //        happen without a bug messing up our state variables
+                this._socketOpen();
             }
         }
 
@@ -525,9 +491,8 @@ export default class RFB extends EventTargetMixin {
         this._cursor.attach(this._canvas);
         this._refreshCursor();
 
-        // Monitor size changes of the screen
-        // FIXME: Use ResizeObserver, or hidden overflow
-        window.addEventListener('resize', this._eventHandlers.windowResize);
+        // Monitor size changes of the screen element
+        this._resizeObserver.observe(this._screen);
 
         // Always grab focus on some kind of click event
         this._canvas.addEventListener("mousedown", this._eventHandlers.focusCanvas);
@@ -568,7 +533,7 @@ export default class RFB extends EventTargetMixin {
         this._canvas.removeEventListener('contextmenu', this._eventHandlers.handleMouse);
         this._canvas.removeEventListener("mousedown", this._eventHandlers.focusCanvas);
         this._canvas.removeEventListener("touchstart", this._eventHandlers.focusCanvas);
-        window.removeEventListener('resize', this._eventHandlers.windowResize);
+        this._resizeObserver.disconnect();
         this._keyboard.ungrab();
         this._gestures.detach();
         this._sock.close();
@@ -587,6 +552,58 @@ export default class RFB extends EventTargetMixin {
         Log.Debug("<< RFB.disconnect");
     }
 
+    _socketOpen() {
+        if ((this._rfbConnectionState === 'connecting') &&
+            (this._rfbInitState === '')) {
+            this._rfbInitState = 'ProtocolVersion';
+            Log.Debug("Starting VNC handshake");
+        } else {
+            this._fail("Unexpected server connection while " +
+                       this._rfbConnectionState);
+        }
+    }
+
+    _socketClose(e) {
+        Log.Debug("WebSocket on-close event");
+        let msg = "";
+        if (e.code) {
+            msg = "(code: " + e.code;
+            if (e.reason) {
+                msg += ", reason: " + e.reason;
+            }
+            msg += ")";
+        }
+        switch (this._rfbConnectionState) {
+            case 'connecting':
+                this._fail("Connection closed " + msg);
+                break;
+            case 'connected':
+                // Handle disconnects that were initiated server-side
+                this._updateConnectionState('disconnecting');
+                this._updateConnectionState('disconnected');
+                break;
+            case 'disconnecting':
+                // Normal disconnection path
+                this._updateConnectionState('disconnected');
+                break;
+            case 'disconnected':
+                this._fail("Unexpected server disconnect " +
+                           "when already disconnected " + msg);
+                break;
+            default:
+                this._fail("Unexpected server disconnect before connecting " +
+                           msg);
+                break;
+        }
+        this._sock.off('close');
+        // Delete reference to raw channel to allow cleanup.
+        this._rawChannel = null;
+    }
+
+    _socketError(e) {
+        Log.Warn("WebSocket on-error event");
+    }
+
     _focusCanvas(event) {
         if (!this.focusOnClick) {
             return;
@@ -602,7 +619,7 @@ export default class RFB extends EventTargetMixin {
             { detail: { name: this._fbName } }));
     }
 
-    _windowResize(event) {
+    _handleResize() {
         // If the window resized then our screen element might have
         // as well. Update the viewport dimensions.
         window.requestAnimationFrame(() => {
@@ -1001,7 +1018,7 @@ export default class RFB extends EventTargetMixin {
     _handleWheel(ev) {
         if (this._rfbConnectionState !== 'connected') { return; }
         if (this._viewOnly) { return; } // View only, skip mouse events
-        
+
         ev.stopPropagation();
         ev.preventDefault();
         
@@ -1266,17 +1283,6 @@ export default class RFB extends EventTargetMixin {
     }
 
     _negotiateSecurity() {
-        // Polyfill since IE and PhantomJS doesn't have
-        // TypedArray.includes()
-        function includes(item, array) {
-            for (let i = 0; i < array.length; i++) {
-                if (array[i] === item) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
         if (this._rfbVersion >= 3.7) {
             // Server sends supported list, client decides
             const numTypes = this._sock.rQshift8();
@@ -1293,15 +1299,15 @@ export default class RFB extends EventTargetMixin {
             Log.Debug("Server security types: " + types);
 
             // Look for each auth in preferred order
-            if (includes(1, types)) {
+            if (types.includes(1)) {
                 this._rfbAuthScheme = 1; // None
-            } else if (includes(22, types)) {
+            } else if (types.includes(22)) {
                 this._rfbAuthScheme = 22; // XVP
-            } else if (includes(16, types)) {
+            } else if (types.includes(16)) {
                 this._rfbAuthScheme = 16; // Tight
-            } else if (includes(2, types)) {
+            } else if (types.includes(2)) {
                 this._rfbAuthScheme = 2; // VNC Auth
-            } else if (includes(19, types)) {
+            } else if (types.includes(19)) {
                 this._rfbAuthScheme = 19; // VeNCrypt Auth
             } else {
                 return this._fail("Unsupported security types (types: " + types + ")");
@@ -1444,8 +1450,8 @@ export default class RFB extends EventTargetMixin {
 
         // negotiated Plain subtype, server waits for password
         if (this._rfbVeNCryptState == 4) {
-            if (!this._rfbCredentials.username ||
-                !this._rfbCredentials.password) {
+            if (this._rfbCredentials.username === undefined ||
+                this._rfbCredentials.password === undefined) {
                 this.dispatchEvent(new CustomEvent(
                     "credentialsrequired",
                     { detail: { types: ["username", "password"] } }));
@@ -1455,9 +1461,18 @@ export default class RFB extends EventTargetMixin {
             const user = encodeUTF8(this._rfbCredentials.username);
             const pass = encodeUTF8(this._rfbCredentials.password);
 
-            // XXX we assume lengths are <= 255 (should not be an issue in the real world)
-            this._sock.send([0, 0, 0, user.length]);
-            this._sock.send([0, 0, 0, pass.length]);
+            this._sock.send([
+                (user.length >> 24) & 0xFF,
+                (user.length >> 16) & 0xFF,
+                (user.length >> 8) & 0xFF,
+                user.length & 0xFF
+            ]);
+            this._sock.send([
+                (pass.length >> 24) & 0xFF,
+                (pass.length >> 16) & 0xFF,
+                (pass.length >> 8) & 0xFF,
+                pass.length & 0xFF
+            ]);
             this._sock.sendString(user);
             this._sock.sendString(pass);
 
@@ -2186,15 +2201,7 @@ export default class RFB extends EventTargetMixin {
                 return this._handleCursor();
 
             case encodings.pseudoEncodingQEMUExtendedKeyEvent:
-                // Old Safari doesn't support creating keyboard events
-                try {
-                    const keyboardEvent = document.createEvent("keyboardEvent");
-                    if (keyboardEvent.code !== undefined) {
-                        this._qemuExtKeyEventSupported = true;
-                    }
-                } catch (err) {
-                    // Do nothing
-                }
+                this._qemuExtKeyEventSupported = true;
                 return true;
 
             case encodings.pseudoEncodingDesktopName:
@@ -2885,9 +2892,9 @@ RFB.messages = {
         buff[offset + 12] = 0;   // blue-max
         buff[offset + 13] = (1 << bits) - 1; // blue-max
 
-        buff[offset + 14] = bits * 2; // red-shift
+        buff[offset + 14] = bits * 0; // red-shift
         buff[offset + 15] = bits * 1; // green-shift
-        buff[offset + 16] = bits * 0; // blue-shift
+        buff[offset + 16] = bits * 2; // blue-shift
 
         buff[offset + 17] = 0;   // padding
         buff[offset + 18] = 0;   // padding
