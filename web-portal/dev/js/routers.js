@@ -112,71 +112,141 @@ const dockerTlsEnv =
         + ` --env TLS_CERTFILE=${config.tlsCertPath}`;
 var port = config.dockerPortMin;
 
+// Check for existing containers
+medleyRouter.get("/checksession", checkForRunningContainer, getSessionTarget, returnCheckSession);
+
+function checkForRunningContainer(req, res, next) {
+    const emailish = req.user.username.replace(badchars, '-').replace("@", ".-.");
+    docker.command(`ps -aqf "name=^${emailish}$"`)
+        .then(data => {
+            req.emailish = emailish;
+            req.isRunning = data.raw ? true : false;
+            //console.log(req.isRunning);
+            next();
+            })
+        .catch(err => {
+            console.log(err); res.status(500).send(err);
+        });
+}
+
+function getSessionTarget(req, res, next) {
+    if(req.isRunning) {
+        docker
+            .command(`inspect --format '{{ printf "%q" .Config.Labels.OIO_TARGET }}' ${req.emailish}`)
+            .then(data => { req.oioExistingTarget = data.object; next(); })
+            .catch(err => { res.status(500).send(err); } );
+    } else {
+        req.isRunning = null;
+        req.oioExistingTarget = null;
+        next();
+     }
+}
+
+function returnCheckSession(req, res, next) {
+    res.json({isRunning: req.isRunning, target: req.oioExistingTarget});
+}
+
+
 // start interlisp
-medleyRouter.get("/start", (req, res) => {
+medleyRouter.get("/interlisp", setupTarget.bind(null, "Interlisp", interlispRunCmd), checkForRunningContainer, killIfNeeded, startIfNeeded, goToVnc);
+
+// start xterm andsftp server
+medleyRouter.get("/xterm", setupTarget.bind(null, "xterm", xtermRunCmd), checkForRunningContainer, killIfNeeded, startIfNeeded, goToVnc);
+
+
+//${config.isDev ? `-${Math.floor(Math.random() * 99999)}` : ``}
+function interlispRunCmd(req) {
+    const emailish = req.emailish;
+    const port = req.oioPort;
     const resume = req.query.resume && ((req.query.resume == "1") || (req.query.resume.toLowerCase() == "true"));
     const screen_width = req.query.screen_width || 1024;
     const screen_height = req.query.screen_height || 808;
-    const devmode = req.query.devmode && ((req.query.devmode == "1") || (req.query.devmode.toLowerCase() == "true"));
-    const emailish = req.user.username.replace(badchars, '-').replace("@", ".-.");
-    port = port + 1;
-    if (port > config.dockerPortMax) port = config.dockerPortMin;
-    const run_cmd =
-        `run -d ${config.isDev ? "" : "--rm"}`
-        + ` --network host`
-        + ` --name ${emailish}${config.isDev ? `-${Math.floor(Math.random() * 99999)}` : ``}`
-        + ` --mount type=volume,source=${emailish}_home,target=/home/medley`
-        + ` --mount type=volume,source=${emailish}_il,target=/home/medley/il`
-        + dockerTlsMounts
-        + ` --env PORT=${port}`
-        + dockerTlsEnv
-        + ` --entrypoint ${config.dockerScriptsDir}/run-online-medley`
-        + ` ${config.dockerImage}`
-        + (resume ? ` vmem` : ` sysout`)
-        + ` ${screen_width} ${screen_height}`
-        ;
-    if(config.isDev) console.log(run_cmd);
-    docker
-        .command(`container ${config.isDev ? `ls` : `kill ${emailish}`}`)
-        .catch((err)=>{ if(config.isDev) { console.log("Expected error after container kill: " + err); } } )
-	    .finally(() =>
-		    docker
-	            .command(run_cmd)
-	            .then(data => { res.redirect(`${config.httpsBaseUrl}/client/go?target=Interlisp&port=${port}&autoconnect=1&encrypt=1`); })
-	            .catch(err => { console.log(err); res.send(err.stderr); })
-                );
-});
+    const cmd =
+            `run -d ${config.noDockerRm ? "" : "--rm"}`
+            + ` --network host`
+            + ` --name ${emailish}`
+            + ` --mount type=volume,source=${emailish}_home,target=/home/medley`
+            + ` --mount type=volume,source=${emailish}_il,target=/home/medley/il`
+            + dockerTlsMounts
+            + ` --env PORT=${port}`
+            + ` --label "OIO_PORT=${port}"`
+            + ` --label "OIO_TARGET=${req.oioTarget}"`
+            + dockerTlsEnv
+            + ` --entrypoint ${config.dockerScriptsDir}/run-online-medley`
+            + ` ${config.dockerImage}`
+            + (resume ? ` vmem` : ` sysout`)
+            + ` ${screen_width} ${screen_height}`
+            ;
+    return cmd;
+}
 
-// start xterm andsftp server
-medleyRouter.get("/xterm", (req, res) => {
-    const emailish = req.user.username.replace(badchars, '-').replace("@", ".-.");
-    port = port + 1;
-    if (port > config.dockerPortMax) port = config.dockerPortMin;
-    const run_cmd =
-        `run -d ${config.isDev ? "" : "--rm"}`
+function xtermRunCmd(req) {
+    const emailish = req.emailish;
+    const port = req.oioPort;
+    const cmd =
+        `run -d ${config.noDockerRm ? "" : "--rm"}`
         + ` --network host`
         + ` --name ${emailish}${config.isDev ? `-${Math.floor(Math.random() * 99999)}` : ``}`
         + ` --mount type=volume,source=${emailish}_home,target=/home/medley`
         + ` --mount type=volume,source=${emailish}_il,target=/home/medley/il`
         + dockerTlsMounts
         + ` --env PORT=${port}`
+        + ` --label "OIO_PORT=${port}"`
+        + ` --label "OIO_TARGET=${req.oioTarget}"`
         + dockerTlsEnv
         + ` --entrypoint ${config.dockerScriptsDir}/run-xterm`
         + ` ${config.dockerImage}`
         + ` 1024 808`
         ;
-//        + ` --privileged` 
-   if(config.isDev) console.log(run_cmd);
-   docker
-        .command(`container ${config.isDev ? `ls` : `kill ${emailish}`}`)
-        .catch((err)=>{ if(config.isDev) { console.log("Expected error after container kill: " + err); } } )
-	    .finally(() =>
-		    docker
-	            .command(run_cmd)    
-	            .then(data => { res.redirect(`${config.httpsBaseUrl}/client/go?target=xterm&port=${port}&autoconnect=1&encrypt=1`); })
-	            .catch(err => { console.log(err); res.send(err.stderr); })
-                );
-});
+    return cmd;
+}
+
+function setupTarget(target, runCmd, req, res, next) {
+    req.oioTarget = target;
+    req.oioRunCmd = runCmd;
+    req.ifRunningDo = req.query.if || null;
+    next();
+}
+
+        
+function killIfNeeded(req, res, next) {
+    if(req.isRunning && (req.ifRunningDo == "kill")) {
+        docker
+            .command(`container kill ${req.emailish}`)
+            .then(data => { req.isRunning = false; next(); })
+            .catch(err => { console.log(err); res.status(500).send(err); } );        
+    }
+    else {
+        next();
+    }
+}
+
+function startIfNeeded(req, res, next) {
+    if(! req.isRunning) {
+        port = port + 1;
+        if (port > config.dockerPortMax) port = config.dockerPortMin;
+        req.oioPort = port;
+        const runCmd = req.oioRunCmd(req);
+        if(config.isDev) console.log(runCmd);
+	    docker
+            .command(runCmd)
+            .then(data => { req.oioPort = port; next(); })
+            .catch(err => { console.log(err); res.status(500).send(err.stderr); });
+    } else {
+        docker
+            .command(`inspect --format "{{ .Config.Labels.OIO_PORT }}" ${req.emailish}`)
+            .then(data => {
+                req.oioPort = data.object;
+                next();
+                })
+            .catch(err => { console.log(err); res.status(500).send(err); } );
+    }
+}
+
+function goToVnc(req, res, next) {
+    res.redirect(`${config.httpsBaseUrl}/client/go?target=${req.oioTarget}&port=${req.oioPort}&autoconnect=1&encrypt=1`);
+}
+
 
 medleyRouter.get(
     '/reset',

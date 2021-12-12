@@ -19,7 +19,7 @@ block headeradds
         });
 
     script.
-        function start_interlisp () {
+        function start_interlisp (reconnect) {
             const local_store = window.localStorage;
             const screen_width = document.getElementById("screen-width").value;
             const screen_height = document.getElementById("screen-height").value;
@@ -27,12 +27,38 @@ block headeradds
             //const devmode = document.getElementById("devmode").checked ? "true" : "false";
             local_store.setItem("screen_width", screen_width);
             local_store.setItem("screen_height", screen_height);
-            window.location.assign(
-                `/medley/start`
-                + `?screen_width=${screen_width}`
-                + `&screen_height=${screen_height}`
-                + `&resume=${resume}`
-            );
+            
+            fetch(`/medley/checksession`)
+                .then(response => {
+                        console.log(response);
+                        if (!response.ok) {
+                            response.text().then(txt => window.alert(`Start Interlisp failed! status: ${response.status}  error: ${txt}`));
+                         }
+                        else return response.json(); })
+                .then(data => {
+                    console.log(data);
+                    const isRunning = data.isRunning;
+                    if(isRunning) {
+                        let reconnect = "kill";
+                        if(window.confirm("Session already running.  Reconnect?")) { 
+                            reconnect = "reconnect";
+                        }
+                        window.location.assign(
+                            `/medley/interlisp`
+                            + `?screen_width=${screen_width}`
+                            + `&screen_height=${screen_height}`
+                            + `&resume=${resume}`
+                            + `&if=${reconnect}`
+                        );
+                    }
+                    else {
+                        window.location.assign(
+                            `/medley/interlisp`
+                            + `?screen_width=${screen_width}`
+                            + `&screen_height=${screen_height}`
+                            + `&resume=${resume}`);
+                    }
+            });
         }
 
     script.
