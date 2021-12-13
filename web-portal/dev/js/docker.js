@@ -10,3 +10,4 @@ var options = new DockerOptions(
 var docker = new Docker(options);
 
 module.exports = docker;
+

@@ -150,3 +150,19 @@ h2 {
   padding-top: 0.5em;
 }
 
+#reconnect-dialog, #alter-dialog {
+  font-size:16px;
+  padding: 2em 1em 2em 1em;
+}
+
+.button-div {
+  display: flex;
+  justify-content: space-between;
+  margin-left: 2em;
+  margin-right: 2em;
+}
+
+.button-div button {
+  width: 100px;
+}
+

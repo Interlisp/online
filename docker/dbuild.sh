@@ -11,7 +11,7 @@ if [ -z ${FROM_TAG} ]; then
 	exit 1
 fi
 export BUILD_DATE=$(date --iso-8601=minutes)
-if [ ${DEV_OR_PROD} == "prod" ]; then
+if [ "X${DEV_OR_PROD}X" == "XprodX" ]; then
     NAME=oio-prod
     CACHE=--no-cache
 else
