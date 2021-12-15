@@ -150,9 +150,10 @@ h2 {
   padding-top: 0.5em;
 }
 
-#reconnect-dialog, #alter-dialog {
+#reconnect-dialog, #alert-dialog {
   font-size:16px;
   padding: 2em 1em 2em 1em;
+  max-width: 600px;
 }
 
 .button-div {
@@ -162,7 +163,7 @@ h2 {
   margin-right: 2em;
 }
 
-.button-div button {
+.button-div button,  .single-button-div button {
   width: 100px;
 }
 

@@ -134,7 +134,7 @@ function getSessionTarget(req, res, next) {
         docker
             .command(`inspect --format '{{ printf "%q" .Config.Labels.OIO_TARGET }}' ${req.emailish}`)
             .then(data => { req.oioExistingTarget = data.object; next(); })
-            .catch(err => { res.status(500).send(err); } );
+            .catch(err => { res.status(500).send("Error fetching Config.Labels.OIO_TARGET from docker container:  " + err); } );
     } else {
         req.isRunning = null;
         req.oioExistingTarget = null;

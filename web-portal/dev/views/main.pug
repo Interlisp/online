@@ -29,45 +29,50 @@ block headeradds
             local_store.setItem("screen_height", screen_height);
             
             fetch(`/medley/checksession`)
-                .then(response => {
-                        console.log(response);
-                        if (!response.ok) {
-                            response.text().then(txt => show_alert(`Start Interlisp failed! status: ${response.status}  error: ${txt}`));
-                         }
-                        else return response.json(); })
-                .then(data => {
-                    const isRunning = data.isRunning;
-                    const sessionType = data.target;
-                    if(isRunning) {
-                        new Promise((resolve, reject) => {
-                            const dlg = document.getElementById("reconnect-dialog");
-                            const typeEl = document.getElementById("rd-type-span");
-                            typeEl.html = sessionType;
-                            dlg.resolve = resolve;
-                            dlg.reject = reject;
-                            dlg.showModal();
+                .then(  response => {
+                            //console.log(response);
+                            if (!response.ok) {
+                                response.text().then(txt => { show_alert(`Start Interlisp failed! status: ${response.status}  error: ${txt}`); });
+                                return Promise.reject("start interlisp fail");
+                            } else {
+                                return response.json(); 
                             }
-                        )
-                        .then(RorK => {
+                        }
+                )
+                .then(  data => {
+                            const isRunning = data.isRunning;
+                            const sessionType = data.target;
+                            if(isRunning) {
+                                new Promise((resolve, reject) => {
+                                    const dlg = document.getElementById("reconnect-dialog");
+                                    const typeEl = document.getElementById("rd-type-span");
+                                    typeEl.html = sessionType;
+                                    dlg.resolve = resolve;
+                                    dlg.reject = reject;
+                                    dlg.showModal();
+                                    }
+                                )
+                                .then(RorK => {
+                                        window.location.assign(
+                                            `/medley/interlisp`
+                                            + `?screen_width=${screen_width}`
+                                            + `&screen_height=${screen_height}`
+                                            + `&resume=${resume}`
+                                            + `&if=${RorK}`
+                                        );
+                                    }
+                                );
+                            }
+                            else {
                                 window.location.assign(
                                     `/medley/interlisp`
                                     + `?screen_width=${screen_width}`
                                     + `&screen_height=${screen_height}`
-                                    + `&resume=${resume}`
-                                    + `&if=${RorK}`
-                                );
+                                    + `&resume=${resume}`);
                             }
-                        );
-                    }
-                    else {
-                        window.location.assign(
-                            `/medley/interlisp`
-                            + `?screen_width=${screen_width}`
-                            + `&screen_height=${screen_height}`
-                            + `&resume=${resume}`);
-                    }
-                }
-            );
+                        },
+                        reason => {}
+                );
         }
         function rd_done(RorK) {
             const dlg = document.getElementById("reconnect-dialog");
@@ -137,8 +142,8 @@ block headeradds
     script.
         function show_alert (msg) {
             const dlg = document.getElementById("alert-dialog");
-            const typeEl = document.getElementById("alert-span");
-            typeEl.html = msg;
+            const msgEl = document.getElementById("alert-span");
+            msgEl.innerHTML = msg;
             dlg.showModal();
         }
         function alert_ok() {
@@ -163,7 +168,7 @@ block content
         div(id="logged-in-as").text-center
             != 'Logged in as: ' + login
 
-    .row
+    .row(style="display:none;")
         .jumbotron.text-center
             button(type="button" onclick='show_alert("Hello there");').main-button Test
 
@@ -210,5 +215,5 @@ block content
     dialog(id="alert-dialog")
         p <span id="alert-span">Alert</span>
         br
-        .button-div
+        .single-button-div
             button(type="button" onclick='alert_ok();').main-button OK

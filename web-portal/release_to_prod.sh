@@ -6,19 +6,39 @@
 #
 #   2021-12-09 Frank Halasz
 #
-cd ${HOME}/online
+OIO_PROD_DIR=/srv/oio
+OIO_DEV_DIR=${HOME}/online
+NEW_INSTALL_DIR=${OIO_PROD_DIR}/next
+LIVE_INSTALL_DIR=${OIO_PROD_DIR}/live
+OLD_INSTALL_DIR=${OIO_PROD_DIR}/previous
+#
+#
 export COMMIT="HEAD"
-if [ ! "X$1X" == "XX" ]; then
+if [ -n "$1" ]; then
    	COMMIT=$1
 fi
-mkdir web-portal/newprod
-git archive --format=tar ${COMMIT} web-portal/dev | tar --strip-components=2 -C web-portal/newprod -x
-echo ${COMMIT} > web-portal/newprod/VERSION.txt
-git rev-parse ${COMMIT} >> web-portal/newprod/VERSION.txt
-echo >> web-portal/newprod/VERSION.txt
-./setup.sh newprod
-#rm -rf web-portal/oldprod
-#mv web-portal/prod web-portal/oldprod
-#mv web-portal/newprod web-portal/prod
-#sudo systemctl restart oio.service
-
+#
+#
+if [ -e ${NEW_INSTALL_DIR} ]; then
+    rm -rf ${NEW_INSTALL_DIR}
+fi
+mkdir -p ${NEW_INSTALL_DIR}
+#
+#
+pushd ${OIO_DEV_DIR} 2>/dev/null
+git archive --format=tar ${COMMIT} web-portal/dev | tar --strip-components=2 -C ${NEW_INSTALL_DIR} -x
+echo ${COMMIT} > ${NEW_INSTALL_DIR}/VERSION.txt
+git rev-parse ${COMMIT} >> ${NEW_INSTALL_DIR}/VERSION.txt
+echo >> ${NEW_INSTALL_DIR}/VERSION.txt
+./oio_finish_setup.sh ${NEW_INSTALL_DIR}
+#
+#
+#
+#rm -rf ${OLD_INSTALL_DIR}
+#mv ${LIVE_INSTALL_DIR} ${OLD_INSTALL_DIR}
+#mv ${NEW_INSTALL_DIR} ${LIVE_INSTALL_DIR}
+#sudo systemctl stop oio.service
+#echo "vvvvvvvvvvvvvvvvvvvvvvv NEW VERSION vvvvvvvvvvvvvvvvvvvvvvv" >> ${OIO_LOG_FILE}
+#cat ${LIVE_INSTALL_DIR}/VERSION.txt >> ${OIO_LOG_FILE}
+#cat "^^^^^^^^^^^^^^^^^^^^^^^^ NEW VERSION ^^^^^^^^^^^^^^^^^^^^^^^^"
+#sudo systemctl start oio.service

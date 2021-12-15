@@ -17,6 +17,7 @@ ARG USER_NAME=medley
 ARG HOMEDIR=/home/${USER_NAME}
 ENV MEDLEYDIR=${HOMEDIR}/il
 # install git & gh (github cli) 
+RUN apt-get update
 RUN apt-get install -y apt-utils
 RUN apt-get install -y curl
 RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg

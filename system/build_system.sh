@@ -66,6 +66,8 @@ apt install -y mongodb-org
 systemctl enable mongod.service
 systemctl start mongod.service
 #
-#     Install required node packages
+#     Create oio production directory
 #
+mkdir /srv/oio
+chown ubuntu:ubuntu /srv/oio
 
