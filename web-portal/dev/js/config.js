@@ -62,7 +62,7 @@ exports.runAsUsername = runAsUsername;
 var runAsGroupname = 'ubuntu';
 exports.runAsGroupname = runAsGroupname;
 
-var logPath = path.join(__dirname, '..', isDev ? 'dev.log' : 'production.log');
+var logPath = path.join(__dirname, '../../log', isDev ? 'dev.log' : 'production.log');
 exports.logPath = logPath;
 
 var viewsPath = path.join(__dirname, '..', 'views');

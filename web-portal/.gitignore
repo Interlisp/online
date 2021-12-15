@@ -1,3 +1,5 @@
 /prod
 *.log
+/node_modules
+/novnc
 

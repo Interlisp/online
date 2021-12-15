@@ -64,6 +64,12 @@ elif [[ -d "${DIR_2BSETUP}/../../docker" && -d "${DIR_2BSETUP}/../../docker/sftp
 	popd  2>/dev/null
 fi
 #
+#  Make sure log dir exists
+#
+if [! -e "${DIR_2BSETUP}/../log" ]; then
+	mkdir ${DIR_2BSETUP}/../log
+fi
+#
 #
 #
 echo "Setup complete."

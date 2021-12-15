@@ -70,4 +70,5 @@ systemctl start mongod.service
 #
 mkdir /srv/oio
 chown ubuntu:ubuntu /srv/oio
-
+mkdir /srv/oio/log
+chown ubuntu:ubuntu /srv/oio/log
