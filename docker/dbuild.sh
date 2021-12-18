@@ -16,7 +16,7 @@ if [ "X${DEV_OR_PROD}X" == "XprodX" ]; then
     CACHE=--no-cache
 else
     NAME=oio-dev
-    CACHE=""
+    CACHE="--no-cache"
 fi
 
 docker build ${CACHE} -t ${NAME} --build-arg FROM_TAG=${FROM_TAG} --build-arg BUILD_DATE=${BUILD_DATE} -f ./Dockerfile .

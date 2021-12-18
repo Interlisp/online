@@ -38,15 +38,16 @@ block content
     div#error-message &nbsp;
 
     form(action="/user/login", method="post", onsubmit="return loginOnSubmit()")
-        .field
-            label Email:
-            input#username(type="text" name="username" required)
+        .field.primary-field
+            label.primary-label Email:
+            input#username.primary-input(type="text" name="username" required)
             br
-        .field
-            label Password:
-            input#password(type="password" name="password" required)
             br
-        .field
+        .field.primary-field
+            label.primary-label Password:
+            input#password.primary-input(type="password" name="password" required)
+            br
+        .field.primary-field
             input.submit-btn.main-button(type="submit" value="LOGIN" required)
     
     p#new-user.

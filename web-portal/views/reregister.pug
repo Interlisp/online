@@ -6,24 +6,16 @@ block variables
 block headeradds
 
 
-
 block content
 
-    div#page-title Register
+    div#page-title Update Registration Information
+    
+    p#reregister-msg.
+        Online.Interlisp.Org now requires a bit more information from you in order to better customize the Interlisp environment.  Please fill in the following information before continuing. 
 
     div#error-message &nbsp;
 
-    form(action="/user/register", method="post")
-        .field.primary-field
-            label.primary-label Email:
-            input#username.primary-input(type="text" name="username" maxlength="256" required)
-            p.input-explain  Maximum length 256 characters
-        .field.primary-field
-            label.primary-label Password:
-            input#password.primary-input(type="password" name="password" maxlength="25" required)
-            p.input-explain  Maximum length 25 characters
-        br
-        br
+    form(action="/user/reregister", method="post")
         .field.secondary-field
             label.secondary-label Username:
             input#uname.secondary-input(type="text" name="uname" minlength="3" maxlength="8" required)
@@ -41,7 +33,7 @@ block content
             input#initials.secondary-input(type="text" name="initials" minlength="2" maxlength="6" required)
             p.input-explain  2-6 alphanumeric characters
         .field.primary-field
-            input.submit-btn.main-button(type="submit" value="Register" required)
+            input.submit-btn.main-button(type="submit" value="Update Registration" required)
 
     script.
         const urlParams = new URLSearchParams(window.location.search);

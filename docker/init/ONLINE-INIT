@@ -1,55 +1,28 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED " 1-Dec-2021 16:55:17" {DSK}<home>medley>ONLINE-INIT.;2 6766   
+(FILECREATED "17-Dec-2021 22:20:10" {DSK}<home>medley>il>greetfiles>ONLINE-INIT.;2 6258   
 
       changes to%:  (VARS ONLINE-INITCOMS)
+                    (FNS Online.DoInit)
 
-      previous date%: "23-Nov-2021 23:24:44" {DSK}<home>medley>ONLINE-INIT.;1)
+      previous date%: "17-Dec-2021 01:26:05" {DSK}<home>medley>il>greetfiles>ONLINE-INIT.;1)
 
 
 (PRETTYCOMPRINT ONLINE-INITCOMS)
 
 (RPAQQ ONLINE-INITCOMS
-       ((GLOBALVARS Online.LogoutTimeout Online.SftpPort Online.SftpPassword Online.SftpDisplay 
+       [(FILES (SYSLOAD)
+               MEDLEYDIR-INIT VTCHAT)
+        (GLOBALVARS Online.LogoutTimeout Online.SftpPort Online.SftpPassword Online.SftpDisplay 
                IDLE.PROFILE Online.SftpDisplayMenu)
         (INITVARS (Online.LogoutTimeout 30))
         (ADVISE IDLE)
-        (FNS Online.SftpInitInfo Online.SftpUpdateInfo)
-        [P (PROGN (Online.SftpInitInfo)
-                  (NCONC1 AROUNDEXITFNS 'Online.SftpUpdateInfo]
-        (P (LISTPUT IDLE.PROFILE 'TIMEOUT Online.LogoutTimeout))
-        [P (MAPC (OPENWINDOWS)
-                 (FUNCTION (LAMBDA (W)
-                                  (COND ((EQ (WINDOWPROP W 'BUTTONEVENTFN)
-                                             'WHEN-WHO-LINE-SELECTED-FN)
-                                         (MOVEW W (CAR (WINDOWPROP W 'REGION))
-                                                (IDIFFERENCE SCREENHEIGHT 18)))
-                                        ((STREQUAL (WINDOWPROP W 'TITLE)
-                                                "Prompt Window")
-                                         (PROGN (MOVEW W (create POSITION XCOORD _ 50 YCOORD _
-                                                                (IDIFFERENCE SCREENHEIGHT 120)))
-                                                (CLEARW W)))
-                                        ((STREQUAL (WINDOWPROP W 'TITLE)
-                                                "Exec  (XCL)")
-                                         (PROGN (WINDOWPROP W 'TITLE "Exec  (INTERLISP)")
-                                                (MOVEW W (create POSITION XCOORD _ 50 YCOORD _
-                                                                (IDIFFERENCE SCREENHEIGHT 460]
-        [P (COND ([NOTANY *WHO-LINE-ENTRY-REGISTRY* (FUNCTION (LAMBDA (ENTRY)
-                                                                     (STRING-EQUAL (CAR ENTRY)
-                                                                            "SFTP"]
-                  (PROGN (NCONC1 *WHO-LINE-ENTRIES* (LIST "SFTP" 'Online.SftpDisplay 16
-                                                          [FUNCTION (LAMBDA NIL (MENU 
-                                                                               Online.SftpDisplayMenu
-                                                                                      ]
-                                                          NIL 
-                                                         "Port thru which to access files using SFTP"
-                                                          ))
-                         (NCONC *WHO-LINE-ENTRY-REGISTRY* (LAST *WHO-LINE-ENTRIES*))
-                         (INSTALL-WHO-LINE-OPTIONS]
-        (FILES (SYSLOAD)
-               BACKGROUND-YIELD VTCHAT)
-        (P (RPLACA (CAR CHAT.DISPLAYTYPES)
-                  NIL))))
+        (FNS Online.SftpInitInfo Online.SftpUpdateInfo Online.DoInit)
+        (P (Online.DoInit))
+        (DECLARE FIRST (P (BKSYSBUF " "])
+
+(FILESLOAD (SYSLOAD)
+       MEDLEYDIR-INIT VTCHAT)
 (DECLARE%: DOEVAL@COMPILE DONTCOPY
 
 (GLOBALVARS Online.LogoutTimeout Online.SftpPort Online.SftpPassword Online.SftpDisplay IDLE.PROFILE
@@ -68,13 +41,15 @@
 (DEFINEQ
 
 (Online.SftpInitInfo
-  [LAMBDA NIL                                         (* ; "Edited 23-Nov-2021 22:05 by medley")
+  [LAMBDA NIL                                            (* ; "Edited 17-Dec-2021 01:25 by abc")
     (SETQ Online.SftpPort (UNIX-GETENV "SFTP_PORT"))
     (SETQ Online.SftpPassword (UNIX-GETENV "SFTP_PWD"))
-    (SETQ Online.SftpDisplay (CONCAT Online.SftpPort " / " Online.SftpPassword))
+    (SETQ Online.SftpDisplay (CONCAT Online.SftpPort " / " (L-CASE USERNAME)
+                                    " / " Online.SftpPassword))
     (SETQ Online.SftpDisplayMenu (create MENU
                                         TITLE _ "SFTP Info"
                                         ITEMS _ (LIST (MKATOM (CONCAT "Port: " Online.SftpPort))
+                                                      (MKATOM (CONCAT "User: " (L-CASE USERNAME)))
                                                       (MKATOM (CONCAT "Pwd: " Online.SftpPassword)))
                                         MENUFONT _ (FONTCREATE 'CLASSIC 14 'BOLD])
 
@@ -84,50 +59,83 @@
        ((OR (EQ WHEN 'AFTERLOGOUT)
             (EQ WHEN 'AFTERSAVEVM))
         (Online.SftpInitInfo])
+
+(Online.DoInit
+  [LAMBDA NIL                                            (* ; "Edited 17-Dec-2021 22:05 by fgh")
+    (PROGN 
+           (* ;; "Set up SFTP Info widget in WHO-LINE window")
+
+           (Online.SftpInitInfo)
+           (NCONC1 AROUNDEXITFNS 'Online.SftpUpdateInfo)
+           [COND
+              ([NOTANY *WHO-LINE-ENTRY-REGISTRY* (FUNCTION (LAMBDA (ENTRY)
+                                                             (STRING-EQUAL (CAR ENTRY)
+                                                                    "SFTP"]
+               (PROGN (NCONC1 *WHO-LINE-ENTRIES* (LIST "SFTP" 'Online.SftpDisplay 30
+                                                       [FUNCTION (LAMBDA NIL
+                                                                   (MENU Online.SftpDisplayMenu]
+                                                       NIL 
+                                       "Port/Username/Password thru which to access files using SFTP"
+                                                       ))
+                      (NCONC *WHO-LINE-ENTRY-REGISTRY* (LAST *WHO-LINE-ENTRIES*))
+                      (INSTALL-WHO-LINE-OPTIONS]
+
+           (* ;; "  Set the IDLE timeout ")
+
+           (LISTPUT IDLE.PROFILE 'TIMEOUT Online.LogoutTimeout)
+
+           (* ;; " Adjust windows so that the exec window and the prompt window don't overlap")
+
+           [MAPC (OPENWINDOWS)
+                 (FUNCTION (LAMBDA (W)
+                             (COND
+                                ((EQ (WINDOWPROP W 'BUTTONEVENTFN)
+                                     'WHEN-WHO-LINE-SELECTED-FN)
+                                 (MOVEW W (CAR (WINDOWPROP W 'REGION))
+                                        (IDIFFERENCE SCREENHEIGHT 18)))
+                                ((STREQUAL (WINDOWPROP W 'TITLE)
+                                        "Prompt Window")
+                                 (PROGN (MOVEW W (create POSITION
+                                                        XCOORD _ 50
+                                                        YCOORD _ (IDIFFERENCE SCREENHEIGHT 120)))
+                                        (CLEARW W)))
+                                ((STREQUAL (WINDOWPROP W 'TITLE)
+                                        "Exec  (XCL)")
+                                 (PROGN (WINDOWPROP W 'TITLE "Exec  (INTERLISP)")
+                                        (MOVEW W (create POSITION
+                                                        XCOORD _ 50
+                                                        YCOORD _ (IDIFFERENCE SCREENHEIGHT 460]
+
+           (* ;; 
+         "Remove default CHAT display type so that VT100 can become the default CHAT display type")
+
+           (RPLACA (CAR CHAT.DISPLAYTYPES)
+                  NIL)
+
+           (* ;; " Set up INITIALSLST based on information passed in from the Linux environment")
+
+           (SETQ INITIALSLST (LIST (LIST USERNAME (UNIX-GETENV 'MEDLEY_FIRSTNAME)
+                                         (UNIX-GETENV 'MEDLEY_INITIALS])
 )
 
-(PROGN (Online.SftpInitInfo)
-       (NCONC1 AROUNDEXITFNS 'Online.SftpUpdateInfo))
+(Online.DoInit)
+(DECLARE%: FIRST 
 
-(LISTPUT IDLE.PROFILE 'TIMEOUT Online.LogoutTimeout)
+(BKSYSBUF " ")
+)
+(PRETTYCOMPRINT ONLINE-INITCOMS)
 
-[MAPC (OPENWINDOWS)
-      (FUNCTION (LAMBDA (W)
-                  (COND
-                     ((EQ (WINDOWPROP W 'BUTTONEVENTFN)
-                          'WHEN-WHO-LINE-SELECTED-FN)
-                      (MOVEW W (CAR (WINDOWPROP W 'REGION))
-                             (IDIFFERENCE SCREENHEIGHT 18)))
-                     ((STREQUAL (WINDOWPROP W 'TITLE)
-                             "Prompt Window")
-                      (PROGN (MOVEW W (create POSITION
-                                             XCOORD _ 50
-                                             YCOORD _ (IDIFFERENCE SCREENHEIGHT 120)))
-                             (CLEARW W)))
-                     ((STREQUAL (WINDOWPROP W 'TITLE)
-                             "Exec  (XCL)")
-                      (PROGN (WINDOWPROP W 'TITLE "Exec  (INTERLISP)")
-                             (MOVEW W (create POSITION
-                                             XCOORD _ 50
-                                             YCOORD _ (IDIFFERENCE SCREENHEIGHT 460]
-
-[COND
-   ([NOTANY *WHO-LINE-ENTRY-REGISTRY* (FUNCTION (LAMBDA (ENTRY)
-                                                  (STRING-EQUAL (CAR ENTRY)
-                                                         "SFTP"]
-    (PROGN (NCONC1 *WHO-LINE-ENTRIES* (LIST "SFTP" 'Online.SftpDisplay 16 [FUNCTION (LAMBDA NIL
-                                                                                      (MENU 
-                                                                               Online.SftpDisplayMenu
-                                                                                            ]
-                                            NIL "Port thru which to access files using SFTP"))
-           (NCONC *WHO-LINE-ENTRY-REGISTRY* (LAST *WHO-LINE-ENTRIES*))
-           (INSTALL-WHO-LINE-OPTIONS]
-
-(FILESLOAD (SYSLOAD)
-       BACKGROUND-YIELD VTCHAT)
-
-(RPLACA (CAR CHAT.DISPLAYTYPES)
-       NIL)
+(RPAQQ ONLINE-INITCOMS
+       [(FILES (SYSLOAD)
+               MEDLEYDIR-INIT VTCHAT)
+        (GLOBALVARS Online.LogoutTimeout Online.SftpPort Online.SftpPassword Online.SftpDisplay 
+               IDLE.PROFILE Online.SftpDisplayMenu)
+        (INITVARS (Online.LogoutTimeout 30))
+        (ADVISE IDLE)
+        (FNS Online.SftpInitInfo Online.SftpUpdateInfo Online.DoInit)
+        (P (Online.DoInit))
+        (DECLARE%: FIRST (P (BKSYSBUF " "])
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (3711 4682 (Online.SftpInitInfo 3721 . 4431) (Online.SftpUpdateInfo 4433 . 4680)))))
+  (FILEMAP (NIL (1506 5696 (Online.SftpInitInfo 1516 . 2385) (Online.SftpUpdateInfo 2387 . 2634) (
+Online.DoInit 2636 . 5694)))))
 STOP

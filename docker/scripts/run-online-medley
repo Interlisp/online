@@ -64,10 +64,16 @@ for i in {1..10}
 xmodmap -e "keycode 12 = Alt_L" -e "keycode 13 = Alt_R" -e "keycode 14 = Meta_L" -e "keycode 15 = Meta_R"
 /usr/bin/autocutsel -s CLIPBOARD &
 sleep 1
-su medley <<EOF
+if [ -z ${MEDLEY_UNAME} ]; then
+	export MEDLEY_UNAME=medley
+fi
+usermod -l ${MEDLEY_UNAME} medley
+su ${MEDLEY_UNAME} <<EOF
 #set -x
 xrdb -merge /home/medley/.Xresources
 cd ${MEDLEYDIR}
 export LOGINDIR=${MEDLEYDIR}
-MAIKODIR="/app/maiko" ./run-medley -noscroll -g ${width}x${height} -sc ${width}x${height} -vmem ${VMEM_PATH} ${sysout}
+export LDEINIT=${MEDLEYDIR}/greetfiles/ONLINE-INIT.LCOM
+export MAIKODIR="/app/maiko"
+./run-medley -noscroll -g ${width}x${height} -sc ${width}x${height} -vmem ${VMEM_PATH} ${sysout}
 EOF

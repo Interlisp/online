@@ -1,19 +1,17 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED "12-Dec-2021 21:42:34" {DSK}<home>medley>il>INIT.;2 601    
+(FILECREATED "17-Dec-2021 01:35:45" {DSK}<home>medley>il>INIT.;2 454    
 
       changes to%:  (VARS INITCOMS)
 
-      previous date%: "22-Nov-2021 23:10:12" {DSK}<home>medley>il>INIT.;1)
+      previous date%: "12-Dec-2021 21:42:34" {DSK}<home>medley>il>INIT.;1)
 
 
 (PRETTYCOMPRINT INITCOMS)
 
-(RPAQQ INITCOMS [(P (RESETVAR PRETTYHEADER NIL (FILESLOAD (SYSLOAD FROM VALUEOF LOGINDIR)
-                                                          ONLINE-INIT])
+(RPAQQ INITCOMS ((P (LIST "Dummy User INIT file for online.interlisp.org"))))
 
-(RESETVAR PRETTYHEADER NIL (FILESLOAD (SYSLOAD FROM VALUEOF LOGINDIR)
-                                  ONLINE-INIT))
+(LIST "Dummy User INIT file for online.interlisp.org")
 (DECLARE%: DONTCOPY
   (FILEMAP (NIL)))
 STOP

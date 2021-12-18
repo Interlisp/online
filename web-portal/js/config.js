@@ -77,5 +77,5 @@ exports.sessionSecret = sessionSecret;
 var imagesDir = path.join(__dirname, '..', 'images');
 exports.imagesDir = imagesDir;
 
-var noDockerRm = false;
+var noDockerRm = isDev && false;
 exports.noDockerRm = noDockerRm;

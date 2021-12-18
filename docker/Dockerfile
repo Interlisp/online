@@ -8,9 +8,6 @@ ARG BUILD_DATE
 #
 SHELL ["/bin/bash", "-c"]
 USER root:root
-# Pass the version information down
-ENV MEDLEY_VERSION=${FROM_TAG}
-ENV MEDLEY_ONLINE_BUILD_DATE=${BUILD_DATE}
 #
 ARG DEBIAN_FRONTEND=noninteractive
 ARG USER_NAME=medley
@@ -57,8 +54,8 @@ COPY scripts/* /app/medley/online/bin/
 RUN chmod ugo+x /app/medley/online/bin/*
 # copy INIT file into home directory
 COPY --chown=${USER_NAME}:${USER_NAME} init/INIT ${MEDLEYDIR}
-COPY --chown=${USER_NAME}:${USER_NAME} init/ONLINE-INIT ${MEDLEYDIR}
-COPY --chown=${USER_NAME}:${USER_NAME} init/ONLINE-INIT.LCOM ${MEDLEYDIR}
+COPY --chown=${USER_NAME}:${USER_NAME} init/ONLINE-INIT ${MEDLEYDIR}/greetfiles
+COPY --chown=${USER_NAME}:${USER_NAME} init/ONLINE-INIT.LCOM ${MEDLEYDIR}/greetfiles
 # clean up medley/.bashrc for use with xterm
 RUN sed -i /PS1=/s/u@.h/u@oio/ ${HOMEDIR}/.bashrc
 RUN chown ${USER_NAME}:${USER_NAME} ${HOMEDIR}/.bashrc
@@ -76,3 +73,6 @@ WORKDIR ${HOMEDIR}
 USER root:root
 ENTRYPOINT USER=${USER_NAME} /bin/bash
 #
+# Pass the version information down
+ENV MEDLEY_VERSION=${FROM_TAG}
+ENV MEDLEY_ONLINE_BUILD_DATE=${BUILD_DATE}

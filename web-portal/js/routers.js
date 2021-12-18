@@ -23,7 +23,11 @@ mongoose.connect(`mongodb://localhost/${config.userdbName}`,
   { useNewUrlParser: true, useUnifiedTopology: true });
 const userSchema = new mongoose.Schema({
   username: String,
-  password: String
+  password: String,
+  uname: String,
+  firstname: String,
+  lastname: String,
+  initials: String
 });
 userSchema.plugin(passportLocalMongoose);
 const userModel = mongoose.model('userInfo', userSchema, 'userInfo');
@@ -45,13 +49,17 @@ userRouter.post('/login',
                       console.dir(info);
                       return res.redirect('/user/login?info=' + info);
                     }
-                
+                    
+            
                     req.logIn(user, function(err) {
                       if (err) {
                         return next(err);
+                      } else {
+                          if(user.uname)
+                            return res.redirect('/main');
+                          else 
+                            return res.render('reregister');
                       }
-                
-                      return res.redirect('/');
                     });
                 
                   })(req, res, next);
@@ -84,7 +92,14 @@ userRouter.post('/register',
     },
     (req, res, next) => {
         userModel.register(
-            {username: req.body.username, active: false}, 
+            {   
+                username: req.body.username, 
+                active: false, 
+                uname: req.body.uname,
+                firstname: req.body.firstname,
+                lastname: req.body.lastname,
+                initials: req.body.initials
+            }, 
             req.body.password,
             (err, thisModel, passwordErr) => {
                 if(!err) 
@@ -97,6 +112,24 @@ userRouter.post('/register',
     }    
 );
 
+userRouter.post('/reregister',
+    async (req, res, next) => {
+        try {
+            let repRes = await userModel.updateOne(
+                {   username: req.user.username }, 
+                {   uname: req.body.uname,
+                    firstname: req.body.firstname,
+                    lastname: req.body.lastname,
+                    initials: req.body.initials
+                }
+            );
+            console.dir(repRes);
+            res.redirect('/main');
+        } catch(err) {
+            res.redirect('/user/reregister?info=' + err);
+        }        
+    }
+);
 
 
 //
@@ -155,6 +188,16 @@ medleyRouter.get("/xterm", setupTarget.bind(null, "xterm", xtermRunCmd), checkFo
 
 
 //${config.isDev ? `-${Math.floor(Math.random() * 99999)}` : ``}
+function medleyEnvs(req) {
+    const u = req.user;
+    return    ` --env MEDLEY_EMAIL=${u.username}`
+            + ` --env MEDLEY_UNAME=${u.uname || "medley" }`
+            + ` --env MEDLEY_FIRSTNAME=${u.firstname || "Medley"}`
+            + ` --env MEDLEY_LASTNAME=${u.lastname || "User"}`
+            + ` --env MEDLEY_INITIALS=${u.initials || "medley"}`
+    ;
+}
+
 function interlispRunCmd(req) {
     const emailish = req.emailish;
     const port = req.oioPort;
@@ -169,6 +212,7 @@ function interlispRunCmd(req) {
             + ` --mount type=volume,source=${emailish}_il,target=/home/medley/il`
             + dockerTlsMounts
             + ` --env PORT=${port}`
+            + medleyEnvs(req)
             + ` --label "OIO_PORT=${port}"`
             + ` --label "OIO_TARGET=${req.oioTarget}"`
             + dockerTlsEnv
@@ -191,6 +235,7 @@ function xtermRunCmd(req) {
         + ` --mount type=volume,source=${emailish}_il,target=/home/medley/il`
         + dockerTlsMounts
         + ` --env PORT=${port}`
+        + medleyEnvs(req)
         + ` --label "OIO_PORT=${port}"`
         + ` --label "OIO_TARGET=${req.oioTarget}"`
         + dockerTlsEnv

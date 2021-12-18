@@ -11,6 +11,7 @@ OIO_DEV_DIR=${HOME}/online
 NEW_INSTALL_DIR=${OIO_PROD_DIR}/next
 LIVE_INSTALL_DIR=${OIO_PROD_DIR}/live
 OLD_INSTALL_DIR=${OIO_PROD_DIR}/previous
+OIO_LOG_FILE=${OIO_PROD_DIR}/log/production.log
 #
 #
 export COMMIT="HEAD"
