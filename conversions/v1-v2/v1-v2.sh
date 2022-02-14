@@ -16,9 +16,10 @@ else
     dolist=$1
 fi
 for emailish in $dolist; do
-  docker run -d \
+  echo $emailish
+  docker run --rm -d \
     --mount type=volume,source=${emailish}_home,target=/tmp/home \
     --mount type=volume,source=${emailish}_il,target=/tmp/il \
-    --mount type=volume,source=${emailish}_home.v2,target=/tmp/newhome \  
+    --mount type=volume,source=${emailish}_home.v2,target=/tmp/newhome \
     v1-v2:latest
 done

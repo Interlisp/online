@@ -10,7 +10,7 @@ Group=root
 Environment=DEV_OR_PROD=prod
 Environment=NODE_ENV=production
 WorkingDirectory=/home/ubuntu
-ExecStart=/usr/bin/docker run -d \
+ExecStart=/usr/bin/docker run \
                --name oio \
                -p 80:80 \
                -p 443:443 \
@@ -22,6 +22,8 @@ ExecStart=/usr/bin/docker run -d \
                --pull missing \
                :::DOCKER_REGISTRY:::===DOCKER_NAMESPACE===/online-production:latest
 Restart=always
+ExecStop=/usr/bin/docker container kill oio
+ExecStop=/usr/bin/docker container rm oio
 
 [Install]
 WantedBy=multi-user.target
