@@ -1,13 +1,22 @@
 #!/usr/bin/env node
-
-/**
- * Module dependencies.
- */
-
+/*******************************************************************************
+ * 
+ *   server.js:  Start up http(s) server(s) for online.interlisp.org web portal. 
+ *               This is the module that starts up the whole portal by loading
+ *               the express app (app.js) and initiating the server listens.
+ *               Called by something like "node ./server.js".
+ * 
+ *   2021-11-18 Frank Halasz
+ * 
+ * 
+ *   Copyright: 2021-2022 by Interlisp.org 
+ * 
+ *
+ ******************************************************************************/
 var config = require('./config');
 var app = require('./app');
-var debug = require('debug')(config.isDev ? 'oio-dev:server' : 'oio:server');
-var https = require('https');
+//var debug = require('debug')(config.isDev ? 'oio-dev:server' : 'oio:server');
+if (config.supportHttps) var https = require('https');
 var http = require('http');
 var fs = require('fs');
 
@@ -16,26 +25,32 @@ var fs = require('fs');
  */
 
 var httpPort = normalizePort(process.env.HTTP_PORT || config.httpPort || '80');
-var httpsPort = normalizePort(process.env.HTTPS_PORT || config.httpsPort || '443');
 app.set('http_port', httpPort);
-app.set('https_port', httpsPort);
-app.set('port', httpsPort);
+app.set('port', httpPort);
+if(config.supportHttps) {
+  var httpsPort = normalizePort(process.env.HTTPS_PORT || config.httpsPort || '443');
+  app.set('https_port', httpsPort);
+  app.set('port', httpsPort);
+}
+
 /**
  * Create HTTP & HTTPS server.
  */
  
-var sslOpts = 
+if(config.supportHttps) {
+  var sslOpts = 
     {
       key: fs.readFileSync(config.tlsKeyPath),
       cert: fs.readFileSync(config.tlsCertPath),
       ca: fs.readFileSync(config.tlsChainPath)
     };
-var httpsServer = https.createServer(sslOpts, app);
-var httpsPromise = new Promise((resolve, reject) => { 
+  var httpsServer = https.createServer(sslOpts, app);
+  var httpsPromise = new Promise((resolve, reject) => { 
     httpsServer.listen(httpsPort);
     httpsServer.on('error', onError.bind(null, 'https'));
     httpsServer.on('listening', onListening.bind(null, 'https', resolve));
-});
+  });
+}
 
 var httpServer = http.createServer(app);
 var httpPromise = new Promise((resolve, reject) => {
@@ -51,7 +66,7 @@ var httpPromise = new Promise((resolve, reject) => {
   process.setgroups(['docker']);
   process.setuid(config.runAsUsername);
   process.env.HOME = `/home/${config.runAsUsername}`;
-})([httpPromise, httpsPromise]);
+})([httpPromise, (config.supportHttps ? httpsPromise : Promise.resolve(true))]);
 
 /**
  * Normalize a port into a number, string, or false.

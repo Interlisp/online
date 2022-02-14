@@ -1,0 +1,73 @@
+//-
+    /***************************************************************************
+     *
+     *   help_dialogs.pug: help dialogs for online.interlisp.org web portal.
+     *                     Meant to be included in other pug files.
+     *
+     *
+     *   2022-02-08 Frank Halasz
+     *
+     *
+     *   Copyright: 2022 by Interlisp.org
+     *
+     *
+     **************************************************************************/
+
+script.
+    function help_onclick(which) {
+        document.getElementById(`help-dialog-${which}`).showModal();
+    }
+
+    function helpDialog_close (which) {
+        document.getElementById("help-dialog-" + which).close();
+    }
+
+dialog(id="help-dialog-guest").help-dialog
+    h2  Help
+    p.
+        Guest login will give you full access to the Interlisp environment for a
+        single session.  No data or files are saved between guest login sessions.
+    p.
+        If you wish to save your Interlisp session or to save files across sessions,
+        you must register and login using your email address.
+    .single-button-div
+        button(type="button" onclick='helpDialog_close("guest");').main-button OK
+
+dialog(id="help-dialog-resume").help-dialog
+    h2  Help
+    p.
+        Ordinarily, "Start Interlisp" will start up Interlisp using the standard full.sysout from the latest Medley release.
+    p.
+        Checking this option will cause "Start Interlisp" to instead restart your latest session using the retained
+        lisp.virtualmem.
+    p.
+        If there is no retained lisp.virtualmem, startup will be from full.sysout.
+    .single-button-div
+        button(type="button" onclick='helpDialog_close("resume");').main-button OK
+
+dialog(id="help-dialog-custom").help-dialog
+    h2  Help
+    p.
+        Ordinarily, "Start Interlisp" will start up Interlisp using the standard full.sysout from the latest Medley release.
+    p.
+        Checking this option will cause "Start Interlisp" to instead start up using the custom sysout stored at ~/il/sysout/online.sysout
+        in your online.interlisp.org home directory.
+    p.
+        You can create this sysout using the online Interlisp environment or you
+        can upload (and rename) any Medley sysout using the sftp feature.
+    p.
+        If ~/il/sysout/online.sysout does not exist, the standard full.sysout will be used instead.
+    .single-button-div
+        button(type="button" onclick='helpDialog_close("custom");').main-button OK
+
+dialog(id="help-dialog-run_notecards").help-dialog
+    h2  Help
+    p.
+        If this option is checked, the Notecards app will be loaded and started up when Interlisp is started.
+    p.
+        If this is the first time Notecards has been run, demo notefiles will be placed in your home directory at
+        ~/il/notefiles.
+    p.
+        This option is disabled if "Resume previous session" is checked.
+    .single-button-div
+        button(type="button" onclick='helpDialog_close("run_notecards");').main-button OK

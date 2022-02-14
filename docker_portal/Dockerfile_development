@@ -1,0 +1,62 @@
+#*******************************************************************************
+# 
+#   Dockerfile_development:  dockerfile used to build the development image that
+#         runs the online.interlisp.org web portal.  This image is basically 
+#         just dev tools added to the production image for the portal
+# 
+#   2022-02-02 Frank Halasz
+# 
+# 
+#   Copyright: 2022 by Interlisp.org 
+# 
+#
+# *****************************************************************************/
+ARG DOCKER_NAMESPACE=interlisp
+ARG DOCKER_REGISTRY="ghcr.io/"
+
+FROM ${DOCKER_REGISTRY}${DOCKER_NAMESPACE}/online-production:latest
+SHELL ["/bin/bash", "-c"]
+USER root:root
+#
+ARG DEBIAN_FRONTEND=noninteractive
+#
+#     The basics, git, ccrypt
+#
+# software-properties-common include apt-add-repository
+RUN apt-get update \
+    && apt-get install -y apt-utils software-properties-common build-essential \
+    && apt-get install -y nano vim \
+    && apt-get install -y git \
+    && apt-get install -y ccrypt
+#
+#  Install gh
+#
+RUN ( curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg ) \
+    && ( echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null ) \
+    && apt-get update \
+    && apt-get install -y gh
+#
+#     Install Python 2.7 (required by Cloud 9
+#
+RUN apt-add-repository universe \
+    && apt-get update \
+    && apt-get install -y python2-minimal
+#
+#     Install Cloud9 IDE
+#
+RUN curl -L https://raw.githubusercontent.com/c9/install/master/install.sh | bash
+#
+#  Repopulate the web-portal source code with full portal code base and .git directory
+#
+COPY --chown=oio:oio . /opt/oio
+WORKDIR /opt/oio
+# re-setup novnc
+COPY --chown=oio:oio web-portal/novnc_oio/rfb.js                web-portal/novnc/core/rfb.js
+COPY --chown=oio:oio web-portal/novnc_oio/vnc.html              web-portal/novnc/vnc.html
+COPY --chown=oio:oio web-portal/novnc_oio/ui.js                 web-portal/novnc/app/ui.js
+COPY --chown=oio:oio web-portal/novnc_oio/Interlisp-FavIcon-*   web-portal/novnc/app/images/icons
+#
+ENV DOCKER_NAMESPACE=${DOCKER_NAMESPACE}
+WORKDIR /opt/oio
+USER root
+ENTRYPOINT /opt/oio/startup/entrypoint.sh

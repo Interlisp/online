@@ -1,0 +1,45 @@
+//-
+    /***************************************************************************
+     * 
+     *   disclaimer.pug:  disclaimer dialog for online.interlisp.org web portal.
+     *                    Meant to be included in other pug files.
+     *
+     *                    disclaimerCheckboxCallback should be defined in the
+     *                    including pug file
+     *
+     * 
+     *   2022-02-06 Frank Halasz
+     * 
+     * 
+     *   Copyright: 2021-2022 by Interlisp.org 
+     * 
+     *
+     **************************************************************************/
+
+script.             
+    function disclaimer_close (){
+        const dlg = document.getElementById("disclaimer-dialog");
+        const cb = document.getElementById("do_not_checkbox").checked;
+        if(cb && disclaimerCheckboxCallback) disclaimerCheckboxCallback();
+        dlg.close();
+    }
+
+dialog(id="disclaimer-dialog")
+    h2  Notice
+    p.
+        Online.interlisp.org is a work-in-progress.  Use at your own risk.
+    p.
+        We do our best to preserve the code and
+        documents you develop, but you should regularly back-up your work to another
+        storage system (e.g., using our sftp feature).
+    p.
+        Any account that that has not been used in 30 days will be deleted, including all
+        code, documents, sysouts and preserved sessions.
+    p.
+        Although the system is reasonably secure, it is not
+        intended to be used for any task where security is important.
+    .single-button-div
+        button(type="button" onclick='disclaimer_close();').main-button OK
+    .checkbox-div(id="do_not_checkbox_div")
+        input(type="checkbox" id="do_not_checkbox" name="do_not_checkbox")
+        label(for="do_not_checkbox") Do not show this notice again

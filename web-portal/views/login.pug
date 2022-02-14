@@ -1,3 +1,16 @@
+//-
+    /***************************************************************************
+     * 
+     *   login.pug:  login page for online.interlisp.org web portal. 
+     * 
+     *   2021-11-22 Frank Halasz
+     * 
+     * 
+     *   Copyright: 2021-2022 by Interlisp.org 
+     * 
+     *
+     **************************************************************************/
+
 extends layout
 
 block variables
@@ -6,6 +19,10 @@ block variables
 block headeradds
 
    script.
+   
+        const guestUsername = "#{guestUsername}";
+        const guestPassword = "#{guestPassword}";
+   
         window.addEventListener('load', (event) => {
 
             const local_store = window.localStorage;
@@ -19,15 +36,33 @@ block headeradds
               errorMessage.innerText = info;
               //errorMessage.style.display = "block";
             }
-                
-            });
+            
+            if("#{verificationNotice}" == "true") {
+                const dlg = document.getElementById("verification-dialog");
+                dlg.showModal();
+            }
+        });
+
+        function verification_close() {
+            const dlg = document.getElementById("verification-dialog");
+            dlg.close();
+        }
+
             
    script.
         function loginOnSubmit() {
-            const local_store = window.localStorage;
             const username = document.getElementById("username").value;
-            local_store.setItem("username", username);
+            if(username != guestUsername) {
+                const local_store = window.localStorage;
+                local_store.setItem("username", username);
+            }
             return true;
+        }
+        
+        function loginAsGuest() {
+            document.getElementById("username").value = guestUsername;
+            document.getElementById("password").value = guestPassword;
+            document.getElementById("login_form").submit();
         }
 
 
@@ -37,7 +72,7 @@ block content
 
     div#error-message &nbsp;
 
-    form(action="/user/login", method="post", onsubmit="return loginOnSubmit()")
+    form(id="login_form" action="/user/login", method="post", onsubmit="return loginOnSubmit()")
         .field.primary-field
             label.primary-label Email:
             input#username.primary-input(type="text" name="username" required)
@@ -48,7 +83,34 @@ block content
             input#password.primary-input(type="password" name="password" required)
             br
         .field.primary-field
-            input.submit-btn.main-button(type="submit" value="LOGIN" required)
+            input.submit-btn.main-button(type="submit" value="LOGIN")
     
     p#new-user.
         New user?  Register <a href=/user/register>here</a> 
+        
+    .row
+        .jumbotron.text-center
+            span.in-circle(style="visibility:hidden") ?
+            span &nbsp;&nbsp;&nbsp;
+            button(type="button" id="guest_button" onclick="loginAsGuest()").main-button Login As Guest
+            span &nbsp;&nbsp;&nbsp;
+            span.in-circle(onclick='help_onclick("guest");') ?
+
+    dialog(id="verification-dialog").vdialog
+        h2  Notice
+        p.
+            Registration successful.
+        p.    
+            You are free to use online.interlisp.org to
+            explore the many wonders of Interlisp.
+        p.
+            A verification email has been sent to #{email}.  Please follow the
+            directions in this email to verify your account.
+        p.
+            Any account that has not been verified within 7 days of its creation
+            may be deleted without notice.
+        br
+        .single-button-div
+            button(type="button" onclick='verification_close();').main-button OK
+
+    include help_dialogs.pug

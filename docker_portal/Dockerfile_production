@@ -1,0 +1,118 @@
+#*******************************************************************************
+# 
+#   Dockerfile_production:  dockerfile used to build the production image that
+#         runs the online.interlisp.org web portal. 
+# 
+#   2022-02-02 Frank Halasz
+# 
+# 
+#   Copyright: 2022 by Interlisp.org 
+# 
+#
+# *****************************************************************************/
+FROM ubuntu:latest
+SHELL ["/bin/bash", "-c"]
+USER root:root
+#
+ARG DOCKER_NAMESPACE=interlisp
+#
+ARG DEBIAN_FRONTEND=noninteractive
+#
+#   Install some basics and Set locale
+#
+RUN apt-get update \
+    && apt-get -y install locales \
+    && locale-gen en_US.UTF-8 \
+    && apt-get install -y curl wget sudo \
+    && apt-get install -y ca-certificates gnupg lsb-release
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US:en
+ENV LC_ALL en_US.UTF-8
+#
+#
+#     Install docker cli from docker repo.
+#
+RUN ( \
+       curl -fsSL https://download.docker.com/linux/ubuntu/gpg \
+       | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg \
+    ) \
+    && \
+    ( echo \
+        "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] \
+             https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" \
+        | tee /etc/apt/sources.list.d/docker.list > /dev/null \
+    ) \
+    && apt-get update \
+    && apt-get install -y docker-ce-cli \
+    && groupadd --gid 998 docker
+#
+#     Install Mongo DB
+#
+RUN ( wget -qO - https://www.mongodb.org/static/pgp/server-5.0.asc | apt-key add - ) \
+    && \
+    ( \
+       echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/5.0 multiverse" \
+          | tee /etc/apt/sources.list.d/mongodb-org-5.0.list \
+    ) \
+    && apt-get update \
+    && apt-get install -y mongodb-org
+ENV MONGO_URI "mongodb://%2Fsrv%2Foio-nomount%2Fmongodb%2Fmongodb-27017.sock/oio_users"
+#
+#     Install node.js
+#
+RUN ( curl -fsSL https://deb.nodesource.com/setup_16.x | bash - ) \
+    && apt-get install -y nodejs
+#
+#     Create user to run web-portal under
+#
+RUN adduser --disabled-password --gecos "" oio \
+    && ( echo oio:3333CoyoteHill | chpasswd ) \
+    && usermod -aG sudo oio \
+    && echo "oio  ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers \
+    && usermod -aG docker oio
+#
+#     Create and populate the /opt/oio directory (web-portal, mongodb and startup code)
+#
+RUN mkdir -p /opt/oio/web-portal \
+      && chown oio:oio /opt/oio \
+      && chown oio:oio /opt/oio/web-portal
+COPY --chown=oio:oio web-portal /opt/oio/web-portal
+WORKDIR /opt/oio
+# setup novnc
+COPY --chown=oio:oio web-portal/novnc_oio/rfb.js                web-portal/novnc/core/rfb.js
+COPY --chown=oio:oio web-portal/novnc_oio/vnc.html              web-portal/novnc/vnc.html
+COPY --chown=oio:oio web-portal/novnc_oio/ui.js                 web-portal/novnc/app/ui.js
+COPY --chown=oio:oio web-portal/novnc_oio/Interlisp-FavIcon-*   web-portal/novnc/app/images/icons
+COPY --chown=oio:oio docker_portal/mongodb/mongodb.conf         mongodb/mongodb.conf
+COPY --chown=oio:oio docker_portal/startup/entrypoint.sh        startup/entrypoint.sh
+RUN chmod u+x startup/entrypoint.sh
+# get node_modules
+WORKDIR /opt/oio/web-portal
+RUN npm ci
+#
+#  Create srv directory structure
+#  and create a directory for lets encrypt to mount onto
+#
+RUN mkdir -p /srv/oio/ \
+      && chown oio:oio /srv/oio \
+      && mkdir -p /srv/oio/log \
+      && chown oio:oio /srv/oio/log \
+      && mkdir -p /srv/oio/mongodb \
+      && chown oio:oio /srv/oio/mongodb \
+      && mkdir -p /srv/oio/mongodb/log \
+      && chown oio:oio /srv/oio/mongodb/log \
+      && mkdir -p /srv/oio/mongodb/db \
+      && chown oio:oio /srv/oio/mongodb/db \
+      && mkdir -p /srv/oio-nomount \
+      && chown oio:oio /srv/oio-nomount \
+      && mkdir -p /srv/oio-nomount/mongodb \
+      && chown oio:oio /srv/oio-nomount/mongodb \
+      && mkdir -p /etc/letsencrypt
+#
+#
+#
+USER root
+WORKDIR /opt/oio
+ENV DOCKER_NAMESPACE=${DOCKER_NAMESPACE}
+ENTRYPOINT /opt/oio/startup/entrypoint.sh
+
