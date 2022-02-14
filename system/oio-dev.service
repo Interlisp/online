@@ -10,7 +10,7 @@ Group=root
 Environment=DEV_OR_PROD=dev
 Environment=NODE_ENV=development
 WorkingDirectory=/home/ubuntu
-ExecStart=/usr/bin/docker run -d \
+ExecStart=/usr/bin/docker run \
                --name oio-dev \
                -p 8080:80 \
                -p 8081:443 \
@@ -21,6 +21,8 @@ ExecStart=/usr/bin/docker run -d \
                -e NODE_ENV \
                --pull always \
                :::DOCKER_REGISTRY:::===DOCKER_NAMESPACE===/online-development:latest
+Restart=no
+ExecStop=/usr/bin/docker container kill oio-dev
 
 [Install]
 WantedBy=multi-user.target
