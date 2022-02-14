@@ -1,0 +1,203 @@
+# buildProductionDocker.yml
+#
+# Workflow to build and push a Docker image for running the
+# the web-portal at online.interlisp.org.  Depending on input, will create
+# either an production or a development version of the image.  Also,
+# input determines amd64 or arm64 - default amd64.
+#
+#    2022-01-25 by Frank Halasz
+#
+#
+#    Copyright: 2022 by Interlisp.org 
+#
+
+name: 'Build/Push Portal Docker Image'
+
+# Run this workflow on ...
+on:
+  workflow_dispatch:
+    inputs:
+      platform:
+        type: choice
+        options:
+        - linux/amd64
+        - linux/arm64
+  
+  workflow_call:
+    secrets:
+      DOCKER_USERNAME:
+        required: true
+      DOCKER_PASSWORD:
+        required: true
+      CCRYPT_KEY:
+        required: true
+    inputs:
+      platform:
+          description: "linux/amd64 or linux/arm64"
+          type: string
+          default: 'linux/amd64'
+          required: false
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  # Regularize the inputs so they can be referenced the same way whether they are
+  # the result of a workflow_dispatch or a workflow_call
+
+  inputs:
+    runs-on: ubuntu-latest
+    outputs:
+      platform: ${{ steps.platform.outputs.platform }}
+    steps:
+      - id: platform
+        run: >
+          if [ '${{ toJSON(inputs) }}' = 'null'  ];
+          then echo ::set-output name=platform::'${{ github.event.inputs.platform }}';
+          else echo ::set-output name=platform::'${{ inputs.platform }}';
+          fi
+
+
+  # Build and push the docker image
+
+  build_and-push:
+    needs: inputs
+    runs-on: ubuntu-latest
+
+    steps:
+
+      # Load ccrypt
+      - name: Load ccrypt
+        id: ccrypt
+        run: sudo apt-get update && sudo apt-get install -y ccrypt
+
+      # Checkout the actions for this repo_owner
+      - name: Checkout Actions
+        uses: actions/checkout@v2
+        with:
+          repository: ${{ github.repository_owner }}/.github
+          path: ./Actions_${{ github.sha }}
+      - run: mv ./Actions_${{ github.sha }}/actions ../actions && rm -rf ./Actions_${{ github.sha }}
+
+      # Checkout latest commit to depth 1 for production
+      - name: Checkout Web-portal code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+
+      # Setup release tag
+      - name: Setup Release Tag
+        id: tag
+        uses: ./../actions/release-tag-action
+
+      # Setup docker environment variables
+      - name: Setup Docker Environment Variables
+        id: docker_env
+        run: |
+          DOCKER_REGISTRY="ghcr.io/"
+          echo ::set-output name=docker_registry::${DOCKER_REGISTRY}
+          DOCKER_NAMESPACE=$(echo ${GITHUB_REPOSITORY_OWNER} | tr '[:upper:]' '[:lower:]')
+          echo "DOCKER_NAMESPACE=${DOCKER_NAMESPACE}" >> ${GITHUB_ENV}
+          echo ::set-output name=docker_namespace::${DOCKER_NAMESPACE}
+          #
+          DOCKER_REPO_PROD=${DOCKER_REGISTRY}${DOCKER_NAMESPACE}/${{ steps.tag.outputs.repo_name }}-production
+          DOCKER_TAGS_PROD="${DOCKER_REPO_PROD}:latest,${DOCKER_REPO_PROD}:${RELEASE_TAG#*-}"
+          DOCKER_REPO_DEV=${DOCKER_REGISTRY}${DOCKER_NAMESPACE}/${{ steps.tag.outputs.repo_name }}-development
+          DOCKER_TAGS_DEV="${DOCKER_REPO_DEV}:latest,${DOCKER_REPO_DEV}:${RELEASE_TAG#*-}"
+          echo ::set-output name=build_time::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
+          echo ::set-output name=docker_tags_prod::${DOCKER_TAGS_PROD}
+          echo ::set-output name=docker_tags_dev::${DOCKER_TAGS_DEV}
+
+      # Setup the Docker Machine Emulation environment.  
+      - name: Set up QEMU
+        if: ${{ needs.inputs.outputs.platform == 'linux/arm64' }}
+        uses: docker/setup-qemu-action@master
+        with:
+          platforms: linux/arm64
+
+      # Setup the Docker Buildx funtion
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@master
+
+      # Online now uses github container registry instead of dockerhub
+      # Login into DockerHub - required to store the created image
+      #- name: Login to DockerHub
+      #  uses: docker/login-action@v1
+      #  with:
+      #    username: ${{ steps.docker_env.outputs.docker_namespace }}
+      #    password: ${{ secrets.DOCKER_PASSWORD }}
+
+      # Login to ghcr.io
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1 
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          
+      # Decrypt secrets in web-portal code
+      - name: Decrypt cpt files
+        run: |
+          cat web-portal/js/keys.js.cpt | K="${{ secrets.CCRYPT_KEY }}" ccdecrypt -E "K" > web-portal/js/keys.js
+
+      # Get novnc
+      - name: Checkout novnc code
+        uses: actions/checkout@v2
+        with:
+          repository: 'novnc/noVNC.git'
+          ref: 'v1.3.0'
+          path: "./web-portal/novnc"
+
+      # Do the Production Docker Build using the Dockerfile_production
+      # Push the result to Docker Hub
+      - name: Build Docker Image for Push to Docker Hub
+        uses: docker/build-push-action@v2
+        with:
+          builder: ${{ steps.buildx.outputs.name }}
+          build-args: |
+            BUILD_DATE=${{ steps.docker_env.outputs.build_time }}
+            DOCKER_NAMESPACE=${{ steps.docker_env.outputs.docker_namespace }}
+          context: .
+          file: ./docker_portal/Dockerfile_production
+          platforms: ${{ needs.inputs.outputs.platform }}
+          push: true
+          tags: ${{ steps.docker_env.outputs.docker_tags_prod }}
+
+      # Recheckout latest commit with fetch_depth of 0 for development image
+      - name: Checkout Web-portal code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      # Decrypt secrets in web-portal code
+      - name: Decrypt cpt files
+        run: |
+          cat web-portal/js/keys.js.cpt | K="${{ secrets.CCRYPT_KEY }}" ccdecrypt -E "K" > web-portal/js/keys.js
+
+      # Get novnc
+      - name: Checkout novnc code
+        uses: actions/checkout@v2
+        with:
+          repository: 'novnc/noVNC.git'
+          ref: 'v1.3.0'
+          path: "./web-portal/novnc"
+
+      # Do the Development Docker Build using the Dockerfile_development
+      # Push the result to Docker Hub
+      - name: Build Docker Image for Push to Docker Hub
+        uses: docker/build-push-action@v2
+        with:
+          builder: ${{ steps.buildx.outputs.name }}
+          build-args: |
+            BUILD_DATE=${{ steps.docker_env.outputs.build_time }}
+            DOCKER_NAMESPACE=${{ steps.docker_env.outputs.docker_namespace }}
+            DOCKER_REGISTRY=${{ steps.docker_env.outputs.docker_registry }}
+          context: .
+          file: ./docker_portal/Dockerfile_development
+          platforms: ${{ needs.inputs.outputs.platform }}
+          push: true
+          tags: ${{ steps.docker_env.outputs.docker_tags_dev }}
+
+      

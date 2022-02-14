@@ -1,0 +1,10 @@
+# Dockerfile to create a docker image that converts v1 volumes to v2 for oio.
+#
+# 2022-02-02 Frank Halasz
+# 
+FROM ubuntu:latest
+SHELL ["/bin/bash", "-c"]
+USER root:root
+COPY v1-v2_inner.sh /usr/local/bin/
+RUN chmod ugo+x /usr/local/bin/v1-v2_inner.sh
+ENTRYPOINT /usr/local/bin/v1-v2_inner.sh

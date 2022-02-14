@@ -1,0 +1,43 @@
+# releaseMedleyDocker.yml
+#
+# Workflow to move an Online-Medley docker image from
+# development status (i.e., tagging) to production status.
+#
+#    2022-01-26 by Frank Halasz
+#
+#    Copyright: 2022 by Interlisp.org 
+#
+name: 'Medley-online:dev to production'
+
+# Run this workflow on ...
+on:
+  workflow_dispatch:
+
+jobs:
+  addtag:
+    runs-on: ubuntu-latest
+    steps:
+      # Setup docker environment variables
+      - name: Setup Docker Environment Variables
+        id: docker_env
+        run: |
+          DOCKER_OWNER=$(echo ${GITHUB_REPOSITORY_OWNER} | tr '[:upper:]' '[:lower:]')
+          echo ::set-output name=docker_owner::${DOCKER_OWNER}
+          DOCKER_IMAGE=${GITHUB_REPOSITORY#*/}-medley
+          echo ::set-output name=docker_image::${DOCKER_IMAGE}
+          echo ::set-output name=docker_repo::"${DOCKER_OWNER}/${DOCKER_IMAGE}"
+
+      # Login into DockerHub - required to store the created image
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ steps.docker_env.outputs.docker_owner }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      # Add the 'production' tag.  Dumb way to do this, but ... it works.
+      - name: Re-tag it
+        run: |
+          REPO="${{ steps.docker_env.outputs.docker_repo }}"
+          docker pull ${REPO}:development
+          docker tag ${REPO}:development ${REPO}:production
+          docker push ${REPO}:production

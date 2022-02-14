@@ -1,54 +1,36 @@
 #!/bin/bash
 #
-#    Call run-medley within an online.interlisp.org docker container.  But startup XVnc, websockify and sftpd first.
+#    Run xterm and sftp server within an online.interlisp.org docker container.  But startup XVnc, websockify and sftpd first.
 #    Expects $PORT to be set to the port to be used.  In actuality, ${PORT} will be used as websocket interface to XVnc,
 #    1${PORT} will be used as the TCP interface to XVnc, and 2${PORT} will be used as the address of the sftp deamon.
 #
 #    2021-11-11 Frank Halasz
 #
+#    Copyright: 2022 by Interlisp.org 
+#
+#
 #set -x
-
-RELEASE_SYSOUT_PATH="${MEDLEYDIR}/loadups/full.sysout"
-SYSOUT_PATH="${MEDLEYDIR}/sysout/online.sysout"
-VMEM_PATH="${MEDLEYDIR}/vmem/lisp.virtualmem"
-
-if [ ! -e ${SYSOUT_PATH} ]; then
-	/bin/cp -p ${RELEASE_SYSOUT_PATH} ${SYSOUT_PATH}
-fi
-
 if [ $# -gt 0 ]; then
-	if [ "$1" == "sysout" ]; then
-		sysout=${SYSOUT_PATH}
-	else
-		if [ -f ${VMEM_PATH} ]; then
-			sysout=""
-		else 
-			sysout=${SYSOUT_PATH}
-		fi
-	fi
-else
-	sysout=${SYSOUT_PATH}
-fi
-
-if [ $# -gt 1 ]; then
-	width=$2
+	width=$1
 else
 	width=1024
 fi
 
-if [ $# -gt 2 ]; then
-	height=$3
+if [ $# -gt 1 ]; then
+	height=$2
 else
 	height=808
 fi
-
+#
 export SFTP_PORT=2${PORT}
 /usr/sbin/sshd -e -p ${SFTP_PORT}
 
 export SFTP_PWD=$(date +%s | sha256sum | base64 | head -c 8)
 echo medley:${SFTP_PWD} | chpasswd
-#
-/usr/bin/websockify --daemon --key ${TLS_KEYFILE} --cert ${TLS_CERTFILE} --ssl-only ${PORT} localhost:1${PORT}
+if [ ${SUPPORT_HTTPS} = "yes" ];
+  then /usr/bin/websockify --daemon --key ${TLS_KEYFILE} --cert ${TLS_CERTFILE} --ssl-only ${PORT} localhost:1${PORT}
+  else /usr/bin/websockify --daemon  ${PORT} localhost:1${PORT}
+fi
 /usr/bin/Xvnc -geometry ${width}x${height} -rfbport 1${PORT} -nolisten tcp -localhost -nevershared -dontdisconnect :0 &
 export DISPLAY=:0
 for i in {1..10}
@@ -64,16 +46,20 @@ for i in {1..10}
 xmodmap -e "keycode 12 = Alt_L" -e "keycode 13 = Alt_R" -e "keycode 14 = Meta_L" -e "keycode 15 = Meta_R"
 /usr/bin/autocutsel -s CLIPBOARD &
 sleep 1
-if [ -z ${MEDLEY_UNAME} ]; then
+if [ -z "${MEDLEY_UNAME}" ]; then
 	export MEDLEY_UNAME=medley
 fi
-usermod -l ${MEDLEY_UNAME} medley
+if [ "${MEDLEY_UNAME}" != "medley" ]; then
+    usermod --login ${MEDLEY_UNAME} medley
+fi
 su ${MEDLEY_UNAME} <<EOF
-#set -x
+set -x
 xrdb -merge /home/medley/.Xresources
-cd ${MEDLEYDIR}
-export LOGINDIR=${MEDLEYDIR}
-export LDEINIT=${MEDLEYDIR}/greetfiles/ONLINE-INIT.LCOM
-export MAIKODIR="/app/maiko"
-./run-medley -noscroll -g ${width}x${height} -sc ${width}x${height} -vmem ${VMEM_PATH} ${sysout}
+(echo ".         Files are now available by SFTP to notecards.online using port 2${PORT}.  Username is '${MEDLEY_UNAME}'.  Password is ${SFTP_PWD}" | xmessage -file - -geometry ${width}x66+5+0)  &
+twm &
+sleep 1
+export TMOUT=1800
+cd ${MEDLEY_USERDIR}
+/usr/bin/xterm -geometry 168x55+5+60
 EOF
+

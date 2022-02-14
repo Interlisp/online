@@ -1,6 +1,7 @@
 [Unit]
 Description=DEV-version online.interlisp.org web portal
 After=network.target
+After=docker.service
 
 [Service]
 Type=simple
@@ -8,8 +9,18 @@ User=root
 Group=root
 Environment=DEV_OR_PROD=dev
 Environment=NODE_ENV=development
-WorkingDirectory=/home/ubuntu/online/web-portal
-ExecStart=/usr/bin/node js/server.js
+WorkingDirectory=/home/ubuntu
+ExecStart=/usr/bin/docker run -d \
+               --name oio-dev \
+               -p 8080:80 \
+               -p 8081:443 \
+               -v /var/run/docker.sock:/var/run/docker.sock \
+               -v /srv/oio/development:/srv/oio \
+               -v /etc/letsencrypt:/etc/letsencrypt \
+               -e DEV_OR_PROD \
+               -e NODE_ENV \
+               --pull always \
+               :::DOCKER_REGISTRY:::^^^DOCKER_NAMESPACE^^^/online-development:latest
 Restart=always
 
 [Install]

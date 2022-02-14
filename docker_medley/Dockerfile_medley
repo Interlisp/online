@@ -1,0 +1,128 @@
+#*******************************************************************************
+# 
+#   Dockerfile_medley:  dockerfile used to build the image that runs Medley,
+#        Xvnc, websockify, etc. within the online.interlisp.org web portal.
+#        One container using this image is run for each user that is logged
+#        into the portal.  This container is started up by the web-portal
+#        express app.
+#          
+# 
+#   2022-02-02 Frank Halasz
+# 
+# 
+#   Copyright: 2022 by Interlisp.org 
+# 
+#
+# *****************************************************************************/
+ARG FROM_TAG=latest
+ARG DOCKER_NAMESPACE=interlisp
+
+FROM ${DOCKER_NAMESPACE}/medley:${FROM_TAG}
+
+SHELL ["/bin/bash", "-c"]
+USER root:root
+
+ARG FROM_TAG
+ARG BUILD_DATE=unknown
+ARG RELEASE_TAG=unknown
+ARG MAIKO_RELEASE=unknown
+ARG MEDLEY_RELEASE=unknown
+ARG NOTECARDS_RELEASE=unknown
+ARG REPO_OWNER=Interlisp
+
+LABEL name="online.interlisp.org"
+LABEL description="The Medley Interlisp environment used by online.interlisp.org"
+LABEL url="https://github.com/${REPO_OWNER}/online"
+LABEL build-time=$BUILD_DATE
+LABEL release_tag=$RELEASE_TAG
+LABEL maiko_release=$MAIKO_RELEASE
+LABEL medley_release=$MEDLEY_RELEASE
+LABEL notecards_release=$NOTECARDS_RELEASE
+
+ENV ONLINE_MEDLEY_BUILD_DATE=$BUILD_DATE
+ENV ONLINE_MEDLEY_RELEASE=$RELEASE_TAG
+ENV NOTECARDS_RELEASE=$NOTECARDS_RELEASE
+
+ARG DEBIAN_FRONTEND=noninteractive
+ARG USER_NAME=medley
+ARG HOMEDIR=/home/${USER_NAME}
+ARG MEDLEY_INSTALLDIR=/usr/local/interlisp/medley
+ENV MEDLEY_INSTALLDIR=${MEDLEY_INSTALLDIR}
+ENV MEDLEY_USERDIR=${HOMEDIR}/il
+
+ARG NC_INSTALLDIR=/usr/local/interlisp/notecards
+ENV NC_INSTALLDIR=${NC_INSTALLDIR}
+
+# install git & gh (github cli) 
+RUN apt-get update
+RUN apt-get install -y apt-utils
+RUN apt-get install -y curl
+RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+RUN apt-get update
+RUN apt-get install -y git gh
+
+#  install websockify for use with noVNC
+RUN apt-get install -y websockify
+
+#  install xterm plus twm for minimal window manager function on xterm/sftp "page"
+RUN apt-get install -y xterm twm autocutsel
+
+# install sshd
+RUN apt-get -y install openssh-server && \
+    mkdir -p /var/run/sshd && \
+    rm -f /etc/ssh/ssh_host_*key*
+COPY sftp/sshd_config /etc/ssh/sshd_config
+COPY sftp/ssh_host_*_key /etc/ssh/
+COPY sftp/ssh_host_*_key.pub /etc/ssh/
+RUN  chmod 600 /etc/ssh/ssh_host_*_key
+
+#  install nano & vim for ease of maintenance
+RUN apt-get install -y nano vim
+
+# keep lisp.virtualmem out of medley home dir
+RUN mkdir -p ${MEDLEY_USERDIR}
+RUN chown ${USER_NAME}:${USER_NAME} ${MEDLEY_USERDIR}
+RUN mkdir ${MEDLEY_USERDIR}/vmem
+RUN chown ${USER_NAME}:${USER_NAME} ${MEDLEY_USERDIR}/vmem
+
+# create a sysout subdir and copy full.sysout into it as online.sysout
+RUN mkdir -p ${MEDLEY_USERDIR}/sysout
+RUN chown ${USER_NAME}:${USER_NAME} ${MEDLEY_USERDIR}/sysout
+
+# copy the run-XXX scripts into ${MEDLEY_INSTALLDIR}/../online/bin
+ARG ONLINE_BINDIR=${MEDLEY_INSTALLDIR}/../online/bin
+RUN mkdir -p ${ONLINE_BINDIR}
+RUN chown root:root ${ONLINE_BINDIR}
+COPY scripts/* ${ONLINE_BINDIR}
+RUN chmod ugo+x ${ONLINE_BINDIR}/*
+
+# copy INIT file into home directory
+COPY --chown=${USER_NAME}:${USER_NAME} init/INIT ${MEDLEY_USERDIR}
+COPY --chown=${USER_NAME}:${USER_NAME} init/ONLINE-INIT ${MEDLEY_INSTALLDIR}/greetfiles
+COPY --chown=${USER_NAME}:${USER_NAME} init/ONLINE-INIT.LCOM ${MEDLEY_INSTALLDIR}/greetfiles
+
+# copy Notecards into place
+COPY notecards ${NC_INSTALLDIR}
+RUN echo ${NOTECARDS_RELEASE} ${NC_INSTALLDIR}/release.txt
+
+# clean up medley/.bashrc for use with xterm
+RUN sed -i /PS1=/s/u@.h/u@oio/ ${HOMEDIR}/.bashrc
+RUN chown ${USER_NAME}:${USER_NAME} ${HOMEDIR}/.bashrc
+
+# setup medley home dir with misc config files
+COPY --chown=${USER_NAME}:${USER_NAME} misc/.Xresources ${HOMEDIR}
+
+# Give user medley a password that can be used with sftp
+RUN echo ${USER_NAME}:3333CoyoteHill | chpasswd
+
+# Create the dir to mount the TLS certificates
+RUN mkdir -p /etc/letsencrypt/live/online.interlisp.org/
+RUN chmod go-rwx /etc/letsencrypt/live
+RUN mkdir -p /etc/letsencrypt/archive/online.interlisp.org/
+RUN chmod go-rwx /etc/letsencrypt/archive
+
+# In actual use, USER and ENTRYPOINT will be set by the docker run command
+WORKDIR ${HOMEDIR}
+USER root:root
+ENTRYPOINT USER=${USER_NAME} /bin/bash

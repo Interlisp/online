@@ -1138,7 +1138,7 @@ const UI = {
         //
         // UI.openControlbar();
         // UI.openConnectPanel();
-        window.location.assign(window.location.origin)
+        window.location.assign(window.location.origin + "/main?fromvnc=1");
     },
 
     securityFailed(e) {

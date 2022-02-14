@@ -1,3 +1,17 @@
+//-
+    /***************************************************************************
+     * 
+     *   register.pug: user registration page for online.interlisp.org web portal. 
+     *
+     * 
+     *   2021-11-22 Frank Halasz
+     * 
+     * 
+     *   Copyright: 2021-2022 by Interlisp.org 
+     * 
+     *
+     **************************************************************************/
+
 extends layout
 
 block variables
@@ -5,7 +19,26 @@ block variables
 
 block headeradds
 
+    script.
+        window.addEventListener('load', (event) => {
+        
+            const cb = document.getElementById("no_disclaimer_cb");
+            cb.checked = false;
 
+            const urlParams = new URLSearchParams(window.location.search);
+            const info = urlParams.get('info');
+        
+            if(info) {
+              const errorMessage = document.getElementById("error-message");
+              errorMessage.innerText = info;
+              //errorMessage.style.display = "block";
+            } else {
+                const dlg = document.getElementById("disclaimer-dialog");
+                dlg.showModal();
+            }
+
+        });
+        
 
 block content
 
@@ -42,14 +75,14 @@ block content
             p.input-explain  2-6 alphanumeric characters
         .field.primary-field
             input.submit-btn.main-button(type="submit" value="Register" required)
+        .field(style="display:none")
+            input(type="checkbox" id="no_disclaimer_cb" name="nodisclaimer" value="true")
 
     script.
-        const urlParams = new URLSearchParams(window.location.search);
-        const info = urlParams.get('info');
-    
-        if(info) {
-          const errorMessage = document.getElementById("error-message");
-          errorMessage.innerText = info;
-          //errorMessage.style.display = "block";
+        function disclaimerCheckboxCallback() {
+            const cb = document.getElementById("no_disclaimer_cb");
+            cb.checked = true;
         }
-
+        
+    include disclaimer.pug
+    

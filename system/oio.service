@@ -1,15 +1,26 @@
 [Unit]
 Description=online.interlisp.org web portal
 After=network.target
+After=docker.service
 
 [Service]
 Type=simple
 User=root
 Group=root
-Environment=DEV_OR_PROD="prod"
-Environment=NODE_ENV="production"
-WorkingDirectory=/srv/oio/live
-ExecStart=/usr/bin/node js/server.js
+Environment=DEV_OR_PROD=prod
+Environment=NODE_ENV=production
+WorkingDirectory=/home/ubuntu
+ExecStart=/usr/bin/docker run -d \
+               --name oio \
+               -p 80:80 \
+               -p 443:443 \
+               -v /var/run/docker.sock:/var/run/docker.sock \
+               -v /srv/oio/production:/srv/oio \
+               -v /etc/letsencrypt:/etc/letsencrypt \
+               -e DEV_OR_PROD \
+               -e NODE_ENV \
+               --pull missing \
+               :::DOCKER_REGISTRY:::^^^DOCKER_NAMESPACE^^^/online-production:latest
 Restart=always
 
 [Install]

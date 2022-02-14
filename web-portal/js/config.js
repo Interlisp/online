@@ -1,27 +1,39 @@
-//
-//  config.js:  global configuration settings for online.interlisp.org web portal
-//
-//  2021-11-16 Frank Halasz
-//
+/*******************************************************************************
+ * 
+ *   config.js: Global configuration settings for online.interlisp.org web portal
+ * 
+ * 
+ *   2021-11-16 Frank Halasz
+ * 
+ * 
+ *   Copyright: 2021-2022 by Interlisp.org 
+ * 
+ *
+ ******************************************************************************///
 
 var path = require('path');
+var fs = require('fs');
+var keys = require('./keys');
 
 var isDev = (process.env.DEV_OR_PROD && (process.env.DEV_OR_PROD.toLowerCase() == "dev"));
 exports.isDev = isDev;
 
-var httpPort =  isDev ? 8080 : 80;
+var supportHttps = fs.existsSync("/etc/letsencrypt/live");
+exports.supportHttps = supportHttps;
+
+var httpPort = 80;
 exports.httpPort = httpPort;
 
-var httpsPort =  isDev ? 8081 : 443;
+var httpsPort = 443;
 exports.httpsPort = httpsPort;
 
-var httpBaseUrl = `http://online.interlisp.org${isDev ? ":" + httpPort : ""}`;
-var httpsBaseUrl = `https://online.interlisp.org${isDev ? ":" + httpsPort : ""}`;
-exports.httpBaseUrl = httpBaseUrl;
-exports.httpsBaseUrl = httpsBaseUrl;
+//var httpBaseUrl = `http://online.interlisp.org`;
+//var httpsBaseUrl = `https://online.interlisp.org`;
+//exports.httpBaseUrl = httpBaseUrl;
+//exports.httpsBaseUrl = httpsBaseUrl;
 
 
-var userdbName = `oio_users${isDev ? "-dev" : ""}`;
+var userdbName = `oio_users`;
 exports.userdbName = userdbName;
 
 var dockerPortMin = isDev ? 4999 : 2999;
@@ -29,10 +41,16 @@ exports.dockerPortMin = dockerPortMin;
 var dockerPortMax = dockerPortMin + 2000;
 exports.dockerPortMax = dockerPortMax;
 
-var dockerImage = isDev ? 'oio-dev' : 'oio-prod';
+var dockerOwner = process.env.DOCKER_OWNER || "interlisp";
+exports.dockerOwner = dockerOwner; 
+var dockerImage = `${dockerOwner}/online-medley:${isDev ? 'development' : 'production'}`;
 exports.dockerImage = dockerImage;
 
-var dockerScriptsDir = "/app/medley/online/bin";
+var medleyInstallDir = "/usr/local/interlisp/medley";
+exports.medleyInstallDir = medleyInstallDir;
+var medleyUserDir = "/home/medley";
+exports.medleyUserDir = medleyUserDir;
+var dockerScriptsDir = path.join(medleyInstallDir, "..", "/online/bin");
 exports.dockerScriptsDir = dockerScriptsDir;
 
 var tlsCertDir = "/etc/letsencrypt/live/online.interlisp.org/";
@@ -57,12 +75,12 @@ exports.noVncDir = noVncDir;
 var noVncHomePage = path.join(noVncDir, 'vnc.html');
 exports.noVncHomePage = noVncHomePage;
 
-var runAsUsername = 'ubuntu';
+var runAsUsername = 'oio';
 exports.runAsUsername = runAsUsername;
-var runAsGroupname = 'ubuntu';
+var runAsGroupname = 'oio';
 exports.runAsGroupname = runAsGroupname;
 
-var logPath = path.join(__dirname, '../../log', isDev ? 'dev.log' : 'production.log');
+var logPath = path.join('/srv/oio/log', 'oio.log');
 exports.logPath = logPath;
 
 var viewsPath = path.join(__dirname, '..', 'views');
@@ -71,11 +89,39 @@ exports.viewsPath = viewsPath;
 var stylesheetsPath = path.join(__dirname, '..', 'stylesheets');
 exports.stylesheetsPath = stylesheetsPath;
 
-var sessionSecret = require('./keys').sessionSecret;
+var sessionSecret = keys.sessionSecret;
 exports.sessionSecret = sessionSecret;
+
+var gmailPassword = keys.gmailPassword;
+exports.gmailPassword = gmailPassword;
+
+var gmailUsername = "fghalasz@interlisp.org";
+exports.gmailUsername = gmailUsername;
+
+var gmailFrom = "Interlisp Online <registration@interlisp.org>";
+exports.gmailFrom = gmailFrom;
 
 var imagesDir = path.join(__dirname, '..', 'images');
 exports.imagesDir = imagesDir;
 
 var noDockerRm = isDev && false;
 exports.noDockerRm = noDockerRm;
+
+var mongodbURI = `mongodb://%2Fsrv%2Foio-nomount%2Fmongodb%2Fmongodb-27017.sock/${userdbName}`;
+exports.mongodbURI = mongodbURI;
+
+var guestUsername = "guest@online.interlisp.org";
+exports.guestUsername = guestUsername;
+
+var guestPassword = keys.guestPassword;
+exports.guestPassword = guestPassword;
+
+var isGuestUser = function isGuestUser(username) { return (guestUsername == username); };
+exports.isGuestUser = isGuestUser;
+
+const badchars = new RegExp("[!#$%&'*+/=?^`{|}~]", "g");
+var emailish = function(email) { return email.replace(badchars, '-').replace("@", ".-."); };
+exports.emailish = emailish;
+
+var homeVolume = function(email) { return `${emailish(email)}_home.v2`; };
+exports.homeVolume = homeVolume;

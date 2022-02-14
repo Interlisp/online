@@ -1,3 +1,15 @@
+/***************************************************************************
+ *
+ *   style.css:  Main css code for online.interlisp.org web portal.
+ *
+ *   2021-11-22 Frank Halasz
+ *
+ *
+ *   Copyright: 2021-2022 by Interlisp.org
+ *
+ *
+ **************************************************************************/
+
 html {
   font: 100%/1.5 Helvetica Neue, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -56,26 +68,26 @@ h2 {
 }
 
 .main-button {
-	font-size: .825em;
-	text-decoration: none;
-	font-weight: 700;
-	padding: .35em 1em;
-	background-color: #eaeef1;
-	background-image: linear-gradient(rgba(0,0,0,0), rgba(0,0,0,.1));
-	border-radius: 3px;
-	color: rgba(0,0,0,.6);
-	text-shadow: 0 1px 1px rgba(255,255,255,.7);
-	box-shadow: 0 0 0 1px rgba(0,0,0,.2), 0 1px 2px rgba(0,0,0,.2), inset 0 1px 2px rgba(255,255,255,.7);
+        font-size: .825em;
+        text-decoration: none;
+        font-weight: 700;
+        padding: .35em 1em;
+        background-color: #eaeef1;
+        background-image: linear-gradient(rgba(0,0,0,0), rgba(0,0,0,.1));
+        border-radius: 3px;
+        color: rgba(0,0,0,.6);
+        text-shadow: 0 1px 1px rgba(255,255,255,.7);
+        box-shadow: 0 0 0 1px rgba(0,0,0,.2), 0 1px 2px rgba(0,0,0,.2), inset 0 1px 2px rgba(255,255,255,.7);
 }
 
 .main-button:hover, .main-button.hover {
-	background-color: #fff;
+        background-color: #fff;
 }
 
 .main-button:active, .main-button.active {
-	background-color: #d0d3d6;
-	background-image: linear-gradient(rgba(0,0,0,.1), rgba(0,0,0,0));
-	box-shadow: inset 0 0 2px rgba(0,0,0,.2), inset 0 2px 5px rgba(0,0,0,.2), 0 1px rgba(255,255,255,.2);
+        background-color: #d0d3d6;
+        background-image: linear-gradient(rgba(0,0,0,.1), rgba(0,0,0,0));
+        box-shadow: inset 0 0 2px rgba(0,0,0,.2), inset 0 2px 5px rgba(0,0,0,.2), 0 1px rgba(255,255,255,.2);
 }
 
 #page-container {
@@ -167,7 +179,7 @@ h2 {
   padding-top: 0.5em;
 }
 
-#reconnect-dialog, #alert-dialog {
+#reconnect-dialog, #alert-dialog, #disclaimer-dialog, .vdialog {
   font-size:16px;
   padding: 2em 1em 2em 1em;
   max-width: 600px;
@@ -197,4 +209,134 @@ h2 {
   margin-left: auto;
   margin-top: 2em;
   line-height: 150%;
+}
+
+#disclaimer-dialog .single-button-div, .vdialog .single-button-div {
+  margin-top: 1.5em;
+}
+
+#disclaimer-dialog .checkbox-div {
+  margin-top: 2em;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 1em;
+}
+
+#disclaimer-dialog h2, .vdialog h2 {
+  margin-top: 0em;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 0.75em;
+}
+
+.options-div label, #dev-div-checkbox {
+    font-size: 16px;
+    display: block;
+}
+
+.number-input {
+    font-size: 16px;
+    width: 4em;
+}
+
+.checkbox-input {
+    font-size: 16px;
+    width: 1em;
+    height: 1em;
+    vertical-align: middle;
+}
+
+.options-div {
+    margin-top: 15px;
+}
+
+#dev-div-buttons {
+    width:auto;
+    margin-right: auto;
+    margin-left: auto;
+    border-style: double;
+    border-width: 5px;
+    border-color: #C0C0C0;
+}
+
+#dev-div-checkbox .jumbotron {
+    padding-bottom: 0em;
+}
+
+#dev-div-buttons .jumbotron {
+    padding-bottom: 0.25em;
+    padding-top: 0.25em;
+    display:inline-block;
+}
+
+h2 {
+    margin-bottom: 0em;
+    font-size: 30px;
+}
+
+#dev-options-div {
+    font-size: 20px;
+    width:auto;
+}
+
+
+.run-options-div {
+  max-width: 350px;
+  border-width: 2px;
+  border-radius: 15px;
+  border-color: #2F2F2F;
+  border-style: solid;
+  margin-top: .66em;
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 0.25em;
+  padding-bottom: 0.5em;
+  font-size: 16px;
+}
+
+
+.run-option {
+  width:250px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: left;
+  display: inline-block;
+}
+
+.in-circle {
+    display: inline-block;
+    background: #000;
+    color: #fff;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    line-height: 18px;
+    text-align: center;
+    font-size: 14px;
+    font-family: Verdana;
+    cursor: help;
+}
+
+.help-dialog {
+  max-width: 500px;
+}
+
+.help-dialog h2 {
+   margin-top: .5em;
+   margin-bottom: 0.25em;
+}
+
+.help-dialog .single-button-div {
+   margin-top: 1.5em;
+}
+
+.help-dialog p {
+  padding-left: 2em;
+  padding-right: 2em;
+  text-align: justify;
+  line-height: 1.5;
+}
+
+#guest_button {
+    display: inline-block;
 }
