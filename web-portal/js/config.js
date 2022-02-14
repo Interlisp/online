@@ -41,9 +41,11 @@ exports.dockerPortMin = dockerPortMin;
 var dockerPortMax = dockerPortMin + 2000;
 exports.dockerPortMax = dockerPortMax;
 
-var dockerOwner = process.env.DOCKER_OWNER || "interlisp";
-exports.dockerOwner = dockerOwner; 
-var dockerImage = `${dockerOwner}/online-medley:${isDev ? 'development' : 'production'}`;
+var dockerRegistry = process.env.DOCKER_REGISTRY || "ghcr.io";
+exports.dockerRegistry=dockerRegistry;
+var dockerNamespace = process.env.DOCKER_NAMESPACE || "interlisp";
+exports.dockerNamespace = dockerNamespace;
+var dockerImage = `${dockerRegistry}/${dockerNamespace}/online-medley:${isDev ? 'development' : 'production'}`;
 exports.dockerImage = dockerImage;
 
 var medleyInstallDir = "/usr/local/interlisp/medley";

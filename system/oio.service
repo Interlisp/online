@@ -20,7 +20,7 @@ ExecStart=/usr/bin/docker run -d \
                -e DEV_OR_PROD \
                -e NODE_ENV \
                --pull missing \
-               :::DOCKER_REGISTRY:::^^^DOCKER_NAMESPACE^^^/online-production:latest
+               :::DOCKER_REGISTRY:::===DOCKER_NAMESPACE===/online-production:latest
 Restart=always
 
 [Install]
