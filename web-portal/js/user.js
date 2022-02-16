@@ -181,8 +181,8 @@ userRouter.post('/register',
                            await gmailSend({to: req.body.username, 
                                        subject: "Email verification for online.interlisp.org", 
                                        html: generateEmailBody(req, req.body.firstname, token) });
-                        console.dir(result);
-                        console.dir(full);
+                        if(false) console.dir(result);
+                        if(false) console.dir(full);
                     }
                     catch(err) {
                         console.log("Gmail send error: " + err);
@@ -217,7 +217,8 @@ userRouter.post('/reregister',
                     verificationToken: token,
                 }
             );
-            console.dir(repRes);
+            if(false) console.dir(repRes);
+            req.user.firstname = req.body.firstname;
             resendVerification(req);
             res.redirect('/main?rr=1');
         } catch(err) {
@@ -252,7 +253,7 @@ userRouter.get('/nodisclaimer',
                 {   username: req.user.username }, 
                 {   nodisclaimer: true }
             );
-            console.dir(repRes);
+            if(false) console.dir(repRes);
             res.redirect('/main');
         } catch(err) {
             console.dir("nodisclaimer error: " + err);
@@ -263,7 +264,7 @@ userRouter.get('/nodisclaimer',
 
 //
 //
-//  Routes to handkle email verification
+//  Routes to handle email verification
 //
 //
 

@@ -34,6 +34,31 @@ html(lang="en")
     link(rel="icon" sizes="152x152" type="image/png" href="/images/icons/Interlisp-FavIcon-152x152.png")
     link(rel="icon" sizes="192x192" type="image/png" href="/images/icons/Interlisp-FavIcon-192x192.png")
 
+    script. 
+        var $buoop = {
+                required:{e:79,f:79,o:51,s:14,c:64},
+                api:2022.02, 
+                no_permanent_hide: true,
+                reminder: 0,
+                reminderClosed: 1,
+                noclose: true,
+                text: {
+                    'msg':'Interlisp Online requires a "modern" web browser. Your web browser ({brow_name}) is out of date and will not function well (or at all) with Interlisp Online.',
+                    'msgmore': 'You will need to update your browser.\nMinimum requirements are: Chrome: 64; Firefox: 79; Safari: 14; Edge: 79.', 
+                    'bupdate': 'Update browser', 
+                    'bignore': 'Ignore',
+                    'remind': 'You will be reminded in {days} days.',
+                    'bnever': 'Never show again'  
+                }
+        }; 
+        function $buo_f(){ 
+            var e = document.createElement("script"); 
+            e.src = "//browser-update.org/update.min.js"; 
+            document.body.appendChild(e);
+        };
+        try {document.addEventListener("DOMContentLoaded", $buo_f,false)}
+        catch(e){window.attachEvent("onload", $buo_f)}
+
     title #{title}
     block headeradds
   body
