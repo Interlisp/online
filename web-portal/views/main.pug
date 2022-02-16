@@ -32,7 +32,9 @@ block headeradds
             document.getElementById("resume").checked = (local_store.getItem("resume") == "true");
             document.getElementById("custom").checked = (local_store.getItem("custom") == "true");
             document.getElementById("run_notecards").checked = (local_store.getItem("run_notecards") == "true");
-
+            custom_on_click();
+            resume_on_click();
+            
             if(#{isGuest}) {
                 document.getElementById("fill-window-cb").checked = true;
                 document.getElementById("dev-div").style.display = "none";

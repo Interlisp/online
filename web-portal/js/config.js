@@ -122,7 +122,13 @@ var isGuestUser = function isGuestUser(username) { return (guestUsername == user
 exports.isGuestUser = isGuestUser;
 
 const badchars = new RegExp("[!#$%&'*+/=?^`{|}~]", "g");
-var emailish = function(email) { return email.replace(badchars, '-').replace("@", ".-."); };
+var emailish = 
+    function(email) { 
+        if(isGuestUser(email))
+            return `guest-${Math.floor(Math.random() * 99999)}`;
+        else
+            return email.replace(badchars, '-').replace("@", ".-."); 
+    };
 exports.emailish = emailish;
 
 var homeVolume = function(email) { return `${emailish(email)}_home.v2`; };
