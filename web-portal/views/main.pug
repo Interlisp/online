@@ -29,11 +29,6 @@ block headeradds
             const urlParams = new URLSearchParams(window.location.search);
             const rr = urlParams.get('rr') || false;
             const fromvnc = urlParams.get('fromvnc') || false;
-            document.getElementById("resume").checked = (local_store.getItem("resume") == "true");
-            document.getElementById("custom").checked = (local_store.getItem("custom") == "true");
-            document.getElementById("run_notecards").checked = (local_store.getItem("run_notecards") == "true");
-            custom_on_click();
-            resume_on_click();
             
             if(#{isGuest}) {
                 document.getElementById("fill-window-cb").checked = true;
@@ -43,7 +38,11 @@ block headeradds
                 document.getElementById("resume-label").style.display = "none";
                 document.getElementById("run_notecards-label-div").style.display = "block";
                 document.getElementById("run_notecards-label").style.textAlign = "center";
+                document.getElementById("run_notecards").checked = false;
             } else {
+                document.getElementById("resume").checked = (local_store.getItem("resume") == "true");
+                document.getElementById("custom").checked = (local_store.getItem("custom") == "true");
+                document.getElementById("run_notecards").checked = (local_store.getItem("run_notecards") == "true");
                 document.getElementById("fill-window-cb").checked = ((local_store.getItem("fill-window") || 'true') == 'true')
                 document.getElementById("dev-div").style.display = "inline-block";
                 document.getElementById("do_not_checkbox_div").style.display = "inline-block";
@@ -51,6 +50,8 @@ block headeradds
                 document.getElementById("resume-label").style.display = "block";
                 document.getElementById("run_notecards-label-div").style.display = "block";
                 document.getElementById("run_notecards-label").style.textAlign = "left";
+                custom_on_click();
+                resume_on_click();
             }
             fill_window_on_click();
             document.getElementById("dev-options-checkbox").checked = (local_store.getItem("show_dev_options") == "true");
