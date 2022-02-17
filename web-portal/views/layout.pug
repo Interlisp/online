@@ -66,7 +66,10 @@ html(lang="en")
       div(id="content-wrap")
         .container
           div(id="page-header")
-            img(src="/images/Interlisp-D-Online.png", alt="Interlisp-D logo", width="300", height="150")
+            div
+              button#sponsor-button(type="button", onclick='window.open("https://github.com/sponsors/Interlisp?o=esb", "_blank");') Sponsor Interlisp.org
+            div
+              img(src="/images/Interlisp-D-Online.png", alt="Interlisp-D logo", width="300", height="150")
           block content
       footer(id="footer").
         &copy; Copyright 2021 by <a href="http://www.interlisp.org">www.interlisp.org</a>
