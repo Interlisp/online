@@ -88,6 +88,9 @@ exports.logPath = logPath;
 var viewsPath = path.join(__dirname, '..', 'views');
 exports.viewsPath = viewsPath;
 
+var stylesheetsPath = path.join(__dirname, '..', 'stylesheets');
+exports.stylesheetsPath = stylesheetsPath;
+
 var polyfillsPath = path.join(__dirname, '..', 'polyfills');
 exports.polyfillsPath = polyfillsPath;
 
