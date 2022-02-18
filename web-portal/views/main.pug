@@ -25,6 +25,9 @@ block headeradds
         });
     
         window.addEventListener('load', (event) => {
+
+            document.querySelectorAll('dialog').forEach(dialogEl => dialogPolyfill.registerDialog(dialogEl));
+
             const local_store = window.localStorage;
             const urlParams = new URLSearchParams(window.location.search);
             const rr = urlParams.get('rr') || false;
