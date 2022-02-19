@@ -24,6 +24,8 @@ block headeradds
         const guestPassword = "#{guestPassword}";
    
         window.addEventListener('load', (event) => {
+        
+            document.querySelectorAll('dialog').forEach(dialogEl => dialogPolyfill.registerDialog(dialogEl));
 
             const local_store = window.localStorage;
             document.getElementById("username").value = local_store.getItem("username") || "";

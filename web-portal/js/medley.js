@@ -62,11 +62,11 @@ const dockerSupportHttpsEnv = ` --env SUPPORT_HTTPS=${config.supportHttps ? "yes
 function medleyEnvs(req) {
     const u = req.user;
     const nc = (req.query.notecards && (req.query.notecards.toLowerCase() == "true")) ? "true" : "false";
-    return    ` --env MEDLEY_EMAIL=${u.username}`
-            + ` --env MEDLEY_UNAME=${u.uname || "medley" }`
-            + ` --env MEDLEY_FIRSTNAME=${u.firstname || "Medley"}`
-            + ` --env MEDLEY_LASTNAME=${u.lastname || "User"}`
-            + ` --env MEDLEY_INITIALS=${u.initials || "medley"}`
+    return    ` --env MEDLEY_EMAIL='${u.username}'`
+            + ` --env MEDLEY_UNAME='${u.uname || "medley" }'`
+            + ` --env MEDLEY_FIRSTNAME='${u.firstname || "Medley"}'`
+            + ` --env MEDLEY_LASTNAME='${u.lastname || "User"}'`
+            + ` --env MEDLEY_INITIALS='${u.initials || "medley"}'`
             + ` --env RUN_NOTECARDS=${nc}`
     ;
 }

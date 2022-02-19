@@ -74,6 +74,7 @@ app.use((req, res, next) => {
 app.use('/images', express.static(config.imagesDir));
 app.get('/', (req, res) => { res.redirect('/main'); });
 app.use('/stylesheets', express.static(config.stylesheetsPath));
+app.use('/polyfills', express.static(config.polyfillsPath));
 app.get('/main', 
          ensureLoggedIn(),
          async (req, res, next) => 
