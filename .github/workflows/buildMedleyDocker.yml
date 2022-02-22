@@ -30,8 +30,6 @@ on:
     secrets:
       CCRYPT_KEY:
         required: true
-      FILEBROWSER_PWD:
-        required: true
     inputs:
       platform:
           description: "linux/amd64 or linux/arm64"
@@ -186,7 +184,6 @@ jobs:
             DOCKER_NAMESPACE=${{ steps.release_info.outputs.docker_namespace }}
             REPO_OWNER=${{ github.repository_owner }}
             NOTECARDS_RELEASE=${{ steps.nc_release_info.outputs.nc_release_tag }}
-            FILEBROWSER_PWD=${{ secrets.FILEBROWSER_PWD }}
           context: ./docker_medley
           file: ./docker_medley/Dockerfile_medley
           platforms: ${{ needs.inputs.outputs.platform }}

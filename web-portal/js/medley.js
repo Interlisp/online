@@ -59,6 +59,10 @@ const dockerTlsEnv = ( ! config.supportHttps ? "" :
 
 const dockerSupportHttpsEnv = ` --env SUPPORT_HTTPS=${config.supportHttps ? "yes" : "no"}`;
 
+function sftpEnvs(req) {
+    return ` --env SFTP_PWD=${req.sftpPwd}`;
+}
+
 function medleyEnvs(req) {
     const u = req.user;
     const nc = (req.query.notecards && (req.query.notecards.toLowerCase() == "true")) ? "true" : "false";
@@ -88,6 +92,7 @@ function interlispRunCmd(req) {
             + medleyEnvs(req)
             + ` --label "OIO_PORT=${port}"`
             + ` --label "OIO_TARGET=${req.oioTarget}"`
+            + sftpEnvs(req)
             + dockerSupportHttpsEnv
             + dockerTlsEnv
             + ` --entrypoint ${config.dockerScriptsDir}/run-online-medley`
@@ -111,6 +116,7 @@ function xtermRunCmd(req) {
         + medleyEnvs(req)
         + ` --label "OIO_PORT=${port}"`
         + ` --label "OIO_TARGET=${req.oioTarget}"`
+        + sftpEnvs(req)
         + dockerSupportHttpsEnv
         + dockerTlsEnv
         + ` --entrypoint ${config.dockerScriptsDir}/run-xterm`
@@ -168,6 +174,7 @@ function startIfNeeded(req, res, next) {
         port = port + 1;
         if (port > config.dockerPortMax) port = config.dockerPortMin;
         req.oioPort = port;
+        req.sftpPwd = randomString(8);
         const runCmd = req.oioRunCmd(req);
         if(config.isDev) console.log(runCmd);
 	    docker
@@ -231,9 +238,18 @@ function setupTarget(target, runCmd, req, res, next) {
 }
 
 function goToVnc(req, res, next) {
-    res.redirect(`/client/go?target=${req.oioTarget}&port=${req.oioPort}&autoconnect=1${config.supportHttps ? "&encrypt=1" : ""}`);
+    var url = `/client/go?target=${req.oioTarget}&port=${req.oioPort}&autoconnect=1`;
+    url = `${url}${config.supportHttps ? "&encrypt=1" : ""}&u=${req.user.uname}&p={req.sftpPwd}`;
+    res.redirect(url);
 }
 
+//
+//  Utilities
+//
+function randomString(len) {
+    var p = "ABCDEFGHIJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789";
+    return [...Array(len)].reduce(a=>a+p[~~(Math.random()*p.length)],'');
+}
 
 //
 // Exports

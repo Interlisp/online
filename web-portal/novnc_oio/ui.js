@@ -391,6 +391,7 @@ const UI = {
     addFileBrowserHandlers() {
         document.getElementById("noVNC_filebrowser_button")
             .addEventListener('click', UI.openFileBrowser);
+        window.addEventListener('unload', UI.closeFileBrowser);
     },
 
 /* ------^-------
@@ -1276,7 +1277,20 @@ const UI = {
     // Interlisp Online
     //
     openFileBrowser() {
-        window.open(`${window.location.protocol}//${window.location.hostname}:3${UI.getSetting('port')}`, "_blank");
+        if(window.fileBrowserWindow && !window.fileBrowserWindow.closed ) {
+            window.fileBrowserWindow.focus();
+        } else {
+            const urlParams = new URLSearchParams(window.location.search);
+            const u = urlParams.get('u') || "";
+            const p = urlParams.get('p') || "";
+            var url = `${window.location.protocol}//${window.location.hostname}:3${UI.getSetting('port')}`;
+            if (u && p) url = `${url}?u=${u}&p=${p}`;
+            window.fileBrowserWindow = window.open(url, "_blank");
+        }
+    },
+    
+    closeFileBrowser() {
+        if(window.fileBrowserWindow && !window.fileBrowserWindow.closed ) window.fileBrowserWindow.close();
     },
 
 /* ------^-------

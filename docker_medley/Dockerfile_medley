@@ -29,7 +29,6 @@ ARG MAIKO_RELEASE=unknown
 ARG MEDLEY_RELEASE=unknown
 ARG NOTECARDS_RELEASE=unknown
 ARG REPO_OWNER=Interlisp
-ARG FILEBROWSER_PWD="abcdef123"
 
 LABEL name="online.interlisp.org"
 LABEL description="The Medley Interlisp environment used by online.interlisp.org"
@@ -80,15 +79,13 @@ RUN  chmod 600 /etc/ssh/ssh_host_*_key
 
 #     Install FileBrowser
 
-RUN ( curl -fsSL https://raw.githubusercontent.com/filebrowser/get/master/get.sh | bash ) \
-    && mkdir -p /usr/local/filebrowser \
+COPY filebrowser/filebrowser /usr/local/bin/filebrowser
+RUN mkdir -p /usr/local/filebrowser \
     && /usr/local/bin/filebrowser config init -d /usr/local/filebrowser/filebrowser.db \
        --address "0.0.0.0" \
        --perm.execute=false \
        --perm.share=false \
-       --root "/home/medley" \
-    && /usr/local/bin/filebrowser users add "RGgyCYqRDt6farSh" "${FILEBROWSER_PWD}" \
-        -d /usr/local/filebrowser/filebrowser.db
+       --root "/home/medley"
 
 #  install nano & vim for ease of maintenance
 RUN apt-get install -y nano vim

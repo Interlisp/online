@@ -57,7 +57,7 @@ fi
 export SFTP_PORT=2${PORT}
 /usr/sbin/sshd -e -p ${SFTP_PORT}
 #
-export SFTP_PWD=$(date +%s | sha256sum | base64 | head -c 8)
+if [ -z "${SFTP_PWD}" ]; then export SFTP_PWD=$(date +%s | sha256sum | base64 | head -c 8); fi
 echo medley:${SFTP_PWD} | chpasswd
 #
 
