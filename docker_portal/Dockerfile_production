@@ -83,6 +83,7 @@ COPY --chown=oio:oio web-portal/novnc_oio/rfb.js                web-portal/novnc
 COPY --chown=oio:oio web-portal/novnc_oio/vnc.html              web-portal/novnc/vnc.html
 COPY --chown=oio:oio web-portal/novnc_oio/ui.js                 web-portal/novnc/app/ui.js
 COPY --chown=oio:oio web-portal/novnc_oio/Interlisp-FavIcon-*   web-portal/novnc/app/images/icons
+COPY --chown=oio:oio web-portal/novnc_oio/7970888_internet_online_file_upload_download_icon.svg   web-portal/novnc/app/images/
 COPY --chown=oio:oio docker_portal/mongodb/mongodb.conf         mongodb/mongodb.conf
 COPY --chown=oio:oio docker_portal/startup/entrypoint.sh        startup/entrypoint.sh
 RUN chmod u+x startup/entrypoint.sh

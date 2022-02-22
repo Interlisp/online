@@ -52,6 +52,22 @@ fi
 if [ "${MEDLEY_UNAME}" != "medley" ]; then
     usermod --login ${MEDLEY_UNAME} medley
 fi
+#
+#
+FB_DATABASE=/opt/oio/filebrowser/filebrowser.db
+export FB_PORT=3${PORT}
+if [ ${SUPPORT_HTTPS} = "yes" ];
+then 
+  export FB_CERT="/etc/letsencrypt/live/online.interlisp.org/fullchain.pem"
+  export FB_KEY="/etc/letsencrypt/live/online.interlisp.org/privkey.pem"
+else
+  export FB_CERT=
+  export FB_KEY=
+fi
+/usr/local/bin/filebrowser users add ${MEDLEY_UNAME} "$(/usr/local/bin/filebrowser hash ${SFTP_PWD})" --lockPassword --perm.share=false --perm.execute=false
+/usr/local/bin/filebrowser &
+#
+#
 su ${MEDLEY_UNAME} <<EOF
 set -x
 xrdb -merge /home/medley/.Xresources

@@ -104,6 +104,11 @@ const UI = {
         UI.addSettingsHandlers();
         document.getElementById("noVNC_status")
             .addEventListener('click', UI.hideStatus);
+            
+        //
+        // Interlisp Online
+        //
+        UI.addFileBrowserHandlers();
 
         // Bootstrap fallback input handler
         UI.keyboardinputReset();
@@ -378,6 +383,14 @@ const UI = {
         window.addEventListener('mozfullscreenchange', UI.updateFullscreenButton);
         window.addEventListener('webkitfullscreenchange', UI.updateFullscreenButton);
         window.addEventListener('msfullscreenchange', UI.updateFullscreenButton);
+    },
+    
+    //
+    // Interlisp Online
+    //
+    addFileBrowserHandlers() {
+        document.getElementById("noVNC_filebrowser_button")
+            .addEventListener('click', UI.openFileBrowser);
     },
 
 /* ------^-------
@@ -1255,6 +1268,19 @@ const UI = {
 
 /* ------^-------
  *  /FULLSCREEN
+ * ==============
+ *   FILEBROWSER
+ * ------v------*/
+    
+    //
+    // Interlisp Online
+    //
+    openFileBrowser() {
+        window.open(`${window.location.protocol}//${window.location.hostname}:3${UI.getSetting('port')}`, "_blank");
+    },
+
+/* ------^-------
+ *  FILEBROWSER
  * ==============
  *     RESIZE
  * ------v------*/

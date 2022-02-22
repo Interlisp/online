@@ -60,6 +60,7 @@ export SFTP_PORT=2${PORT}
 export SFTP_PWD=$(date +%s | sha256sum | base64 | head -c 8)
 echo medley:${SFTP_PWD} | chpasswd
 #
+
 if [ ${SUPPORT_HTTPS} = "yes" ];
   then /usr/bin/websockify --daemon --key ${TLS_KEYFILE} --cert ${TLS_CERTFILE} --ssl-only ${PORT} localhost:1${PORT}
   else /usr/bin/websockify --daemon  ${PORT} localhost:1${PORT}
@@ -88,6 +89,22 @@ fi
 if [ "${RUN_NOTECARDS}" = "true" ]; then
     export NOTEFILESDIR=${MEDLEY_USERDIR}/notefiles
 fi
+#
+#
+FB_DATABASE=/opt/oio/filebrowser/filebrowser.db
+export FB_PORT=3${PORT}
+if [ ${SUPPORT_HTTPS} = "yes" ];
+then 
+  export FB_CERT="/etc/letsencrypt/live/online.interlisp.org/fullchain.pem"
+  export FB_KEY="/etc/letsencrypt/live/online.interlisp.org/privkey.pem"
+else
+  export FB_CERT=
+  export FB_KEY=
+fi
+/usr/local/bin/filebrowser users add ${MEDLEY_UNAME} "$(/usr/local/bin/filebrowser hash ${SFTP_PWD})" --lockPassword --perm.share=false --perm.execute=false
+/usr/local/bin/filebrowser &
+#
+#
 #
 su ${MEDLEY_UNAME} <<EOF
 #set -x
