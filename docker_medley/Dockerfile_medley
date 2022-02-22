@@ -79,14 +79,14 @@ RUN  chmod 600 /etc/ssh/ssh_host_*_key
 
 #     Install FileBrowser
 
-RUN ( curl -fsSL https://raw.githubusercontent.com/filebrowser/get/master/get.sh | bash ) \
-    && mkdir -p /opt/oio/filebrowser \
-    && /usr/local/bin/filebrowser config init -d /opt/oio/filebrowser/filebrowser.db \
+RUN ( curl -fsSL https://raw.githubusercontent.com/filebrowser/get/master/get.sh | bash )
+RUN mkdir -p /opt/oio/filebrowser
+RUN /usr/local/bin/filebrowser config init -d /opt/oio/filebrowser/filebrowser.db \
        --address "0.0.0.0" \
        --perm.execute=false \
        --perm.share=false \
-       --root "/home/medley" \
-    && /usr/local/bin/filebrowser users update admin \
+       --root "/home/medley"
+RUN /usr/local/bin/filebrowser users update admin -d /opt/oio/filebrowser/filebrowser.db \
        --username "RGgyCYqRDt6farSh" \
        --password '$2a$10$o6u/2txiB0qV22kZB6D9FuWuwzi8zV7K2.JcfwkQnD..WWnHWzStq'
 
