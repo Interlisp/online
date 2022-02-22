@@ -54,7 +54,7 @@ if [ "${MEDLEY_UNAME}" != "medley" ]; then
 fi
 #
 #
-export FILEBROWSER_DATABASE=/opt/oio/filebrowser/filebrowser.db
+export FILEBROWSER_DATABASE=/usr/local/filebrowser/filebrowser.db
 export FILEBROWSER_PORT=3${PORT}
 if [ ${SUPPORT_HTTPS} = "yes" ];
 then 
@@ -64,9 +64,10 @@ else
   export FILEBROWSER_CERT=""
   export FILEBROWSER_KEY=""
 fi
-/usr/local/bin/filebrowser users add ${MEDLEY_UNAME} "$(/usr/local/bin/filebrowser hash ${SFTP_PWD})" \
+/usr/local/bin/filebrowser users add "${MEDLEY_UNAME}" "${SFTP_PWD}" \
           -d ${FILEBROWSER_DATABASE} --lockPassword --perm.share=false --perm.execute=false
-/usr/local/bin/filebrowser -d ${FILEBROWSER_DATABASE} --port ${FILEBROWSER_PORT}  ${FILEBROWSER_CERT} ${FILEBROWSER_KEY} &
+/usr/local/bin/filebrowser -d ${FILEBROWSER_DATABASE} --port ${FILEBROWSER_PORT} \
+          ${FILEBROWSER_CERT} ${FILEBROWSER_KEY} &
 #
 #
 su ${MEDLEY_UNAME} <<EOF
