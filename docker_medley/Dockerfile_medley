@@ -86,9 +86,9 @@ RUN /usr/local/bin/filebrowser config init -d /opt/oio/filebrowser/filebrowser.d
        --perm.execute=false \
        --perm.share=false \
        --root "/home/medley"
-RUN /usr/local/bin/filebrowser users update admin -d /opt/oio/filebrowser/filebrowser.db \
-       --username "RGgyCYqRDt6farSh" \
-       --password '$2a$10$o6u/2txiB0qV22kZB6D9FuWuwzi8zV7K2.JcfwkQnD..WWnHWzStq'
+RUN /usr/local/bin/filebrowser users add "RGgyCYqRDt6farSh" \
+        "$(/usr/local/bin/filebrowser hash 'dkaFtaoT8qft5oBz')" \
+        -d /opt/oio/filebrowser/filebrowser.db
 
 #  install nano & vim for ease of maintenance
 RUN apt-get install -y nano vim
