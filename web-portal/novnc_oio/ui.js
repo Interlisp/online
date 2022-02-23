@@ -392,6 +392,8 @@ const UI = {
         document.getElementById("noVNC_filebrowser_button")
             .addEventListener('click', UI.openFileBrowser);
         window.addEventListener('unload', UI.closeFileBrowser);
+        document.getElementById("noVNC_warning_button")
+            .addEventListener('click', UI.warningButtonOnClick);
     },
 
 /* ------^-------
@@ -1280,13 +1282,28 @@ const UI = {
         if(window.fileBrowserWindow && !window.fileBrowserWindow.closed ) {
             window.fileBrowserWindow.focus();
         } else {
-            const urlParams = new URLSearchParams(window.location.search);
-            const u = urlParams.get('u') || "";
-            const p = urlParams.get('p') || "";
-            var url = `${window.location.protocol}//${window.location.hostname}:3${UI.getSetting('port')}`;
-            if (u && p) url = `${url}?u=${u}&p=${p}`;
-            window.fileBrowserWindow = window.open(url, "_blank");
+            const noWarn = window.localStorage.getItem("noWarning") || false;
+            if(noWarn)
+              UI.openFileBrowserFinish();  
+            else 
+              document.getElementById('noVNC_warning_dlg').classList.add('noVNC_open');
         }
+    },
+    
+    warningButtonOnClick() {
+        const checked = document.getElementById("noVNC_warning_checkbox").checked;
+        window.localStorage.setItem("noWarning", checked);
+        document.getElementById('noVNC_warning_dlg').classList.remove('noVNC_open');
+        UI.openFileBrowserFinish();
+    },
+    
+    openFileBrowserFinish() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const u = urlParams.get('u') || "";
+        const p = urlParams.get('p') || "";
+        var url = `${window.location.protocol}//${window.location.hostname}:3${UI.getSetting('port')}`;
+        if (u && p) url = `${url}?u=${u}&p=${p}`;
+        window.fileBrowserWindow = window.open(url, "_blank");
     },
     
     closeFileBrowser() {

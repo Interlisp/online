@@ -315,6 +315,17 @@
              style for example -->
         <textarea id="noVNC_keyboardinput" autocapitalize="off"
             autocomplete="off" spellcheck="false" tabindex="-1"></textarea>
+        <!-- Interlisp Online -->
+        <div id="noVNC_warning_dlg" class="noVNC_panel">
+            <h2>Warning</h2>
+            <p>The File Manager will open in a new tab.</p>
+            <p>This new File Manager tab will <b>automatically close</b>
+               whenever this current Interlisp (or xterm) page goes away.</p>
+            <input type="button" id="noVNC_warning_button" value="Continue" class="noVNC_submit">
+            <input type="checkbox" id="noVNC_warning_checkbox" name="noVNC_warning_checkbox">
+            <label for="noVNC_warning_checkbox">Do not show this notice again</label>
+        </div>
+        <!-- END Interlisp Online -->
     </div>
 
     <audio id="noVNC_bell">
