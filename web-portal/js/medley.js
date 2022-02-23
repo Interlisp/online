@@ -90,9 +90,10 @@ function interlispRunCmd(req) {
             + dockerTlsMounts
             + ` --env PORT=${port}`
             + medleyEnvs(req)
+            + sftpEnvs(req)
             + ` --label "OIO_PORT=${port}"`
             + ` --label "OIO_TARGET=${req.oioTarget}"`
-            + sftpEnvs(req)
+            + ` --label "OIO_SFTP=${req.sftpPwd}"`
             + dockerSupportHttpsEnv
             + dockerTlsEnv
             + ` --entrypoint ${config.dockerScriptsDir}/run-online-medley`
@@ -114,9 +115,10 @@ function xtermRunCmd(req) {
         + dockerTlsMounts
         + ` --env PORT=${port}`
         + medleyEnvs(req)
+        + sftpEnvs(req)
         + ` --label "OIO_PORT=${port}"`
         + ` --label "OIO_TARGET=${req.oioTarget}"`
-        + sftpEnvs(req)
+        + ` --label "OIO_SFTP=${req.sftpPwd}"`
         + dockerSupportHttpsEnv
         + dockerTlsEnv
         + ` --entrypoint ${config.dockerScriptsDir}/run-xterm`
@@ -183,9 +185,11 @@ function startIfNeeded(req, res, next) {
             .catch(err => { console.log(err); res.status(500).send(err.stderr); });
     } else {
         docker
-            .command(`inspect --format "{{ .Config.Labels.OIO_PORT }}" ${req.emailish}`)
+            .command(`inspect --format "{{ json .Config.Labels }}" ${req.emailish}`)
             .then(data => {
-                req.oioPort = data.object;
+                const labels = JSON.parse(data.object);
+                req.oioPort = labels.OIO_PORT;
+                req.sftpPwd = labels.OIO_SFTP;
                 next();
                 })
             .catch(err => { console.log(err); res.status(500).send(err); } );
@@ -239,7 +243,7 @@ function setupTarget(target, runCmd, req, res, next) {
 
 function goToVnc(req, res, next) {
     var url = `/client/go?target=${req.oioTarget}&port=${req.oioPort}&autoconnect=1`;
-    url = `${url}${config.supportHttps ? "&encrypt=1" : ""}&u=${req.user.uname}&p={req.sftpPwd}`;
+    url = `${url}${config.supportHttps ? "&encrypt=1" : ""}&u=${req.user.uname}&p=${req.sftpPwd}`;
     res.redirect(url);
 }
 
