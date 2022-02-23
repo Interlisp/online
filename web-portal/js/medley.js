@@ -187,11 +187,10 @@ function startIfNeeded(req, res, next) {
         docker
             .command(`inspect --format "{{ json .Config.Labels }}" ${req.emailish}`)
             .then(data => {
-                const labels = JSON.parse(data.object);
-                req.oioPort = labels.OIO_PORT;
-                req.sftpPwd = labels.OIO_SFTP;
+                req.oioPort = data.object.OIO_PORT;
+                req.sftpPwd = data.object.OIO_SFTP;
                 next();
-                })
+            })
             .catch(err => { console.log(err); res.status(500).send(err); } );
     }
 }

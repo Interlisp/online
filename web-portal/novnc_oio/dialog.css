@@ -1,0 +1,37 @@
+/***************************************************************************
+ *
+ *   dialog.css:  css code OIO dialogs within noVNC
+ *
+ *   2022-02-23 Frank Halasz
+ *
+ *
+ *   Copyright: 2021-2022 by Interlisp.org
+ *
+ *
+ **************************************************************************/
+
+.OIO_dialog {
+  font-size:16px;
+  padding: 2em 1em 2em 1em;
+  max-width: 600px;
+}
+
+.OIO_dialog .OIO_single-button-div {
+  margin-top: 1.5em;
+}
+
+.OIO_dialog .OIO_checkbox-div {
+  margin: 2em auto 1em auto;
+}
+
+.OIO_dialog h2 {
+  margin: 0em auto 0.75em auto;
+  font-size: 24px;
+  color: #337ab7;
+}
+
+.OIO_dialog {
+  font-size:16px;
+  padding: 2em 1em 2em 1em;
+  max-width: 600px;
+}

@@ -1279,20 +1279,6 @@ const UI = {
     // Interlisp Online
     //
     
-                fetch(`/medley/checksession`)
-                .then(  response => {
-                            //console.log(response);
-                            if (!response.ok) {
-                                response.text().then(txt => { show_alert(`Start Interlisp failed! status: ${response.status}  error: ${txt}`); });
-                                return Promise.reject("start interlisp fail");
-                            } else {
-                                return response.json();
-                            }
-
-    
-    
-    
-    
     async openFileBrowser() {
         if(window.fileBrowserWindow && !window.fileBrowserWindow.closed ) {
             window.fileBrowserWindow.focus();
@@ -1300,27 +1286,27 @@ const UI = {
             let noWarn;
             let response = await window.fetch('/user/nofilemgrwarning');
             if(response.ok) {
-                let txt = await response.test();
+                let txt = await response.text();
                 noWarn = (txt == "true");
             }
             else noWarn = false;
             if(noWarn)
               UI.openFileBrowserFinish();  
             else 
-              document.getElementById('noVNC_warning_dlg').classList.add('noVNC_open');
+              document.getElementById('OIO_warning_dlg').showModal();
         }
     },
     
     async warningButtonOnClick() {
         const checked = document.getElementById("noVNC_warning_checkbox").checked;
         if(checked) {
-             let response = await fetch('/user/nofilemgrwarning?set=1');  
+             let response = await window.fetch('/user/nofilemgrwarning?set=1');  
              if(!response.ok) {
                  console.log("fetch error /user/nofilemgrwarning");
                  console.dir(response);
              }
         }
-        document.getElementById('noVNC_warning_dlg').classList.remove('noVNC_open');
+        document.getElementById('OIO_warning_dlg').close();
         UI.openFileBrowserFinish();
     },
     
