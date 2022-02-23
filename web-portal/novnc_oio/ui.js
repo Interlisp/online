@@ -1278,11 +1278,32 @@ const UI = {
     //
     // Interlisp Online
     //
-    openFileBrowser() {
+    
+                fetch(`/medley/checksession`)
+                .then(  response => {
+                            //console.log(response);
+                            if (!response.ok) {
+                                response.text().then(txt => { show_alert(`Start Interlisp failed! status: ${response.status}  error: ${txt}`); });
+                                return Promise.reject("start interlisp fail");
+                            } else {
+                                return response.json();
+                            }
+
+    
+    
+    
+    
+    async openFileBrowser() {
         if(window.fileBrowserWindow && !window.fileBrowserWindow.closed ) {
             window.fileBrowserWindow.focus();
         } else {
-            const noWarn = window.localStorage.getItem("noWarning") || false;
+            let noWarn;
+            let response = await window.fetch('/user/nofilemgrwarning');
+            if(response.ok) {
+                let txt = await response.test();
+                noWarn = (txt == "true");
+            }
+            else noWarn = false;
             if(noWarn)
               UI.openFileBrowserFinish();  
             else 
@@ -1290,9 +1311,15 @@ const UI = {
         }
     },
     
-    warningButtonOnClick() {
+    async warningButtonOnClick() {
         const checked = document.getElementById("noVNC_warning_checkbox").checked;
-        window.localStorage.setItem("noWarning", checked);
+        if(checked) {
+             let response = await fetch('/user/nofilemgrwarning?set=1');  
+             if(!response.ok) {
+                 console.log("fetch error /user/nofilemgrwarning");
+                 console.dir(response);
+             }
+        }
         document.getElementById('noVNC_warning_dlg').classList.remove('noVNC_open');
         UI.openFileBrowserFinish();
     },

@@ -33,7 +33,8 @@ const userSchema = new mongoose.Schema({
   lastLogin: {type: Date, default: 0 },
   numLogins: {type: Number, default: 0 },
   verificationToken: {type: String, default: "notAssigned"},
-  isAdmin: {type: Boolean, default: false}
+  isAdmin: {type: Boolean, default: false},
+  noFileMgrWarning: {type: Boolean, default: false}
 });
 
 userSchema.plugin(passportLocalMongoose);
