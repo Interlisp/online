@@ -107,6 +107,24 @@ h2 {
   font-size: 12px;
 }
 
+#footer table {
+  width: 100%;
+  max-width: 650px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#copyright-div {
+  text-align: left;
+  vertical-align: middle;
+  width: 50%;
+}
+
+#sponsor-button-div {
+  text-align: right;
+  width: 50%;
+}
+
 #logged-in-as {
   font-size: 15px;
   font-style: italic;
@@ -114,14 +132,14 @@ h2 {
 }
 
 #page-header {
-  margin: 0em auto 1em auto;
+  margin: 0em auto 0.25em auto;
   font-size: 24px;
   color: #337ab7;
   text-align: center;
 }
 
 #sponsor-button {
-        font-size: .6em;
+        font-size: 12px;
         text-decoration: none;
         font-weight: 700;
         padding: .35em 1em;
@@ -180,7 +198,7 @@ h2 {
 
 #page-title {
   margin-bottom: 0em;
-  margin-top: 1em;
+  margin-top: 0.25em;
   font-size: 30px;
   /*color: #337ab7;*/
   color: #000;
@@ -355,16 +373,17 @@ h2 {
 #guest_button {
     display: inline-block;
 }
+
 #combined-msg-div {
   max-width: 525px;
-  padding: .5em 1.5em .5em 1.5em;
+  padding: 0em 1.5em 0em 1.5em;
   font-size: 14px;
   border-width: 1px;
   border-color: #337ab7;
   border-style: solid;
   border-radius: 10px;
   text-align: center;
-  margin: 1.5em auto .5em auto;
+  margin: 1em auto .5em auto;
 }
 
 #combined-msg-div .combined-header {

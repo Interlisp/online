@@ -13,8 +13,9 @@
      **************************************************************************/
 
 block variables
-    - var title = isNCO ? "Notecards Online" : "Interlisp Online";
-    - var targetSystem = isNCO ? "Notecards" : "Interlisp"
+
+- var title = isNCO ? "Notecards Online" : "Interlisp Online";
+- var targetSystem = isNCO ? "Notecards" : "Interlisp";
 
 doctype html
 html(lang="en")
@@ -64,6 +65,13 @@ html(lang="en")
         };
         try {document.addEventListener("DOMContentLoaded", $buo_f,false)}
         catch(e){window.attachEvent("onload", $buo_f)}
+        var oioMaxHeight = 850;
+        window.addEventListener('resize', (event) => {
+                  if(window.innerHeight < oioMaxHeight)
+                       document.getElementById("header_img").style.display = "none";
+                  else
+                       document.getElementById("header_img").style.display = "inline-block";
+        });
 
     title #{title}
     block headeradds
@@ -73,9 +81,12 @@ html(lang="en")
         .container
           div(id="page-header")
             div
-              button#sponsor-button(type="button", onclick='window.open("https://github.com/sponsors/Interlisp?o=esb", "_blank");') Sponsor Interlisp.org
-            div!=
-              '<img src="/images/' + targetSystem + '-Online.png" alt="' + targetSystem + ' logo" width="300" height="150">'
+              != '<img id="header_img" src="/images/' + targetSystem + '-Online.png" alt="' + targetSystem + ' logo" width="200" height="100">'
           block content
-      footer(id="footer").
-        &copy; Copyright 2022 by <a href="http://www.interlisp.org">www.interlisp.org</a>
+      footer(id="footer")
+        table
+          tr
+            td#copyright-div.
+              &copy; Copyright 2022 by <a href="http://www.interlisp.org">www.interlisp.org</a>
+            td#sponsor-button-div
+              button#sponsor-button(type="button", onclick='window.open("https://github.com/sponsors/Interlisp?o=esb", "_blank");') Sponsor Interlisp.org

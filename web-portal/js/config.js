@@ -137,5 +137,7 @@ exports.emailish = emailish;
 var homeVolume = function(email) { return `${emailish(email)}_home.v2`; };
 exports.homeVolume = homeVolume;
 
-var isNCO = function(req) {return (req.hostname.toLowerCase() == "ec2-3-19-8-9.us-east-2.compute.amazonaws.com");};
+var isNCO = function(req) {
+    return ((req.hostname.toLowerCase() == "notecards.online") || (req.hostname.toLowerCase() == "ec2-3-19-8-9.us-east-2.compute.amazonaws.com"));
+};
 exports.isNCO = isNCO;
