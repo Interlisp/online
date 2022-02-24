@@ -13,6 +13,8 @@
      **************************************************************************/
 
 block variables
+    - var title = isNCO ? "Notecards Online" : "Interlisp Online";
+    - var targetSystem = isNCO ? "Notecards" : "Interlisp"
 
 doctype html
 html(lang="en")
@@ -38,7 +40,7 @@ html(lang="en")
     script(src="/polyfills/dialog-polyfill.js")
 
     script. 
-        var targetSystem = ("#{isNCO}" == "true") ? "Notecards" : "Interlisp";
+        var targetSystem = "#{targetSystem}";
         var $buoop = {
                 required:{e:79,f:79,o:51,s:14,c:64},
                 api:2022.02, 
@@ -72,8 +74,8 @@ html(lang="en")
           div(id="page-header")
             div
               button#sponsor-button(type="button", onclick='window.open("https://github.com/sponsors/Interlisp?o=esb", "_blank");') Sponsor Interlisp.org
-            div
-              img(src="/images/#{targetSystem}-Online.png", alt="#{targetSystem} logo", width="300", height="150")
+            div!=
+              '<img src="/images/' + targetSystem + '-Online.png" alt="' + targetSystem + ' logo" width="300" height="150">'
           block content
       footer(id="footer").
         &copy; Copyright 2022 by <a href="http://www.interlisp.org">www.interlisp.org</a>

@@ -15,7 +15,6 @@
 extends layout
 
 block variables
-    - var title = ("#{isNCO}" == "true") ? "Notecards Online" : "Interlisp Online";
 
 block headeradds
 
@@ -33,12 +32,18 @@ block headeradds
             const rr = urlParams.get('rr') || false;
             const fromvnc = urlParams.get('fromvnc') || false;
             
-            if ("#{isNCO}" == "true"}) {
+            if (targetSystem == "Notecards") {
                 document.getElementById("fill-window-cb").checked = true;
                 document.getElementById("dev-div").style.display = "none";
-                document.getElementById("do_not_checkbox_div").style.display = "inline-block";
                 document.getElementById("custom-label").style.display = "none";
-                document.getElementById("resume-label").style.display = "block";
+                if(#{isGuest}) {
+                    document.getElementById("run-options-div").style.display = "none";
+                    document.getElementById("do_not_checkbox_div").style.display = "none";
+
+                } else {
+                    document.getElementById("resume-label").style.display = "block";
+                    document.getElementById("do_not_checkbox_div").style.display = "inline-block";
+                }
                 document.getElementById("run_notecards-label-div").style.display = "none";
                 document.getElementById("run_notecards").checked = true;
                 document.getElementById("custom").checked = false;
@@ -299,7 +304,7 @@ block content
 
     .row
         .jumbotron.text-center
-            button.main-button(type="button" onclick='start_interlisp();')!= "Start " + (("#{isNCO}" == "true") ? "Notecards" : "Interlisp")
+            button.main-button(type="button" onclick='start_interlisp();')!= "Start " + (isNCO ? "Notecards" : "Interlisp")
             div(id="screen-size-div" class="options-div")
                 label.
                     <input type="checkbox" id="fill-window-cb" onclick="fill_window_on_click()">&nbsp;Fill browser window
@@ -307,7 +312,7 @@ block content
                     input(type="number", id="screen-width", class="number-input", value=1024)
                 label and Screen Height:
                     input(type="number", id="screen-height", class="number-input", value=808)
-            .run-options-div
+            .run-options-div#run-options-div
                 label.
                    <b>Run Options</b>
                 div#resume-label
