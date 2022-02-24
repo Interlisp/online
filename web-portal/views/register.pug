@@ -15,7 +15,7 @@
 extends layout
 
 block variables
-    - var title = "Interlisp Online"
+    - var title = ("#{isNCO}" == "true") ? "Notecards Online" : "Interlisp Online";
 
 block headeradds
 
@@ -45,6 +45,8 @@ block headeradds
 block content
 
     div#page-title Register
+    
+    include combined.pug
 
     div#error-message &nbsp;
 

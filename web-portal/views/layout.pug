@@ -38,6 +38,7 @@ html(lang="en")
     script(src="/polyfills/dialog-polyfill.js")
 
     script. 
+        var targetSystem = ("#{isNCO}" == "true") ? "Notecards" : "Interlisp";
         var $buoop = {
                 required:{e:79,f:79,o:51,s:14,c:64},
                 api:2022.02, 
@@ -46,7 +47,7 @@ html(lang="en")
                 reminderClosed: 1,
                 noclose: true,
                 text: {
-                    'msg':'Interlisp Online requires a "modern" web browser. Your web browser ({brow_name}) is out of date and will not function well (or at all) with Interlisp Online.',
+                    'msg': targetSystem +' Online requires a "modern" web browser. Your web browser ({brow_name}) is out of date and will not function well (or at all) with Interlisp Online.',
                     'msgmore': 'You will need to update your browser.\nMinimum requirements are: Chrome: 64; Firefox: 79; Safari: 14; Edge: 79.', 
                     'bupdate': 'Update browser', 
                     'bignore': 'Ignore',
@@ -72,7 +73,7 @@ html(lang="en")
             div
               button#sponsor-button(type="button", onclick='window.open("https://github.com/sponsors/Interlisp?o=esb", "_blank");') Sponsor Interlisp.org
             div
-              img(src="/images/Interlisp-D-Online.png", alt="Interlisp-D logo", width="300", height="150")
+              img(src="/images/#{targetSystem}-Online.png", alt="#{targetSystem} logo", width="300", height="150")
           block content
       footer(id="footer").
         &copy; Copyright 2022 by <a href="http://www.interlisp.org">www.interlisp.org</a>

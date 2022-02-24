@@ -14,7 +14,7 @@
 extends layout
 
 block variables
-    - var title = "Interlisp Online"
+    - var title = ("#{isNCO}" == "true") ? "Notecards Online" : "Interlisp Online";
 
 block headeradds
 
@@ -71,6 +71,8 @@ block headeradds
 block content
 
     div#page-title Login
+    
+    include combined.pug
 
     div#error-message &nbsp;
 
@@ -103,8 +105,8 @@ block content
         p.
             Registration successful.
         p.    
-            You are free to use online.interlisp.org to
-            explore the many wonders of Interlisp.
+            You are free to use online.interlisp.org and notecards.online to
+            explore the many wonders of Interlisp and Notecards.
         p.
             A verification email has been sent to #{email}.  Please follow the
             directions in this email to verify your account.

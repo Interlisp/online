@@ -118,7 +118,7 @@ userRouter.post('/login',
                           if(user.uname) 
                               return res.redirect('/main');
                           else 
-                              return res.render('reregister');
+                              return res.render('reregister', {isNCO: config.isNCO(req)});
                       }
                     });
                 
@@ -127,7 +127,16 @@ userRouter.post('/login',
 );
 
 userRouter.get('/login',
-  (req, res) => { res.render('login', {verificationNotice: "false", guestUsername: config.guestUsername, guestPassword: config.guestPassword}); }
+    (req, res) => { 
+        res.render('login', 
+                    {
+                      verificationNotice: "false", 
+                      guestUsername: config.guestUsername, 
+                      guestPassword: config.guestPassword,
+                      isNCO: config.isNCO(req)
+                    }      
+        ); 
+    }
 );
 
 userRouter.post('/logout',
@@ -144,7 +153,7 @@ userRouter.post('/logout',
 //
 
 userRouter.get('/register',
-  (req, res) => { res.render('register'); }
+  (req, res) => { res.render('register', {isNCO: config.isNCO(req)}); }
 );
 
 

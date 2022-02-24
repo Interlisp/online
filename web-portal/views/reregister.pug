@@ -15,7 +15,7 @@
 extends layout
 
 block variables
-    - var title = "Interlisp Online"
+    - var title = ("#{isNCO}" == "true") ? "Notecards Online" : "Interlisp Online";
 
 block headeradds
 
@@ -24,8 +24,12 @@ block content
 
     div#page-title Update Registration Information
     
-    p#reregister-msg.
-        Online.Interlisp.Org now requires a bit more information from you in order to better customize the Interlisp environment.  Please fill in the following information before continuing. 
+    include combined.pug
+    
+    p#reregister-msg=
+        (("#{isNCO}" == "true") ? "Notecards.online" : "Online.Interlisp.Org") 
+        + " now requires a bit more information from you in order to better customize the Interlisp environment.  "
+        + "  Please fill in the following information before continuing.""
 
     div#error-message &nbsp;
 

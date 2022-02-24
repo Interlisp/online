@@ -89,6 +89,7 @@ function interlispRunCmd(req) {
             + (config.isGuestUser(req.user.username) ? "" : ` --mount type=volume,source=${config.homeVolume(req.user.username)},target=/home/medley`)
             + dockerTlsMounts
             + ` --env PORT=${port}`
+            + ` --env NCO=${config.isNCO(req) ? "1" : "0"}`
             + medleyEnvs(req)
             + sftpEnvs(req)
             + ` --label "OIO_PORT=${port}"`
@@ -243,6 +244,7 @@ function setupTarget(target, runCmd, req, res, next) {
 function goToVnc(req, res, next) {
     var url = `/client/go?target=${req.oioTarget}&port=${req.oioPort}&autoconnect=1`;
     url = `${url}${config.supportHttps ? "&encrypt=1" : ""}&u=${req.user.uname}&p=${req.sftpPwd}`;
+    if(config.isNCO(req)) url = `${url}&nco=1`;
     res.redirect(url);
 }
 

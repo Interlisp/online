@@ -11,9 +11,14 @@
 #
 #set -x
 
+if [ -z "${NCO}" ]; then NCO=0; fi
+
 RELEASE_SYSOUT_PATH="${MEDLEY_INSTALLDIR}/loadups/full.sysout"
 CUSTOM_SYSOUT_PATH="${MEDLEY_USERDIR}/sysout/online.sysout"
-VMEM_PATH="${MEDLEY_USERDIR}/vmem/lisp.virtualmem"
+if [ ${NCO} -eq 1 ];
+   then VMEM_PATH="${MEDLEY_USERDIR}/vmem/notecards.virtualmem"
+   else VMEM_PATH="${MEDLEY_USERDIR}/vmem/lisp.virtualmem"
+fi
 
 if [ $# -gt 0 ]; then
     case "$1" in
@@ -86,6 +91,9 @@ fi
 if [ "${MEDLEY_UNAME}" != "medley" ]; then
     usermod --login ${MEDLEY_UNAME} medley
 fi
+
+if [ ${NCO} -eq 1 ]; then RUN_NOTECARDS="true"; fi
+
 if [ "${RUN_NOTECARDS}" = "true" ]; then
     export NOTEFILESDIR=${MEDLEY_USERDIR}/notefiles
 fi

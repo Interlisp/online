@@ -15,7 +15,7 @@
 extends layout
 
 block variables
-    - var title = "Interlisp Online"
+    - var title = ("#{isNCO}" == "true") ? "Notecards Online" : "Interlisp Online";
 
 block headeradds
 
@@ -33,7 +33,16 @@ block headeradds
             const rr = urlParams.get('rr') || false;
             const fromvnc = urlParams.get('fromvnc') || false;
             
-            if(#{isGuest}) {
+            if ("#{isNCO}" == "true"}) {
+                document.getElementById("fill-window-cb").checked = true;
+                document.getElementById("dev-div").style.display = "none";
+                document.getElementById("do_not_checkbox_div").style.display = "inline-block";
+                document.getElementById("custom-label").style.display = "none";
+                document.getElementById("resume-label").style.display = "block";
+                document.getElementById("run_notecards-label-div").style.display = "none";
+                document.getElementById("run_notecards").checked = true;
+                document.getElementById("custom").checked = false;
+            } else if(#{isGuest}) {
                 document.getElementById("fill-window-cb").checked = true;
                 document.getElementById("dev-div").style.display = "none";
                 document.getElementById("do_not_checkbox_div").style.display = "none";
@@ -290,7 +299,7 @@ block content
 
     .row
         .jumbotron.text-center
-            button(type="button" onclick='start_interlisp();').main-button Start Interlisp
+            button.main-button(type="button" onclick='start_interlisp();')!= "Start " + (("#{isNCO}" == "true") ? "Notecards" : "Interlisp")
             div(id="screen-size-div" class="options-div")
                 label.
                     <input type="checkbox" id="fill-window-cb" onclick="fill_window_on_click()">&nbsp;Fill browser window
