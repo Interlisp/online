@@ -60,7 +60,7 @@ const dockerTlsEnv = ( ! config.supportHttps ? "" :
 const dockerSupportHttpsEnv = ` --env SUPPORT_HTTPS=${config.supportHttps ? "yes" : "no"}`;
 
 function sftpEnvs(req) {
-    return ` --env SFTP_PWD=${req.sftpPwd}`;
+    return ` --env SFTP_PWD=${req.sftpPwd}` + ` --env START_SFTP=${req.sftp || "false"}`;
 }
 
 function medleyEnvs(req) {

@@ -39,6 +39,10 @@ html(lang="en")
 
     link(rel="stylesheet", href="/polyfills/dialog-polyfill.css")
     script(src="/polyfills/dialog-polyfill.js")
+    script.
+        window.addEventListener('load', (event) => {
+            document.querySelectorAll('dialog').forEach(dialogEl => dialogPolyfill.registerDialog(dialogEl));
+        }
 
     script. 
         var targetSystem = "#{targetSystem}";

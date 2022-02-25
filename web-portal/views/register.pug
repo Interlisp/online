@@ -20,9 +20,6 @@ block headeradds
 
     script.
         window.addEventListener('load', (event) => {
-
-            document.querySelectorAll('dialog').forEach(dialogEl => dialogPolyfill.registerDialog(dialogEl));
-        
             const cb = document.getElementById("no_disclaimer_cb");
             cb.checked = false;
 

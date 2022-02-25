@@ -60,9 +60,16 @@ else
 fi
 #
 export SFTP_PORT=2${PORT}
-/usr/sbin/sshd -e -p ${SFTP_PORT}
+if [ -z "${SFTP}" ]; then 
+    export SFTP="false";
+fi
+if [ "$SFTP" == "true"]; then 
+    /usr/sbin/sshd -e -p ${SFTP_PORT}
+fi
 #
-if [ -z "${SFTP_PWD}" ]; then export SFTP_PWD=$(date +%s | sha256sum | base64 | head -c 8); fi
+if [ -z "${SFTP_PWD}" ]; then 
+    export SFTP_PWD=$(date +%s | sha256sum | base64 | head -c 8);
+fi
 echo medley:${SFTP_PWD} | chpasswd
 #
 
