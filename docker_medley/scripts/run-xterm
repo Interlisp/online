@@ -23,10 +23,10 @@ else
 fi
 #
 export SFTP_PORT=2${PORT}
-if [ -z "${SFTP}" ]; then 
-    export SFTP="false";
+if [ -z "${SFTP_SERVER}" ]; then 
+    export SFTP_SERVER="false";
 fi
-if [ "$SFTP" == "true"]; then 
+if [ "$SFTP_SERVER" == "true" ]; then 
     /usr/sbin/sshd -e -p ${SFTP_PORT}
 fi
 #

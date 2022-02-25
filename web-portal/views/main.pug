@@ -146,7 +146,7 @@ block headeradds
                                             + `&screen_height=${screenHeight}`
                                             + `&if=${RorK}`
                                             + `&resume=${resume || "false"}`
-                                            + `&custom= ${custom || "false"}`
+                                            + `&custom=${custom || "false"}`
                                             + `&notecards=${runNotecards || "false"}`
                                             + `&sftp=${startSftp || "false"}`
                                         );
@@ -159,7 +159,7 @@ block headeradds
                                     + `?screen_width=${screenWidth}`
                                     + `&screen_height=${screenHeight}`
                                     + `&resume=${resume || "false"}`
-                                    + `&custom= ${custom || "false"}`
+                                    + `&custom=${custom || "false"}`
                                     + `&notecards=${runNotecards || "false"}`
                                     + `&sftp=${startSftp || "false"}`
                                     );
@@ -339,6 +339,7 @@ block content
         div(id="dev-div-buttons" style="display:none;")
             label.run-option.
                 <input type="checkbox" id="sftp-checkbox" class="checkbox-input">&nbsp;Start SFTP Server
+            br
             .jumbotron.text-center
                  button(type="button" onclick='startSession("xterm");').main-button Start Terminal Session
             br
