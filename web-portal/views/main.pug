@@ -337,7 +337,7 @@ block content
                 label.
                     <input type="checkbox" id="dev-options-checkbox" onclick="showDevOptionsOnClick();" class="checkbox-input">&nbsp;Show advanced options
         div(id="dev-div-buttons" style="display:none;")
-            label.run-option.
+            label.run-option.jumbotron.text-center.
                 <input type="checkbox" id="sftp-checkbox" class="checkbox-input">&nbsp;Start SFTP Server
             br
             .jumbotron.text-center
@@ -354,7 +354,6 @@ block content
         .button-div
             button(type="button" onclick='rdDone("reconnect");').main-button Reconnect
             button(type="button" onclick='rdDone("kill");').main-button Kill
-
     dialog(id="alert-dialog")
         p <span id="alert-span">Alert</span>
         br

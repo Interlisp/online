@@ -14,6 +14,9 @@
 extends layout
 
 block variables
+    - var no = "<em>notecards.online</em>"; 
+    - var No = "<em>Notecards.online</em>"; 
+    - var oio = "<em>online.interlisp.org</em>"
 
 block headeradds
 
@@ -128,28 +131,25 @@ block content
 
     include help_dialogs.pug
     
-    
-    - var no = "<em>notecards.online</em>"; 
-    - var No = "<em>Notecards.online</em>"; 
-    - var oio = "<em>online.interlisp.org</em>"
-    
     dialog(id="notecards-dialog").vdialog
         h2 Welcome to the NEW Notecards Online
         p.
             If you are new to !{no}, just check "Do not show" and click "OK".
-        p.
-            For previous users of !{no}:
-        p.
-            !{No} has been merged into !{oio}.
-        p.
-            You can still use the !{no} address.  The result will be a
-            Notecards-centric version of the !{oio} experience.
-        p.
-            <b>You will need to reregister to create a combined account for the new !{no} / !{oio}, unless
-            you already have an !{oio} account, in which case just use it for the new !{no} as well.</b>
-        p.
-            Any custom Notefiles that you created on the "old" !{no},
-            will need to be moved manually.  Please contact support@notecards.online for help.
+        div#notecards-msg-div
+            p.combined-header.
+                For previous users of !{no}
+            p.
+                !{No} has been merged into !{oio}.
+            p.
+                You can still use the !{no} address.  The result will be a
+                Notecards-centric version of the !{oio} experience.
+            p.
+                <b>You will need to re-register to create an account at !{oio}.</b>
+            p.
+                <b>Or use your existing acccount at !{oio} for your !{no} work as well.</b>
+            p.
+                Any custom Notefiles that you created on the "old" !{no},
+                will need to be moved manually.  Please contact support@notecards.online for help.
         .single-button-div
             button(type="button" onclick='notecards_close();').main-button OK
         .checkbox-div(id="nc_do_not_checkbox_div" class="do_not_checkbox_div")

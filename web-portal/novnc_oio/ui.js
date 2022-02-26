@@ -391,7 +391,7 @@ const UI = {
     addFileBrowserHandlers() {
         document.getElementById("OIO_filebrowser_button")
             .addEventListener('click', UI.openFileBrowser);
-        window.addEventListener('unload', UI.closeFileBrowser);
+        window.addEventListener('beforeunload', UI.closeFileBrowser);
         document.getElementById("OIO_warning_button")
             .addEventListener('click', UI.warningButtonOnClick);
     },
