@@ -69,7 +69,7 @@ const ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn.bind(null,
 // Do the routing
 app.use((req, res, next) => {
             if(req.protocol === 'https' || !config.supportHttps) next();
-            else res.redirect(`https://${req.hostname}:${config.httpsPort}${req.url}`);
+            else res.redirect(`https://${req.hostname}:${config.httpsRedirectPort}${req.url}`);
           });
 app.use('/images', express.static(config.imagesDir));
 app.get('/', (req, res) => { res.redirect('/main'); });
