@@ -15,25 +15,39 @@
 extends layout
 
 block variables
-    - var title = "Interlisp Online"
 
 block headeradds
 
     script.
+        var localStore;
+    
         window.addEventListener('resize', (event) => {
-           fill_window_on_click(); 
+           fillWindowOnClick(); 
         });
     
         window.addEventListener('load', (event) => {
-
-            document.querySelectorAll('dialog').forEach(dialogEl => dialogPolyfill.registerDialog(dialogEl));
-
-            const local_store = window.localStorage;
+            localStore = window.localStorage;
             const urlParams = new URLSearchParams(window.location.search);
             const rr = urlParams.get('rr') || false;
             const fromvnc = urlParams.get('fromvnc') || false;
             
-            if(#{isGuest}) {
+            if (targetSystem == "Notecards") {
+                document.getElementById("fill-window-cb").checked = true;
+                document.getElementById("dev-div").style.display = "none";
+                document.getElementById("custom-label").style.display = "none";
+                if(#{isGuest}) {
+                    document.getElementById("run-options-div").style.display = "none";
+                    document.getElementById("do_not_checkbox_div").style.display = "none";
+
+                } else {
+                    document.getElementById("resume-label").style.display = "block";
+                    document.getElementById("do_not_checkbox_div").style.display = "inline-block";
+                }
+                document.getElementById("run_notecards-label-div").style.display = "none";
+                document.getElementById("run_notecards").checked = true;
+                document.getElementById("custom").checked = false;
+                document.getElementById("sftp-checkbox").checked = false;
+            } else if(#{isGuest}) {
                 document.getElementById("fill-window-cb").checked = true;
                 document.getElementById("dev-div").style.display = "none";
                 document.getElementById("do_not_checkbox_div").style.display = "none";
@@ -42,23 +56,25 @@ block headeradds
                 document.getElementById("run_notecards-label-div").style.display = "block";
                 document.getElementById("run_notecards-label").style.textAlign = "center";
                 document.getElementById("run_notecards").checked = false;
+                document.getElementById("sftp-checkbox").checked = false;
             } else {
-                document.getElementById("resume").checked = (local_store.getItem("resume") == "true");
-                document.getElementById("custom").checked = (local_store.getItem("custom") == "true");
-                document.getElementById("run_notecards").checked = (local_store.getItem("run_notecards") == "true");
-                document.getElementById("fill-window-cb").checked = ((local_store.getItem("fill-window") || 'true') == 'true')
+                document.getElementById("resume").checked = (localStore.getItem("resume") == "true");
+                document.getElementById("custom").checked = (localStore.getItem("custom") == "true");
+                document.getElementById("sftp-checkbox").checked = (localStore.getItem("sftp") == "true");
+                document.getElementById("run_notecards").checked = (localStore.getItem("run_notecards") == "true");
+                document.getElementById("fill-window-cb").checked = ((localStore.getItem("fill-window") || 'true') == 'true')
                 document.getElementById("dev-div").style.display = "inline-block";
                 document.getElementById("do_not_checkbox_div").style.display = "inline-block";
                 document.getElementById("custom-label").style.display = "block";
                 document.getElementById("resume-label").style.display = "block";
                 document.getElementById("run_notecards-label-div").style.display = "block";
                 document.getElementById("run_notecards-label").style.textAlign = "left";
-                custom_on_click();
-                resume_on_click();
+                customOnClick();
+                resumeOnClick();
             }
-            fill_window_on_click();
-            document.getElementById("dev-options-checkbox").checked = (local_store.getItem("show_dev_options") == "true");
-            show_dev_options_on_click();
+            fillWindowOnClick();
+            document.getElementById("dev-options-checkbox").checked = (localStore.getItem("show_dev_options") == "true");
+            showDevOptionsOnClick();
             if(! fromvnc) {
                 if("#{isVerified}" != "true") {
                     const dlg = document.getElementById(rr ? "verification-dialog2" : "verification-dialog1");
@@ -74,31 +90,36 @@ block headeradds
         });
 
     script.
-        function start_interlisp (reconnect) {
-            const local_store = window.localStorage;
-            const screen_width = document.getElementById("screen-width").value;
-            const screen_height = document.getElementById("screen-height").value;
-            const fill_window = document.getElementById("fill-window-cb").checked;
+        function startSession (interlispOrXterm) {
+            const screenWidth = document.getElementById("screen-width").value;
+            const screenHeight = document.getElementById("screen-height").value;
+            const fillWindow = document.getElementById("fill-window-cb").checked;
             const resume = document.getElementById("resume").checked ? "true" : "false";
             const custom = document.getElementById("custom").checked ? "true" : "false";
-            const run_notecards = document.getElementById("run_notecards").checked ? "true": "false";
+            const runNotecards = document.getElementById("run_notecards").checked ? "true": "false";
+            const startSftp = document.getElementById("sftp-checkbox").checked ? "true": "false";
             //const devmode = document.getElementById("devmode").checked ? "true" : "false";
             if(! #{isGuest}) {
-                local_store.setItem("fill-window", fill_window ? 'true' : 'false');
-                if(! fill_window) {
-                    local_store.setItem("screen_width", screen_width);
-                    local_store.setItem("screen_height", screen_height);
+                localStore.setItem("fill-window", fillWindow ? 'true' : 'false');
+                if(! fillWindow) {
+                    localStore.setItem("screen_width", screenWidth);
+                    localStore.setItem("screen_height", screenHeight);
                 }
-                local_store.setItem("run_notecards", run_notecards);
-                local_store.setItem("resume", resume);
-                local_store.setItem("custom", custom);
+                localStore.setItem("run_notecards", runNotecards);
+                localStore.setItem("resume", resume);
+                localStore.setItem("custom", custom);
+            }
+            if((! #{isGuest}) && (targetSystem != "Notecards")) {
+                localStore.setItem("sftp", startSftp);
             }
 
+
+            //  ToDo:  clean this up; use async await; have only single call to window.location.assign
             fetch(`/medley/checksession`)
                 .then(  response => {
                             //console.log(response);
                             if (!response.ok) {
-                                response.text().then(txt => { show_alert(`Start Interlisp failed! status: ${response.status}  error: ${txt}`); });
+                                response.text().then(txt => { showAlert(`Start Interlisp failed! status: ${response.status}  error: ${txt}`); });
                                 return Promise.reject("start interlisp fail");
                             } else {
                                 return response.json();
@@ -120,44 +141,38 @@ block headeradds
                                 )
                                 .then(RorK => {
                                         window.location.assign(
-                                            `/medley/interlisp`
-                                            + `?screen_width=${screen_width}`
-                                            + `&screen_height=${screen_height}`
+                                            `/medley/${interlispOrXterm || "interlisp"}`
+                                            + `?screen_width=${screenWidth}`
+                                            + `&screen_height=${screenHeight}`
                                             + `&if=${RorK}`
                                             + `&resume=${resume || "false"}`
-                                            + `&custom= ${custom || "false"}`
-                                            + `&notecards=${run_notecards || "false"}`
+                                            + `&custom=${custom || "false"}`
+                                            + `&notecards=${runNotecards || "false"}`
+                                            + `&sftp=${startSftp || "false"}`
                                         );
                                     }
                                 );
                             }
                             else {
                                 window.location.assign(
-                                    `/medley/interlisp`
-                                    + `?screen_width=${screen_width}`
-                                    + `&screen_height=${screen_height}`
+                                    `/medley/${interlispOrXterm || "interlisp"}`
+                                    + `?screen_width=${screenWidth}`
+                                    + `&screen_height=${screenHeight}`
                                     + `&resume=${resume || "false"}`
-                                    + `&custom= ${custom || "false"}`
-                                    + `&notecards=${run_notecards || "false"}`
+                                    + `&custom=${custom || "false"}`
+                                    + `&notecards=${runNotecards || "false"}`
+                                    + `&sftp=${startSftp || "false"}`
                                     );
                             }
                         },
                         reason => {}
                 );
         }
-        function rd_done(RorK) {
+        function rdDone(RorK) {
             const dlg = document.getElementById("reconnect-dialog");
             dlg.close();
             setTimeout(() => dlg.resolve(RorK), 0);
         }
-
-
-    script.
-        function start_xterm () {
-            const local_store = window.localStorage;
-            window.location.assign(`/medley/xterm`);
-        }
-
 
     script.
         function reset() {
@@ -165,37 +180,35 @@ block headeradds
             fetch(req)
                 .then((response) => {
                         if (!response.ok) {
-                            response.text().then(txt => show_alert(`Reset failed! status: ${response.status}  error: ${txt}`));
+                            response.text().then(txt => showAlert(`Reset failed! status: ${response.status}  error: ${txt}`));
                         }
-                        else show_alert(`Home directory reset succeeded.`);
+                        else showAlert(`Home directory reset succeeded.`);
                     }
                 );
         }
 
     script.
-        function show_dev_options_on_click() {
+        function showDevOptionsOnClick() {
            const dev_div = document.getElementById('dev-div-buttons');
            const dev_cb = document.getElementById("dev-options-checkbox");
-           const local_store = window.localStorage;
            if(dev_cb.checked) {
                 dev_div.style.display = "inline-block";
-                local_store.setItem("show_dev_options", "true");
+                localStore.setItem("show_dev_options", "true");
             }
             else {
                 dev_div.style.display = "none";
-                local_store.setItem("show_dev_options", "false");
+                localStore.setItem("show_dev_options", "false");
            }
         }
 
     script.
-        function devmode_on_click() {
-            const local_store = window.localStorage;
+        function devmodeOnClick() {
             const devmode = document.getElementById("devmode").checked ? "true" : "false";
-            local_store.setItem("devmode", devmode);
+            localStore.setItem("devmode", devmode);
         }
 
     script.
-        function resume_on_click() {
+        function resumeOnClick() {
             const resume = document.getElementById("resume");
             const custom = document.getElementById("custom");
             const rnc = document.getElementById("run_notecards");
@@ -208,7 +221,7 @@ block headeradds
         }
 
     script.
-        function custom_on_click() {
+        function customOnClick() {
             const resume = document.getElementById("resume");
             const custom = document.getElementById("custom");
             const rnc = document.getElementById("run_notecards");
@@ -219,23 +232,23 @@ block headeradds
         }
 
     script.
-        function notecards_on_click() {
+        function notecardsOnClick() {
         }
 
     script.
-        function show_alert (msg) {
+        function showAlert (msg) {
             const dlg = document.getElementById("alert-dialog");
             const msgEl = document.getElementById("alert-span");
             msgEl.innerHTML = msg;
             dlg.showModal();
         }
-        function alert_ok() {
+        function alertOk() {
             const dlg = document.getElementById("alert-dialog");
             dlg.close();
         }
 
     script.
-        function test_reconnect (){
+        function testReconnect (){
                         new Promise((resolve, reject) => {
                             const dlg = document.getElementById("reconnect-dialog");
                             dlg.resolve = resolve;
@@ -247,7 +260,7 @@ block headeradds
         }
 
     script.
-        function verification_close (n, resend){
+        function verificationClose (n, resend){
             const dlg = document.getElementById("verification-dialog" + n);
             if(resend) {
                 fetch(`/user/resendverification`).then(response => {console.log(response);});
@@ -256,30 +269,29 @@ block headeradds
         }
 
     script.
-        function fill_window_on_click() {
-            const local_store = window.localStorage;
-            let win_width = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-            let win_height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-            win_width = Math.min(win_width, 2048);
-            win_height = Math.min(win_height, 2048);
-            if(win_height * win_width > 0x1FFFFF) {
-              const scale = Math.sqrt(0x1FFFFF / (win_width * win_height));
-              win_width = Math.round(scale * win_width);
-              win_height = Math.round(scale * win_height);
+        function fillWindowOnClick() {
+            let winWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+            let winHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+            winWidth = Math.min(winWidth, 2048);
+            winHeight = Math.min(winHeight, 2048);
+            if(winHeight * winWidth > 0x1FFFFF) {
+              const scale = Math.sqrt(0x1FFFFF / (winWidth * winHeight));
+              winWidth = Math.round(scale * winWidth);
+              winHeight = Math.round(scale * winHeight);
             }
 
-            const width_element = document.getElementById("screen-width");
-            const height_element = document.getElementById("screen-height");
+            const widthElement = document.getElementById("screen-width");
+            const heightElement = document.getElementById("screen-height");
             if(document.getElementById("fill-window-cb").checked) {
-                width_element.value = win_width - 10;
-                height_element.value = win_height - 10;
-                width_element.disabled = true;
-                height_element.disabled = true;
+                widthElement.value = winWidth - 10;
+                heightElement.value = winHeight - 10;
+                widthElement.disabled = true;
+                heightElement.disabled = true;
             } else {
-                width_element.value = local_store.getItem("screen_width") || 1024;
-                height_element.value = local_store.getItem("screen_height") || 808;
-                width_element.disabled = false;
-                height_element.disabled = false;
+                widthElement.value = localStore.getItem("screen_width") || 1024;
+                heightElement.value = localStore.getItem("screen_height") || 808;
+                widthElement.disabled = false;
+                heightElement.disabled = false;
             }
         }
 
@@ -290,29 +302,29 @@ block content
 
     .row
         .jumbotron.text-center
-            button(type="button" onclick='start_interlisp();').main-button Start Interlisp
+            button.main-button(type="button" onclick='startSession("interlisp");')!= "Start " + (isNCO ? "Notecards" : "Interlisp")
             div(id="screen-size-div" class="options-div")
                 label.
-                    <input type="checkbox" id="fill-window-cb" onclick="fill_window_on_click()">&nbsp;Fill browser window
+                    <input type="checkbox" id="fill-window-cb" onclick="fillWindowOnClick()">&nbsp;Fill browser window
                 label with Screen Width:
                     input(type="number", id="screen-width", class="number-input", value=1024)
                 label and Screen Height:
                     input(type="number", id="screen-height", class="number-input", value=808)
-            .run-options-div
+            .run-options-div#run-options-div
                 label.
                    <b>Run Options</b>
                 div#resume-label
                     label.run-option.
-                        <input type="checkbox" id="resume" onclick="resume_on_click()" class="checkbox-input">&nbsp;Resume previous session
-                    span.in-circle(onclick='help_onclick("resume");') ?
+                        <input type="checkbox" id="resume" onclick="resumeOnClick()" class="checkbox-input">&nbsp;Resume previous session
+                    span.in-circle(onclick='helpOnClick("resume");') ?
                 div#custom-label
                     label.run-option.
-                        <input type="checkbox" id="custom" onclick="custom_on_click()" class="checkbox-input">&nbsp;Run custom sysout
-                    span.in-circle(onclick='help_onclick("custom");') ?
+                        <input type="checkbox" id="custom" onclick="customOnClick()" class="checkbox-input">&nbsp;Run custom sysout
+                    span.in-circle(onclick='helpOnClick("custom");') ?
                 div#run_notecards-label-div
                     label.run-option#run_notecards-label
-                        <input type="checkbox" id="run_notecards" onclick="notecards_on_click()" class="checkbox-input">&nbsp;Run Notecards
-                    span.in-circle(onclick='help_onclick("run_notecards");') ?
+                        <input type="checkbox" id="run_notecards" onclick="notecardsOnClick()" class="checkbox-input">&nbsp;Run Notecards
+                    span.in-circle(onclick='helpOnClick("run_notecards");') ?
 
     .row
         .jumbotron.text-center
@@ -323,10 +335,13 @@ block content
         div(id="dev-div-checkbox")
             .jumbotron.text-center
                 label.
-                    <input type="checkbox" id="dev-options-checkbox" onclick="show_dev_options_on_click();" class="checkbox-input">&nbsp;Show advanced options
+                    <input type="checkbox" id="dev-options-checkbox" onclick="showDevOptionsOnClick();" class="checkbox-input">&nbsp;Show advanced options
         div(id="dev-div-buttons" style="display:none;")
+            label.run-option.jumbotron.text-center.
+                <input type="checkbox" id="sftp-checkbox" class="checkbox-input">&nbsp;Start SFTP Server
+            br
             .jumbotron.text-center
-                 button(type="button" onclick='start_xterm();').main-button Start Xterm & SFTP Server
+                 button(type="button" onclick='startSession("xterm");').main-button Start Terminal Session
             br
             .jumbotron.text-center
                  button(type="button" onclick='reset();').main-button Reset Home Directory
@@ -337,14 +352,13 @@ block content
         p <b>kill</b> this session and start a new one?
         br
         .button-div
-            button(type="button" onclick='rd_done("reconnect");').main-button Reconnect
-            button(type="button" onclick='rd_done("kill");').main-button Kill
-
+            button(type="button" onclick='rdDone("reconnect");').main-button Reconnect
+            button(type="button" onclick='rdDone("kill");').main-button Kill
     dialog(id="alert-dialog")
         p <span id="alert-span">Alert</span>
         br
         .single-button-div
-            button(type="button" onclick='alert_ok();').main-button OK
+            button(type="button" onclick='alertOk();').main-button OK
 
     dialog(id="verification-dialog1").vdialog
         h2  Notice
@@ -358,9 +372,9 @@ block content
             A verification email was sent to #{login} when the account was created.  Please follow the
             directions in this email to verify your account.
         .single-button-div
-            button(type="button" onclick='verification_close(1, false);').main-button OK
+            button(type="button" onclick='verificationClose(1, false);').main-button OK
         .single-button-div
-            button(type="button" onclick='verification_close(1, true);').main-button Resend Verification Email
+            button(type="button" onclick='verificationClose(1, true);').main-button Resend Verification Email
 
     dialog(id="verification-dialog2").vdialog
         h2  Notice

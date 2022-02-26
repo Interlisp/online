@@ -27,11 +27,12 @@ exports.httpPort = httpPort;
 var httpsPort = 443;
 exports.httpsPort = httpsPort;
 
-//var httpBaseUrl = `http://online.interlisp.org`;
-//var httpsBaseUrl = `https://online.interlisp.org`;
-//exports.httpBaseUrl = httpBaseUrl;
-//exports.httpsBaseUrl = httpsBaseUrl;
-
+// Acct for the fact that Docker maps
+// 8080 -> 80
+// 8081 -> 443
+// in the dev case
+var httpsRedirectPort = isDev ? 8081 : 443;
+exports.httpsRedirectPort = httpsRedirectPort;
 
 var userdbName = `oio_users`;
 exports.userdbName = userdbName;
@@ -136,3 +137,8 @@ exports.emailish = emailish;
 
 var homeVolume = function(email) { return `${emailish(email)}_home.v2`; };
 exports.homeVolume = homeVolume;
+
+var isNCO = function(req) {
+    return ((req.hostname.toLowerCase() == "notecards.online") || (req.hostname.toLowerCase() == "ec2-3-19-8-9.us-east-2.compute.amazonaws.com"));
+};
+exports.isNCO = isNCO;

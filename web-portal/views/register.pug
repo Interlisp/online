@@ -15,15 +15,11 @@
 extends layout
 
 block variables
-    - var title = "Interlisp Online"
 
 block headeradds
 
     script.
         window.addEventListener('load', (event) => {
-
-            document.querySelectorAll('dialog').forEach(dialogEl => dialogPolyfill.registerDialog(dialogEl));
-        
             const cb = document.getElementById("no_disclaimer_cb");
             cb.checked = false;
 
@@ -45,6 +41,8 @@ block headeradds
 block content
 
     div#page-title Register
+    
+    include combined.pug
 
     div#error-message &nbsp;
 

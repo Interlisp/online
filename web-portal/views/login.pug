@@ -14,7 +14,9 @@
 extends layout
 
 block variables
-    - var title = "Interlisp Online"
+    - var no = "<em>notecards.online</em>"; 
+    - var No = "<em>Notecards.online</em>"; 
+    - var oio = "<em>online.interlisp.org</em>"
 
 block headeradds
 
@@ -22,27 +24,31 @@ block headeradds
    
         const guestUsername = "#{guestUsername}";
         const guestPassword = "#{guestPassword}";
+        var localStore;
    
         window.addEventListener('load', (event) => {
-        
-            document.querySelectorAll('dialog').forEach(dialogEl => dialogPolyfill.registerDialog(dialogEl));
 
-            const local_store = window.localStorage;
-            document.getElementById("username").value = local_store.getItem("username") || "";
+            localStore = window.localStorage;
+            document.getElementById("username").value = localStore.getItem("username") || "";
+            const noShowNotecards = localStore.getItem("notecardsDialog") || "false";
             
             const urlParams = new URLSearchParams(window.location.search);
             const info = urlParams.get('info');
+            
+            
         
             if(info) {
               const errorMessage = document.getElementById("error-message");
               errorMessage.innerText = info;
               //errorMessage.style.display = "block";
-            }
-            
-            if("#{verificationNotice}" == "true") {
+            } else if("#{verificationNotice}" == "true") {
                 const dlg = document.getElementById("verification-dialog");
                 dlg.showModal();
+            } else if((targetSystem == "Notecards") && (noShowNotecards != "true")) {
+                const dlg = document.getElementById("notecards-dialog");
+                dlg.showModal();
             }
+
         });
 
         function verification_close() {
@@ -50,13 +56,19 @@ block headeradds
             dlg.close();
         }
 
-            
+        function notecards_close() {
+            const dlg = document.getElementById("notecards-dialog");
+            if(document.getElementById("nc_do_not_checkbox").checked) {
+                localStore.setItem("notecardsDialog", "true");
+            }
+            dlg.close();
+        }
+
    script.
         function loginOnSubmit() {
             const username = document.getElementById("username").value;
             if(username != guestUsername) {
-                const local_store = window.localStorage;
-                local_store.setItem("username", username);
+                localStore.setItem("username", username);
             }
             return true;
         }
@@ -71,6 +83,8 @@ block headeradds
 block content
 
     div#page-title Login
+    
+    include combined.pug
 
     div#error-message &nbsp;
 
@@ -96,15 +110,15 @@ block content
             span &nbsp;&nbsp;&nbsp;
             button(type="button" id="guest_button" onclick="loginAsGuest()").main-button Login As Guest
             span &nbsp;&nbsp;&nbsp;
-            span.in-circle(onclick='help_onclick("guest");') ?
+            span.in-circle(onclick='helpOnClick("guest");') ?
 
     dialog(id="verification-dialog").vdialog
         h2  Notice
         p.
             Registration successful.
         p.    
-            You are free to use online.interlisp.org to
-            explore the many wonders of Interlisp.
+            You are free to use online.interlisp.org and notecards.online to
+            explore the many wonders of Interlisp and Notecards.
         p.
             A verification email has been sent to #{email}.  Please follow the
             directions in this email to verify your account.
@@ -116,3 +130,28 @@ block content
             button(type="button" onclick='verification_close();').main-button OK
 
     include help_dialogs.pug
+    
+    dialog(id="notecards-dialog").vdialog
+        h2 Welcome to the NEW Notecards Online
+        p.
+            If you are new to !{no}, just check "Do not show" and click "OK".
+        div#notecards-msg-div
+            p.combined-header.
+                For previous users of !{no}
+            p.
+                !{No} has been merged into !{oio}.
+            p.
+                You can still use the !{no} address.  The result will be a
+                Notecards-centric version of the !{oio} experience.
+            p.
+                <b>You will need to re-register to create an account at !{oio}.</b>
+            p.
+                <b>Or use your existing acccount at !{oio} for your !{no} work as well.</b>
+            p.
+                Any custom Notefiles that you created on the "old" !{no},
+                will need to be moved manually.  Please contact support@notecards.online for help.
+        .single-button-div
+            button(type="button" onclick='notecards_close();').main-button OK
+        .checkbox-div(id="nc_do_not_checkbox_div" class="do_not_checkbox_div")
+            input(type="checkbox" id="nc_do_not_checkbox" name="nc_do_not_checkbox")
+            label(for="nc_do_not_checkbox") Do not show this notice again

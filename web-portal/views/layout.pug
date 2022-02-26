@@ -14,6 +14,9 @@
 
 block variables
 
+- var title = isNCO ? "Notecards Online" : "Interlisp Online";
+- var targetSystem = isNCO ? "Notecards" : "Interlisp";
+
 doctype html
 html(lang="en")
   head
@@ -36,8 +39,13 @@ html(lang="en")
 
     link(rel="stylesheet", href="/polyfills/dialog-polyfill.css")
     script(src="/polyfills/dialog-polyfill.js")
+    script.
+        window.addEventListener('load', (event) => {
+            document.querySelectorAll('dialog').forEach(dialogEl => dialogPolyfill.registerDialog(dialogEl));
+        });
 
     script. 
+        var targetSystem = "#{targetSystem}";
         var $buoop = {
                 required:{e:79,f:79,o:51,s:14,c:64},
                 api:2022.02, 
@@ -46,7 +54,7 @@ html(lang="en")
                 reminderClosed: 1,
                 noclose: true,
                 text: {
-                    'msg':'Interlisp Online requires a "modern" web browser. Your web browser ({brow_name}) is out of date and will not function well (or at all) with Interlisp Online.',
+                    'msg': targetSystem +' Online requires a "modern" web browser. Your web browser ({brow_name}) is out of date and will not function well (or at all) with Interlisp Online.',
                     'msgmore': 'You will need to update your browser.\nMinimum requirements are: Chrome: 64; Firefox: 79; Safari: 14; Edge: 79.', 
                     'bupdate': 'Update browser', 
                     'bignore': 'Ignore',
@@ -61,6 +69,13 @@ html(lang="en")
         };
         try {document.addEventListener("DOMContentLoaded", $buo_f,false)}
         catch(e){window.attachEvent("onload", $buo_f)}
+        var oioMaxHeight = 850;
+        window.addEventListener('resize', (event) => {
+                  if(window.innerHeight < oioMaxHeight)
+                       document.getElementById("header_img").style.display = "none";
+                  else
+                       document.getElementById("header_img").style.display = "inline-block";
+        });
 
     title #{title}
     block headeradds
@@ -70,9 +85,12 @@ html(lang="en")
         .container
           div(id="page-header")
             div
-              button#sponsor-button(type="button", onclick='window.open("https://github.com/sponsors/Interlisp?o=esb", "_blank");') Sponsor Interlisp.org
-            div
-              img(src="/images/Interlisp-D-Online.png", alt="Interlisp-D logo", width="300", height="150")
+              != '<img id="header_img" src="/images/' + targetSystem + '-Online.png" alt="' + targetSystem + ' logo" width="200" height="100">'
           block content
-      footer(id="footer").
-        &copy; Copyright 2022 by <a href="http://www.interlisp.org">www.interlisp.org</a>
+      footer(id="footer")
+        table
+          tr
+            td#copyright-div.
+              &copy; Copyright 2022 by <a href="http://www.interlisp.org">www.interlisp.org</a>
+            td#sponsor-button-div
+              button#sponsor-button(type="button", onclick='window.open("https://github.com/sponsors/Interlisp?o=esb", "_blank");') Sponsor Interlisp.org

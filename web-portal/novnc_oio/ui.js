@@ -389,10 +389,10 @@ const UI = {
     // Interlisp Online
     //
     addFileBrowserHandlers() {
-        document.getElementById("noVNC_filebrowser_button")
+        document.getElementById("OIO_filebrowser_button")
             .addEventListener('click', UI.openFileBrowser);
-        window.addEventListener('unload', UI.closeFileBrowser);
-        document.getElementById("noVNC_warning_button")
+        window.addEventListener('beforeunload', UI.closeFileBrowser);
+        document.getElementById("OIO_warning_button")
             .addEventListener('click', UI.warningButtonOnClick);
     },
 
@@ -1298,7 +1298,7 @@ const UI = {
     },
     
     async warningButtonOnClick() {
-        const checked = document.getElementById("noVNC_warning_checkbox").checked;
+        const checked = document.getElementById("OIO_warning_checkbox").checked;
         if(checked) {
              let response = await window.fetch('/user/nofilemgrwarning?set=1');  
              if(!response.ok) {
@@ -1314,7 +1314,9 @@ const UI = {
         const urlParams = new URLSearchParams(window.location.search);
         const u = urlParams.get('u') || "";
         const p = urlParams.get('p') || "";
+        const nco = urlParams.get('nco') || 0;
         var url = `${window.location.protocol}//${window.location.hostname}:3${UI.getSetting('port')}`;
+        url = nco ? `${url}/files/il/notefiles` : `${url}/files/il`;
         if (u && p) url = `${url}?u=${u}&p=${p}`;
         window.fileBrowserWindow = window.open(url, "_blank");
     },

@@ -107,6 +107,24 @@ h2 {
   font-size: 12px;
 }
 
+#footer table {
+  width: 100%;
+  max-width: 650px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#copyright-div {
+  text-align: left;
+  vertical-align: middle;
+  width: 50%;
+}
+
+#sponsor-button-div {
+  text-align: right;
+  width: 50%;
+}
+
 #logged-in-as {
   font-size: 15px;
   font-style: italic;
@@ -114,14 +132,14 @@ h2 {
 }
 
 #page-header {
-  margin: 0em auto 1em auto;
+  margin: 0em auto 0.25em auto;
   font-size: 24px;
   color: #337ab7;
   text-align: center;
 }
 
 #sponsor-button {
-        font-size: .6em;
+        font-size: 12px;
         text-decoration: none;
         font-weight: 700;
         padding: .35em 1em;
@@ -180,7 +198,7 @@ h2 {
 
 #page-title {
   margin-bottom: 0em;
-  margin-top: 1em;
+  margin-top: 0.25em;
   font-size: 30px;
   /*color: #337ab7;*/
   color: #000;
@@ -231,17 +249,11 @@ h2 {
 }
 
 #disclaimer-dialog .checkbox-div {
-  margin-top: 2em;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 1em;
+  margin: 2em auto 1em auto;
 }
 
 #disclaimer-dialog h2, .vdialog h2 {
-  margin-top: 0em;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 0.75em;
+  margin: 0em auto 0.75em auto;
 }
 
 .options-div label, #dev-div-checkbox {
@@ -272,16 +284,19 @@ h2 {
     border-style: double;
     border-width: 5px;
     border-color: #C0C0C0;
+    padding: 1em;
 }
 
 #dev-div-checkbox .jumbotron {
     padding-bottom: 0em;
+    font-size: 18px;
 }
 
 #dev-div-buttons .jumbotron {
     padding-bottom: 0.25em;
     padding-top: 0.25em;
     display:inline-block;
+    font-size:16px    
 }
 
 h2 {
@@ -354,4 +369,39 @@ h2 {
 
 #guest_button {
     display: inline-block;
+}
+
+#combined-msg-div {
+  max-width: 525px;
+  padding: 0em 1.5em 0em 1.5em;
+  font-size: 14px;
+  border-width: 1px;
+  border-color: #337ab7;
+  border-style: solid;
+  border-radius: 10px;
+  text-align: center;
+  margin: 1em auto .5em auto;
+}
+
+#combined-msg-div .combined-header {
+   font-weight:bold;
+}
+
+#notecards-msg-div {
+  margin:2em;
+  padding: 1em;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #C0C0C0;
+  text-align: left;
+  line-height:1.25;
+}
+
+#notecards-msg-div .combined-header {
+   font-weight:bold;
+   text-align: center;
+}
+
+#nc_do_not_checkbox_div {
+  margin-top: 1em;
 }

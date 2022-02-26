@@ -69,7 +69,7 @@ const ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn.bind(null,
 // Do the routing
 app.use((req, res, next) => {
             if(req.protocol === 'https' || !config.supportHttps) next();
-            else res.redirect(`https://${req.hostname}:${config.httpsPort}${req.url}`);
+            else res.redirect(`https://${req.hostname}:${config.httpsRedirectPort}${req.url}`);
           });
 app.use('/images', express.static(config.imagesDir));
 app.get('/', (req, res) => { res.redirect('/main'); });
@@ -83,7 +83,8 @@ app.get('/main',
                              login: req.user.username, 
                              isGuest: (req.user.username == config.guestUsername),
                              isVerified: (await userRouter.getIsVerified(req) ? 'true' : 'false'),
-                             nodisclaimer: (await userRouter.getNoDisclaimer(req) ? 'true' : 'false')
+                             nodisclaimer: (await userRouter.getNoDisclaimer(req) ? 'true' : 'false'),
+                             isNCO: config.isNCO(req)
                             }
                           );
               }
@@ -92,7 +93,6 @@ app.use('/user', userRouter);
 app.use('/medley', ensureLoggedIn(), medleyRouter);
 app.use('/client', ensureLoggedIn(), clientRouter);
 app.use('/admin', ensureLoggedIn(), adminRouter);
-app.use('/client', ensureLoggedIn(), clientRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
