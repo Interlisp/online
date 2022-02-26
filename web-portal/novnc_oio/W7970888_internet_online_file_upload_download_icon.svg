@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   data-name="Layer 1"
+   id="Layer_1"
+   viewBox="0 0 512 512"
+   version="1.1"
+   sodipodi:docname="X7970888_internet_online_file_upload_download_icon.svg"
+   inkscape:version="1.1.2 (b8e25be833, 2022-02-05)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs49" />
+  <sodipodi:namedview
+     id="namedview47"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     inkscape:zoom="2.2050781"
+     inkscape:cx="166.66076"
+     inkscape:cy="219.72011"
+     inkscape:window-width="3440"
+     inkscape:window-height="1351"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="Layer_1" />
+  <path
+     d="M206.15,414.94l-32.31,32.3v-107a5.73,5.73,0,1,0-11.45,0v107l-32.3-32.3A5.73,5.73,0,1,0,122,423l42.08,42.08a5.72,5.72,0,0,0,8.1,0L214.24,423a5.72,5.72,0,0,0-8.09-8.1Z"
+     id="path30"
+     style="fill:#ffffff" />
+  <path
+     d="M292.28,336.18a5.72,5.72,0,0,0-8.12,0l-42.07,42.07a5.73,5.73,0,1,0,8.1,8.1l32.3-32.3V457.12a5.73,5.73,0,1,0,11.45,0V354.05l32.31,32.3a5.72,5.72,0,0,0,8.09-8.1Z"
+     id="path32"
+     style="fill:#ffffff" />
+  <path
+     d="M441.63,45.2H126a5.74,5.74,0,0,0-5.73,5.73v54.76H70.37a5.73,5.73,0,0,0-5.72,5.73V369.15a5.73,5.73,0,1,0,11.45,0v-252H380.24v252a5.73,5.73,0,1,0,11.45,0V111.42a5.73,5.73,0,0,0-5.73-5.73H131.77v-49H435.9v252a5.73,5.73,0,1,0,11.45,0V50.93A5.73,5.73,0,0,0,441.63,45.2Z"
+     id="path34"
+     style="fill:#ffffff" />
+  <path
+     d="M328.1,160.05H130a5.73,5.73,0,0,0,0,11.45H328.1a5.73,5.73,0,1,0,0-11.45Z"
+     id="path36"
+     style="fill:#ffffff" />
+  <path
+     d="M328.1,218.78h-114a5.73,5.73,0,1,0,0,11.45h114a5.73,5.73,0,1,0,0-11.45Z"
+     id="path38"
+     style="fill:#ffffff" />
+  <path
+     d="M130,230.23h42.08a5.73,5.73,0,1,0,0-11.45H130a5.73,5.73,0,0,0,0,11.45Z"
+     id="path40"
+     style="fill:#ffffff" />
+  <path
+     d="M328.1,277.51H286.9a5.73,5.73,0,0,0,0,11.46h41.2a5.73,5.73,0,0,0,0-11.46Z"
+     id="path42"
+     style="fill:#ffffff" />
+  <path
+     d="M234.3,277.51H130A5.73,5.73,0,0,0,130,289H234.3a5.73,5.73,0,0,0,0-11.46Z"
+     id="path44"
+     style="fill:#ffffff" />
+</svg>

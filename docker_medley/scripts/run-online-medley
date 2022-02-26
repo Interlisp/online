@@ -57,9 +57,10 @@ fi
 export SFTP_PORT=2${PORT}
 /usr/sbin/sshd -e -p ${SFTP_PORT}
 #
-export SFTP_PWD=$(date +%s | sha256sum | base64 | head -c 8)
+if [ -z "${SFTP_PWD}" ]; then export SFTP_PWD=$(date +%s | sha256sum | base64 | head -c 8); fi
 echo medley:${SFTP_PWD} | chpasswd
 #
+
 if [ ${SUPPORT_HTTPS} = "yes" ];
   then /usr/bin/websockify --daemon --key ${TLS_KEYFILE} --cert ${TLS_CERTFILE} --ssl-only ${PORT} localhost:1${PORT}
   else /usr/bin/websockify --daemon  ${PORT} localhost:1${PORT}
@@ -88,6 +89,24 @@ fi
 if [ "${RUN_NOTECARDS}" = "true" ]; then
     export NOTEFILESDIR=${MEDLEY_USERDIR}/notefiles
 fi
+#
+#
+export FILEBROWSER_DATABASE=/usr/local/filebrowser/filebrowser.db
+export FILEBROWSER_PORT=3${PORT}
+if [ ${SUPPORT_HTTPS} = "yes" ];
+then 
+  export FILEBROWSER_CERT="--cert /etc/letsencrypt/live/online.interlisp.org/fullchain.pem"
+  export FILEBROWSER_KEY="--key /etc/letsencrypt/live/online.interlisp.org/privkey.pem"
+else
+  export FILEBROWSER_CERT=""
+  export FILEBROWSER_KEY=""
+fi
+/usr/local/bin/filebrowser users add "${MEDLEY_UNAME}" "${SFTP_PWD}" \
+          -d ${FILEBROWSER_DATABASE} --lockPassword --perm.share=false --perm.execute=false
+/usr/local/bin/filebrowser -d ${FILEBROWSER_DATABASE} --port ${FILEBROWSER_PORT} \
+          ${FILEBROWSER_CERT} ${FILEBROWSER_KEY} &
+#
+#
 #
 su ${MEDLEY_UNAME} <<EOF
 #set -x

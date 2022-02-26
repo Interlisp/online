@@ -54,13 +54,13 @@ ARG NC_INSTALLDIR=/usr/local/interlisp/notecards
 ENV NC_INSTALLDIR=${NC_INSTALLDIR}
 
 # install git & gh (github cli) 
-RUN apt-get update
-RUN apt-get install -y apt-utils
-RUN apt-get install -y curl
-RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
-RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null
-RUN apt-get update
-RUN apt-get install -y git gh
+RUN apt-get update \
+    && apt-get install -y apt-utils \
+    && apt-get install -y curl \
+    && ( curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg ) \
+    && ( echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null ) \
+    && apt-get update \
+    && apt-get install -y git gh
 
 #  install websockify for use with noVNC
 RUN apt-get install -y websockify
@@ -77,23 +77,33 @@ COPY sftp/ssh_host_*_key /etc/ssh/
 COPY sftp/ssh_host_*_key.pub /etc/ssh/
 RUN  chmod 600 /etc/ssh/ssh_host_*_key
 
+#     Install FileBrowser
+
+COPY filebrowser/filebrowser /usr/local/bin/filebrowser
+RUN mkdir -p /usr/local/filebrowser \
+    && /usr/local/bin/filebrowser config init -d /usr/local/filebrowser/filebrowser.db \
+       --address "0.0.0.0" \
+       --perm.execute=false \
+       --perm.share=false \
+       --root "/home/medley"
+
 #  install nano & vim for ease of maintenance
 RUN apt-get install -y nano vim
 
 # keep lisp.virtualmem out of medley home dir
-RUN mkdir -p ${MEDLEY_USERDIR}
-RUN chown ${USER_NAME}:${USER_NAME} ${MEDLEY_USERDIR}
-RUN mkdir ${MEDLEY_USERDIR}/vmem
-RUN chown ${USER_NAME}:${USER_NAME} ${MEDLEY_USERDIR}/vmem
+RUN mkdir -p ${MEDLEY_USERDIR} \
+    && chown ${USER_NAME}:${USER_NAME} ${MEDLEY_USERDIR} \
+    && mkdir ${MEDLEY_USERDIR}/vmem \
+    && chown ${USER_NAME}:${USER_NAME} ${MEDLEY_USERDIR}/vmem
 
 # create a sysout subdir and copy full.sysout into it as online.sysout
-RUN mkdir -p ${MEDLEY_USERDIR}/sysout
-RUN chown ${USER_NAME}:${USER_NAME} ${MEDLEY_USERDIR}/sysout
+RUN mkdir -p ${MEDLEY_USERDIR}/sysout \
+    && chown ${USER_NAME}:${USER_NAME} ${MEDLEY_USERDIR}/sysout
 
 # copy the run-XXX scripts into ${MEDLEY_INSTALLDIR}/../online/bin
 ARG ONLINE_BINDIR=${MEDLEY_INSTALLDIR}/../online/bin
-RUN mkdir -p ${ONLINE_BINDIR}
-RUN chown root:root ${ONLINE_BINDIR}
+RUN mkdir -p ${ONLINE_BINDIR} \
+    && chown root:root ${ONLINE_BINDIR}
 COPY scripts/* ${ONLINE_BINDIR}
 RUN chmod ugo+x ${ONLINE_BINDIR}/*
 
@@ -107,8 +117,8 @@ COPY notecards ${NC_INSTALLDIR}
 RUN echo ${NOTECARDS_RELEASE} ${NC_INSTALLDIR}/release.txt
 
 # clean up medley/.bashrc for use with xterm
-RUN sed -i /PS1=/s/u@.h/u@oio/ ${HOMEDIR}/.bashrc
-RUN chown ${USER_NAME}:${USER_NAME} ${HOMEDIR}/.bashrc
+RUN sed -i /PS1=/s/u@.h/u@oio/ ${HOMEDIR}/.bashrc \
+    && chown ${USER_NAME}:${USER_NAME} ${HOMEDIR}/.bashrc
 
 # setup medley home dir with misc config files
 COPY --chown=${USER_NAME}:${USER_NAME} misc/.Xresources ${HOMEDIR}
@@ -117,10 +127,10 @@ COPY --chown=${USER_NAME}:${USER_NAME} misc/.Xresources ${HOMEDIR}
 RUN echo ${USER_NAME}:3333CoyoteHill | chpasswd
 
 # Create the dir to mount the TLS certificates
-RUN mkdir -p /etc/letsencrypt/live/online.interlisp.org/
-RUN chmod go-rwx /etc/letsencrypt/live
-RUN mkdir -p /etc/letsencrypt/archive/online.interlisp.org/
-RUN chmod go-rwx /etc/letsencrypt/archive
+RUN mkdir -p /etc/letsencrypt/live/online.interlisp.org/ \
+    && chmod go-rwx /etc/letsencrypt/live \
+    && mkdir -p /etc/letsencrypt/archive/online.interlisp.org/ \
+    && chmod go-rwx /etc/letsencrypt/archive
 
 # In actual use, USER and ENTRYPOINT will be set by the docker run command
 WORKDIR ${HOMEDIR}

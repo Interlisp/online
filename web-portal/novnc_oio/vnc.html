@@ -57,6 +57,19 @@
 
     <script src="app/error-handler.js"></script>
     <script type="module" crossorigin="anonymous" src="app/ui.js"></script>
+    
+    <!-- Interlisp Online -->
+    <link rel="stylesheet" href="oio/dialog.css">
+    <link rel="stylesheet" href="oio/dialog-polyfill.css">
+    <script src="oio/dialog-polyfill.js"></script>
+    <script>
+        /*global dialogPolyfill*/
+        window.addEventListener('load', (event) => {
+            document.querySelectorAll('dialog').forEach(dialogEl => dialogPolyfill.registerDialog(dialogEl));
+        });
+    </script>
+    <!-- END Interlisp Online -->
+
 </head>
 
 <body>
@@ -83,6 +96,11 @@
             <input type="image" alt="Drag" src="app/images/drag.svg"
                 id="noVNC_view_drag_button" class="noVNC_button noVNC_hidden"
                 title="Move/Drag Viewport">
+
+            <!-- Open FileBrowser ** Interlisp Online **-->
+            <input type="image" alt="FileBrowser" src="app/images/W7970888_internet_online_file_upload_download_icon.svg"
+                id="noVNC_filebrowser_button" class="noVNC_button"
+                title="Open File Manager">
 
             <!--noVNC Touch Device only buttons-->
             <div id="noVNC_mobile_buttons">
@@ -311,6 +329,21 @@
         <textarea id="noVNC_keyboardinput" autocapitalize="off"
             autocomplete="off" spellcheck="false" tabindex="-1"></textarea>
     </div>
+
+    <!-- Interlisp Online -->
+    <dialog id="OIO_warning_dlg" class="OIO_dialog">
+        <h2>Warning</h2>
+        <p>The File Manager will open in a new tab.</p>
+        <p>This new File Manager tab will <b>automatically close</b> whenever 
+           this current Interlisp (or xterm) page goes away.</p>
+        <div class="OIO_single-button-div">
+            <input type="button" id="OIO_warning_button" value="Continue" class="noVNC_submit">
+        <div class="OIO_checkbox-div" id="OIO_do_not_checkbox_div">
+            <input type="checkbox" id="OIO_warning_checkbox" name="OIO_warning_checkbox">
+            <label for="OIO_warning_checkbox">Do not show this notice again</label>
+        </div>
+    </dialog>
+    <!-- END Interlisp Online -->
 
     <audio id="noVNC_bell">
         <source src="app/sounds/bell.oga" type="audio/ogg">

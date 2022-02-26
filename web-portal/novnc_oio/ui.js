@@ -104,6 +104,11 @@ const UI = {
         UI.addSettingsHandlers();
         document.getElementById("noVNC_status")
             .addEventListener('click', UI.hideStatus);
+            
+        //
+        // Interlisp Online
+        //
+        UI.addFileBrowserHandlers();
 
         // Bootstrap fallback input handler
         UI.keyboardinputReset();
@@ -378,6 +383,17 @@ const UI = {
         window.addEventListener('mozfullscreenchange', UI.updateFullscreenButton);
         window.addEventListener('webkitfullscreenchange', UI.updateFullscreenButton);
         window.addEventListener('msfullscreenchange', UI.updateFullscreenButton);
+    },
+    
+    //
+    // Interlisp Online
+    //
+    addFileBrowserHandlers() {
+        document.getElementById("noVNC_filebrowser_button")
+            .addEventListener('click', UI.openFileBrowser);
+        window.addEventListener('unload', UI.closeFileBrowser);
+        document.getElementById("noVNC_warning_button")
+            .addEventListener('click', UI.warningButtonOnClick);
     },
 
 /* ------^-------
@@ -1255,6 +1271,60 @@ const UI = {
 
 /* ------^-------
  *  /FULLSCREEN
+ * ==============
+ *   FILEBROWSER
+ * ------v------*/
+    
+    //
+    // Interlisp Online
+    //
+    
+    async openFileBrowser() {
+        if(window.fileBrowserWindow && !window.fileBrowserWindow.closed ) {
+            window.fileBrowserWindow.focus();
+        } else {
+            let noWarn;
+            let response = await window.fetch('/user/nofilemgrwarning');
+            if(response.ok) {
+                let txt = await response.text();
+                noWarn = (txt == "true");
+            }
+            else noWarn = false;
+            if(noWarn)
+              UI.openFileBrowserFinish();  
+            else 
+              document.getElementById('OIO_warning_dlg').showModal();
+        }
+    },
+    
+    async warningButtonOnClick() {
+        const checked = document.getElementById("noVNC_warning_checkbox").checked;
+        if(checked) {
+             let response = await window.fetch('/user/nofilemgrwarning?set=1');  
+             if(!response.ok) {
+                 console.log("fetch error /user/nofilemgrwarning");
+                 console.dir(response);
+             }
+        }
+        document.getElementById('OIO_warning_dlg').close();
+        UI.openFileBrowserFinish();
+    },
+    
+    openFileBrowserFinish() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const u = urlParams.get('u') || "";
+        const p = urlParams.get('p') || "";
+        var url = `${window.location.protocol}//${window.location.hostname}:3${UI.getSetting('port')}`;
+        if (u && p) url = `${url}?u=${u}&p=${p}`;
+        window.fileBrowserWindow = window.open(url, "_blank");
+    },
+    
+    closeFileBrowser() {
+        if(window.fileBrowserWindow && !window.fileBrowserWindow.closed ) window.fileBrowserWindow.close();
+    },
+
+/* ------^-------
+ *  FILEBROWSER
  * ==============
  *     RESIZE
  * ------v------*/
