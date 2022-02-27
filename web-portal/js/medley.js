@@ -80,6 +80,7 @@ function interlispRunCmd(req) {
     const port = req.oioPort;
     const resume = req.query.resume && ((req.query.resume == "1") || (req.query.resume.toLowerCase() == "true"));
     const custom = (req.query.custom && (req.query.custom.toLowerCase() == "true"));
+    const customInit = (req.query.custom_init && (req.query.custom_init.toLowerCase() == "true"));
     const screen_width = req.query.screen_width || 1024;
     const screen_height = req.query.screen_height || 808;
     const cmd =
@@ -100,6 +101,7 @@ function interlispRunCmd(req) {
             + ` --entrypoint ${config.dockerScriptsDir}/run-online-medley`
             + ` ${config.dockerImage}`
             + (resume ? ` vmem` : (custom ? ` custom` : ` sysout`))
+            + (customInit ? ` custom` : ` release`)
             + ` ${screen_width} ${screen_height}`
             ;
     return cmd;

@@ -60,6 +60,7 @@ block headeradds
             } else {
                 document.getElementById("resume").checked = (localStore.getItem("resume") == "true");
                 document.getElementById("custom").checked = (localStore.getItem("custom") == "true");
+                document.getElementById("custom-init").checked = (localStore.getItem("custom_init") == "true");
                 document.getElementById("sftp-checkbox").checked = (localStore.getItem("sftp") == "true");
                 document.getElementById("run_notecards").checked = (localStore.getItem("run_notecards") == "true");
                 document.getElementById("fill-window-cb").checked = ((localStore.getItem("fill-window") || 'true') == 'true')
@@ -69,7 +70,6 @@ block headeradds
                 document.getElementById("resume-label").style.display = "block";
                 document.getElementById("run_notecards-label-div").style.display = "block";
                 document.getElementById("run_notecards-label").style.textAlign = "left";
-                customOnClick();
                 resumeOnClick();
             }
             fillWindowOnClick();
@@ -96,6 +96,7 @@ block headeradds
             const fillWindow = document.getElementById("fill-window-cb").checked;
             const resume = document.getElementById("resume").checked ? "true" : "false";
             const custom = document.getElementById("custom").checked ? "true" : "false";
+            const customInit = document.getElementById("custom-init").checked ? "true" : "false";
             const runNotecards = document.getElementById("run_notecards").checked ? "true": "false";
             const startSftp = document.getElementById("sftp-checkbox").checked ? "true": "false";
             //const devmode = document.getElementById("devmode").checked ? "true" : "false";
@@ -108,6 +109,8 @@ block headeradds
                 localStore.setItem("run_notecards", runNotecards);
                 localStore.setItem("resume", resume);
                 localStore.setItem("custom", custom);
+                localStore.setItem("custom_init", customInit);
+                
             }
             if((! #{isGuest}) && (targetSystem != "Notecards")) {
                 localStore.setItem("sftp", startSftp);
@@ -147,6 +150,7 @@ block headeradds
                                             + `&if=${RorK}`
                                             + `&resume=${resume || "false"}`
                                             + `&custom=${custom || "false"}`
+                                            + `&custom_init=${customInit || "false"}`
                                             + `&notecards=${runNotecards || "false"}`
                                             + `&sftp=${startSftp || "false"}`
                                         );
@@ -160,6 +164,7 @@ block headeradds
                                     + `&screen_height=${screenHeight}`
                                     + `&resume=${resume || "false"}`
                                     + `&custom=${custom || "false"}`
+                                    + `&custom_init=${customInit || "false"}`
                                     + `&notecards=${runNotecards || "false"}`
                                     + `&sftp=${startSftp || "false"}`
                                     );
@@ -211,28 +216,18 @@ block headeradds
         function resumeOnClick() {
             const resume = document.getElementById("resume");
             const custom = document.getElementById("custom");
+            const customInit = document.getElementById("custom-init");
             const rnc = document.getElementById("run_notecards");
             if(resume.checked) {
-                custom.checked = false;
+                custom.disabled = true;
+                customInit.disabled = true;
                 rnc.disabled = true;
+                
             } else {
+                custom.disabled = false;
+                customInit.disabled = false;
                 rnc.disabled = false;
             }
-        }
-
-    script.
-        function customOnClick() {
-            const resume = document.getElementById("resume");
-            const custom = document.getElementById("custom");
-            const rnc = document.getElementById("run_notecards");
-            if(custom.checked) {
-                resume.checked = false;
-                rnc.disabled = false;
-            }
-        }
-
-    script.
-        function notecardsOnClick() {
         }
 
     script.
@@ -317,13 +312,9 @@ block content
                     label.run-option.
                         <input type="checkbox" id="resume" onclick="resumeOnClick()" class="checkbox-input">&nbsp;Resume previous session
                     span.in-circle(onclick='helpOnClick("resume");') ?
-                div#custom-label
-                    label.run-option.
-                        <input type="checkbox" id="custom" onclick="customOnClick()" class="checkbox-input">&nbsp;Run custom sysout
-                    span.in-circle(onclick='helpOnClick("custom");') ?
                 div#run_notecards-label-div
                     label.run-option#run_notecards-label
-                        <input type="checkbox" id="run_notecards" onclick="notecardsOnClick()" class="checkbox-input">&nbsp;Run Notecards
+                        <input type="checkbox" id="run_notecards" class="checkbox-input">&nbsp;Run Notecards
                     span.in-circle(onclick='helpOnClick("run_notecards");') ?
 
     .row
@@ -337,8 +328,18 @@ block content
                 label.
                     <input type="checkbox" id="dev-options-checkbox" onclick="showDevOptionsOnClick();" class="checkbox-input">&nbsp;Show advanced options
         div(id="dev-div-buttons" style="display:none;")
-            label.run-option.jumbotron.text-center.
-                <input type="checkbox" id="sftp-checkbox" class="checkbox-input">&nbsp;Start SFTP Server
+            div#custom-label
+                label.run-option.
+                    <input type="checkbox" id="custom" class="checkbox-input">&nbsp;Run custom sysout
+                span.in-circle(onclick='helpOnClick("custom");') ?
+            div#custom-init-label
+                label.run-option.
+                    <input type="checkbox" id="custom-init" class="checkbox-input">&nbsp;Use custom site init
+                span.in-circle(onclick='helpOnClick("custom-init");') ?
+            div#sftp-label
+                label.run-option.
+                    <input type="checkbox" id="sftp-checkbox" class="checkbox-input">&nbsp;Start SFTP Server
+                span.in-circle(onclick='helpOnClick("sftp");') ?
             br
             .jumbotron.text-center
                  button(type="button" onclick='startSession("xterm");').main-button Start Terminal Session

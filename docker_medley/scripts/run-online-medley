@@ -15,6 +15,9 @@ if [ -z "${NCO}" ]; then NCO=0; fi
 
 RELEASE_SYSOUT_PATH="${MEDLEY_INSTALLDIR}/loadups/full.sysout"
 CUSTOM_SYSOUT_PATH="${MEDLEY_USERDIR}/sysout/online.sysout"
+RELEASE_INIT_PATH="${MEDLEY_INSTALLDIR}/greetfiles/ONLINE-INIT.LCOM"
+CUSTOM_INIT_PATH="${MEDLEY_USERDIR}/init/ONLINE-INIT"
+
 if [ ${NCO} -eq 1 ];
    then VMEM_PATH="${MEDLEY_USERDIR}/vmem/notecards.virtualmem"
    else VMEM_PATH="${MEDLEY_USERDIR}/vmem/lisp.virtualmem"
@@ -47,14 +50,28 @@ else
 	sysout=${RELEASE_SYSOUT_PATH}
 fi
 #
+export MEDLEY_INIT_PATH
 if [ $# -gt 1 ]; then
-	width=$2
+    case "$2" in
+	    custom)
+	        MEDLEY_INIT_PATH="${CUSTOM_INIT_PATH}"
+	        ;;
+	     *)
+	        MEDLEY_INIT_PATH="${RELEASE_INIT_PATH}"
+	        ;;
+	 esac
+else
+	MEDLEY_INIT_PATH="${RELEASE_INIT_PATH}"
+fi
+#
+if [ $# -gt 2 ]; then
+	width=$3
 else
 	width=1024
 fi
 #
-if [ $# -gt 2 ]; then
-	height=$3
+if [ $# -gt 3 ]; then
+	height=$4
 else
 	height=808
 fi
@@ -137,7 +154,7 @@ xrdb -merge /home/medley/.Xresources
 cd ${MEDLEY_INSTALLDIR}
 export MEDLEYDIR=${MEDLEY_INSTALLDIR}
 export LOGINDIR=${MEDLEY_USERDIR}
-export LDEINIT=${MEDLEY_INSTALLDIR}/greetfiles/ONLINE-INIT.LCOM
+export LDEINIT=${MEDLEY_INIT_PATH}
 export MAIKODIR="/usr/local/interlisp/maiko"
 ./run-medley -noscroll -g ${width}x${height} -sc ${width}x${height} -vmem ${VMEM_PATH} ${sysout}
 EOF
