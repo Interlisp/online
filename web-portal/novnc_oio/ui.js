@@ -19,7 +19,7 @@ import * as WebUtil from "./webutil.js";
 
 // Interlisp Online
 // const PAGE_TITLE = "noVNC";
-const PAGE_TITLE = "Interlisp Online";
+const PAGE_TITLE = `${window.location.hostname.toLowerCase().match(/notecards/) ? "Notecards" : "Interlisp"} Online`;
 
 const UI = {
 
