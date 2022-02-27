@@ -71,3 +71,32 @@ dialog(id="help-dialog-run_notecards").help-dialog
         This option is disabled if "Resume previous session" is checked.
     .single-button-div
         button(type="button" onclick='helpDialogClose("run_notecards");').main-button OK
+
+dialog(id="help-dialog-sftp").help-dialog
+    h2  Help
+    p.
+        Checking this option will cause "Start Interlisp" and "Start Terminal Session" to also start up an SFTP server on online.interlisp.org.
+        This SFTP server can be used to upload or download files to/from online.interlisp.org home directory using any standard SFTP client
+        (e.g., FileZilla).
+    p.
+        The port#, username and password for accessing the SFTP server are given in the WHO-LINE window in the Interlisp 
+        environment or at the top of the terminal window in the Terminal Session environment.
+    p.
+        If ~/il/init/ONLINE-INIT(.LCOM) does not exist, the standard ONLINE-INIT will be used instead.
+    .single-button-div
+        button(type="button" onclick='helpDialogClose("sftp");').main-button OK
+
+dialog(id="help-dialog-custom-init").help-dialog
+    h2  Help
+    p.
+        Ordinarily, "Start Interlisp" will start up Interlisp using the standard ONLINE-INIT from the latest Medley release.
+    p.
+        Checking this option will cause "Start Interlisp" to instead start up using the custom sysout stored at ~/il/init/ONLINE-INIT or 
+        ~/il/init/ONLINE-INIT.LCOM in your online.interlisp.org home directory.
+    p.
+        You can create this custom init file using the online Interlisp environment or you
+        can upload any Medley sysout using the File Manager feature.
+    p.
+        If ~/il/init/ONLINE-INIT(.LCOM) does not exist, the standard ONLINE-INIT will be used instead.
+    .single-button-div
+        button(type="button" onclick='helpDialogClose("custom-init");').main-button OK

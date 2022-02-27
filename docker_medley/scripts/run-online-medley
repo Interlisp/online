@@ -50,18 +50,11 @@ else
 	sysout=${RELEASE_SYSOUT_PATH}
 fi
 #
-export MEDLEY_INIT_PATH
-if [ $# -gt 1 ]; then
-    case "$2" in
-	    custom)
-	        MEDLEY_INIT_PATH="${CUSTOM_INIT_PATH}"
-	        ;;
-	     *)
-	        MEDLEY_INIT_PATH="${RELEASE_INIT_PATH}"
-	        ;;
-	 esac
-else
-	MEDLEY_INIT_PATH="${RELEASE_INIT_PATH}"
+export MEDLEY_INIT_PATH="${RELEASE_INIT_PATH}"
+if [ $# -gt 1 ] && [ "$2" = "custom" ]; then
+    if [ -f "${CUSTOM_INIT_PATH}" ] || [ -f "${CUSTOM_INIT_PATH}.LCOM"]; then
+         MEDLEY_INIT_PATH="${CUSTOM_INIT_PATH}"
+    fi
 fi
 #
 if [ $# -gt 2 ]; then
