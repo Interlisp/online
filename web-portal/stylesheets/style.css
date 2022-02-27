@@ -333,6 +333,10 @@ h2 {
   display: inline-block;
 }
 
+.dev-div-run-option {
+  width:200px;
+}
+
 .in-circle {
     display: inline-block;
     background: #000;
