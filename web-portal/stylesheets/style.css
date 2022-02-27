@@ -278,7 +278,7 @@ h2 {
 }
 
 #dev-div-buttons {
-    width:auto;
+    width:350px;
     margin-right: auto;
     margin-left: auto;
     border-style: double;
@@ -331,6 +331,10 @@ h2 {
   margin-right: auto;
   text-align: left;
   display: inline-block;
+}
+
+.dev-div-run-option {
+  width:200px;
 }
 
 .in-circle {

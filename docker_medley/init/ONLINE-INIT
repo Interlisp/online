@@ -1,11 +1,10 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED " 7-Feb-2022 20:24:32" {DSK}<home>medley>il>ONLINE-INIT.;5 7106   
+(FILECREATED "26-Feb-2022 22:19:58" {DSK}<home>medley>il>ONLINE-INIT.;2 8357   
 
       :CHANGES-TO (VARS ONLINE-INITCOMS)
-                  (FNS Online.InitNotecards)
 
-      :PREVIOUS-DATE " 7-Feb-2022 02:02:05" {DSK}<home>medley>il>ONLINE-INIT.;4)
+      :PREVIOUS-DATE "26-Feb-2022 17:24:47" {DSK}<home>medley>il>ONLINE-INIT.;1)
 
 
 (PRETTYCOMPRINT ONLINE-INITCOMS)
@@ -17,8 +16,10 @@
                IDLE.PROFILE Online.SftpDisplayMenu)
         (INITVARS (Online.LogoutTimeout 30))
         (ADVISE IDLE)
-        (FNS Online.SftpInitInfo Online.SftpUpdateInfo Online.InitNotecards Online.DoInit)
+        (FNS Online.SftpInitInfo Online.SftpUpdateInfo Online.InitNotecards Online.DoInit 
+             Online.InitNCO)
         (P (Online.DoInit))
+        (P (SETQ BAZZLE 77))
         (DECLARE%: FIRST (P (BKSYSBUF " "])
 
 (FILESLOAD (SYSLOAD)
@@ -76,7 +77,8 @@
                          550 220])
 
 (Online.DoInit
-  [LAMBDA NIL                                                (* ; "Edited  6-Feb-2022 23:29 by tp7")
+  [LAMBDA NIL                                                (* ; "Edited 26-Feb-2022 17:04 by F G H")
+                                                             (* ; "Edited  6-Feb-2022 23:29 by tp7")
                                                              (* ; "Edited 17-Dec-2021 22:05 by fgh")
     (PROGN 
            (* ;; "Set up SFTP Info widget in WHO-LINE window")
@@ -138,15 +140,38 @@
            (COND
               ((STRING-EQUAL (UNIX-GETENV 'RUN_NOTECARDS)
                       "true")
-               (Online.InitNotecards])
+               (Online.InitNotecards)))
+
+           (* ;; "change to interlisp exec if notecards.online")
+
+           (COND
+              ((STRING-EQUAL (UNIX-GETENV 'NCO)
+                      "1")
+               (Online.InitNCO])
+
+(Online.InitNCO
+  [LAMBDA NIL                                                (* ; "Edited 26-Feb-2022 17:24 by F G H")
+    (PROGN [MAPC OPENWINDOWS (FUNCTION (LAMBDA (W)
+                                         (COND
+                                            ((STREQUAL (WINDOWPROP W 'TITLE)
+                                                    "Exec  (XCL)")
+                                             (PROGN (WINDOWPROP W 'TITLE "Exec  (INTERLISP)")
+                                                    (MOVEW W (create POSITION
+                                                                    XCOORD _ 50
+                                                                    YCOORD _ (IDIFFERENCE 
+                                                                                    SCREENHEIGHT 460]
+           (XCL:SET-DEFAULT-EXEC-TYPE 'INTERLISP)
+           (XCL:SET-EXEC-TYPE 'INTERLISP])
 )
 
 (Online.DoInit)
+
+(SETQ BAZZLE 77)
 (DECLARE%: FIRST 
 
 (BKSYSBUF " ")
 )
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (1497 7026 (Online.SftpInitInfo 1507 . 2376) (Online.SftpUpdateInfo 2378 . 2698) (
-Online.InitNotecards 2700 . 3640) (Online.DoInit 3642 . 7024)))))
+  (FILEMAP (NIL (1510 8259 (Online.SftpInitInfo 1520 . 2389) (Online.SftpUpdateInfo 2391 . 2711) (
+Online.InitNotecards 2713 . 3653) (Online.DoInit 3655 . 7345) (Online.InitNCO 7347 . 8257)))))
 STOP
