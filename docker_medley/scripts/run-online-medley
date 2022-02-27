@@ -52,7 +52,7 @@ fi
 #
 export MEDLEY_INIT_PATH="${RELEASE_INIT_PATH}"
 if [ $# -gt 1 ] && [ "$2" = "custom" ]; then
-    if [ -f "${CUSTOM_INIT_PATH}" ] || [ -f "${CUSTOM_INIT_PATH}.LCOM"]; then
+    if [ -f "${CUSTOM_INIT_PATH}" ] || [ -f "${CUSTOM_INIT_PATH}.LCOM" ]; then
          MEDLEY_INIT_PATH="${CUSTOM_INIT_PATH}"
     fi
 fi
