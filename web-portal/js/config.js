@@ -139,6 +139,6 @@ var homeVolume = function(email) { return `${emailish(email)}_home.v2`; };
 exports.homeVolume = homeVolume;
 
 var isNCO = function(req) {
-    return ((req.hostname.toLowerCase() == "notecards.online") || (req.hostname.toLowerCase() == "www.notecards.online"));
+    return (req.hostname.toLowerCase().replace(/^www\./,"") == "notecards.online");
 };
 exports.isNCO = isNCO;
