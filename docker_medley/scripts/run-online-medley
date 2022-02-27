@@ -16,7 +16,7 @@ if [ -z "${NCO}" ]; then NCO=0; fi
 RELEASE_SYSOUT_PATH="${MEDLEY_INSTALLDIR}/loadups/full.sysout"
 CUSTOM_SYSOUT_PATH="${MEDLEY_USERDIR}/sysout/online.sysout"
 RELEASE_INIT_PATH="${MEDLEY_INSTALLDIR}/greetfiles/ONLINE-INIT.LCOM"
-CUSTOM_INIT_PATH="${MEDLEY_USERDIR}/init/ONLINE-INIT"
+CUSTOM_INIT_PATH="${MEDLEY_USERDIR}/initdir/ONLINE-INIT"
 
 if [ ${NCO} -eq 1 ];
    then VMEM_PATH="${MEDLEY_USERDIR}/vmem/notecards.virtualmem"
