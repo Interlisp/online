@@ -293,7 +293,9 @@ block headeradds
 block content
     .row
         div(id="logged-in-as").text-center
-            != 'Logged in as: ' + login
+
+            form#dummy002(method="POST" action="/user/logout" style="display:none")
+            != `Logged in as: ${login}.&nbsp;&nbsp;&nbsp;&nbsp<a onclick="document.getElementById('dummy002').submit();">LOGOUT</a>` 
 
     .row
         .jumbotron.text-center
@@ -305,29 +307,25 @@ block content
                     input(type="number", id="screen-width", class="number-input", value=1024)
                 label and Screen Height:
                     input(type="number", id="screen-height", class="number-input", value=808)
-            div#resume-label
-                label.run-option.
-                    <input type="checkbox" id="resume" onclick="resumeOnClick()" class="checkbox-input">&nbsp;Resume previous session
-                span.in-circle(onclick='helpOnClick("resume");') ?
             .run-options-div#run-options-div
                 label.
                    <b>Run Options</b>
-                div#which-exec-label-div
-                    label.run-option#which-exec-label Initial exec should be a:
-                        label.run-option#interlisp-exec-label
-                            <input type="radio" id="interlisp_rb" name="which-exec" class="checkbox-input">&nbsp;Interlisp Exec
-                        label.run-option#commonlisp-exec-label
-                            <input type="radio" id="commonlisp_rb" name="which-exec" class="checkbox-input">&nbsp;Common Lisp Exec
+                div#resume-label
+                    label.run-option.
+                        <input type="checkbox" id="resume" onclick="resumeOnClick()" class="checkbox-input">&nbsp;Resume previous session
+                    span.in-circle(onclick='helpOnClick("resume");') ?
+                div#which-exec-div
+                    .run-option#which-exec-label.
+                        <input type="checkbox" id="dummy001" class="checkbox-input" style="visibility:hidden">&nbsp;Initial exec window:
                     span.in-circle(onclick='helpOnClick("which-exec");') ?
+                    label.run-option.run-option-rb#interlisp-exec-label
+                        <input type="radio" id="interlisp_rb" name="which-exec" class="checkbox-input" checked>&nbsp;Interlisp
+                    label.run-option.run-option-rb#commonlisp-exec-label
+                        <input type="radio" id="commonlisp_rb" name="which-exec" class="checkbox-input">&nbsp;Common Lisp
                 div#run_notecards-label-div
                     label.run-option#run_notecards-label
                         <input type="checkbox" id="run_notecards" class="checkbox-input">&nbsp;Run Notecards
                     span.in-circle(onclick='helpOnClick("run_notecards");') ?
-
-    .row
-        .jumbotron.text-center
-            form(method="POST" action="/user/logout")
-                button(type="submit" id="logout_submit").main-button Logout
 
     div(id="dev-div" style="display:none;")
         div(id="dev-div-checkbox")
