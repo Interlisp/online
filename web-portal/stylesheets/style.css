@@ -138,6 +138,19 @@ h2 {
   text-align: center;
 }
 
+#header_img {
+ width:300px;
+ height:100px;  
+}
+
+#header_img_caption {
+  margin-top:0.25em;
+  color:#337ab7;
+  font-family:"Times New Roman",Times,serif;
+  font-size:18pt;
+  font-weight:700;
+}
+
 #sponsor-button {
         font-size: 12px;
         text-decoration: none;
@@ -379,10 +392,6 @@ h2 {
   max-width: 525px;
   padding: 0em 1.5em 0em 1.5em;
   font-size: 14px;
-  border-width: 1px;
-  border-color: #337ab7;
-  border-style: solid;
-  border-radius: 10px;
   text-align: center;
   margin: 1em auto .5em auto;
 }

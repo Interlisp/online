@@ -80,12 +80,13 @@ html(lang="en")
     title #{title}
     block headeradds
   body
-    div(id="page-container")
+    div(id="page-container")  
       div(id="content-wrap")
         .container
           div(id="page-header")
             div
-              != `<img id="header_img" src="/images/logos/logo_${toLowerCase(targetSystem)}_online.svg" alt="${targetSystem} logo" width="152" height="100">`
+              != `<img id="header_img" src="/images/logos/logo_${targetSystem.toLowerCase()}_online.svg" alt="${targetSystem} logo">`
+              <p id="header_img_caption">IDE for Interlisp <i>and</i> Common Lisp</p>
           block content
       footer(id="footer")
         table
