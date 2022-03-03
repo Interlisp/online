@@ -85,12 +85,12 @@ html(lang="en")
         .container
           div(id="page-header")
             div
-              != '<img id="header_img" src="/images/' + targetSystem + '-Online.png" alt="' + targetSystem + ' logo" width="200" height="100">'
+              != `<img id="header_img" src="/images/logos/logo_${toLowerCase(targetSystem)}_online.svg" alt="${targetSystem} logo" width="152" height="100">`
           block content
       footer(id="footer")
         table
           tr
             td#copyright-div.
-              &copy; Copyright 2022 by <a href="http://www.interlisp.org">www.interlisp.org</a>
+              &copy; Copyright 2022 by <a href="http://interlisp.org">Interlisp.Org</a>
             td#sponsor-button-div
               button#sponsor-button(type="button", onclick='window.open("https://github.com/sponsors/Interlisp?o=esb", "_blank");') Sponsor Interlisp.org
