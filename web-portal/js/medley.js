@@ -66,12 +66,14 @@ function sftpEnvs(req) {
 function medleyEnvs(req) {
     const u = req.user;
     const nc = (req.query.notecards && (req.query.notecards.toLowerCase() == "true")) ? "true" : "false";
+    const exec = (req.query.exec && (req.query.exec.toLowerCase() == "common")) ? "common" : "inter";
     return    ` --env MEDLEY_EMAIL='${u.username}'`
             + ` --env MEDLEY_UNAME='${u.uname || "medley" }'`
             + ` --env MEDLEY_FIRSTNAME='${u.firstname || "Medley"}'`
             + ` --env MEDLEY_LASTNAME='${u.lastname || "User"}'`
             + ` --env MEDLEY_INITIALS='${u.initials || "medley"}'`
             + ` --env RUN_NOTECARDS=${nc}`
+            + ` --env MEDLEY_EXEC=${exec}`
     ;
 }
 
@@ -90,7 +92,7 @@ function interlispRunCmd(req) {
             + (config.isGuestUser(req.user.username) ? "" : ` --mount type=volume,source=${config.homeVolume(req.user.username)},target=/home/medley`)
             + dockerTlsMounts
             + ` --env PORT=${port}`
-            + ` --env NCO=${config.isNCO(req) ? "1" : "0"}`
+            + ` --env NCO=${config.isNCO(req) ? "true" : "false"}`
             + medleyEnvs(req)
             + sftpEnvs(req)
             + ` --label "OIO_PORT=${port}"`

@@ -422,3 +422,23 @@ h2 {
 #nc_do_not_checkbox_div {
   margin-top: 1em;
 }
+
+#logout-span {
+  font-style: italic;
+  text-transform: uppercase;
+  text-decoration: underline;
+}
+
+#logout-a {
+  margin-left: 5em;
+  cursor: default;
+}
+
+#logout-a :hover {
+  background-color: #eaeef1;;
+}
+
+#logout-a :active {
+  background-color: #eaeef1;;
+  color: #337ab7;
+}

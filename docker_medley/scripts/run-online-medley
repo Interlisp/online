@@ -11,14 +11,15 @@
 #
 #set -x
 
-if [ -z "${NCO}" ]; then NCO=0; fi
+if [ -z "${NCO}" ]; then export NCO="false"; fi
+if [ -z "${MEDLEY_EXEC}" ]; then export MEDLEY_EXEC="common"; fi
 
 RELEASE_SYSOUT_PATH="${MEDLEY_INSTALLDIR}/loadups/full.sysout"
 CUSTOM_SYSOUT_PATH="${MEDLEY_USERDIR}/sysout/online.sysout"
 RELEASE_INIT_PATH="${MEDLEY_INSTALLDIR}/greetfiles/ONLINE-INIT.LCOM"
 CUSTOM_INIT_PATH="${MEDLEY_USERDIR}/initdir/ONLINE-INIT"
 
-if [ ${NCO} -eq 1 ];
+if [ "${NCO}" == "true" ];
    then VMEM_PATH="${MEDLEY_USERDIR}/vmem/notecards.virtualmem"
    else VMEM_PATH="${MEDLEY_USERDIR}/vmem/lisp.virtualmem"
 fi
@@ -111,7 +112,7 @@ if [ "${MEDLEY_UNAME}" != "medley" ]; then
     usermod --login ${MEDLEY_UNAME} medley
 fi
 
-if [ ${NCO} -eq 1 ]; then RUN_NOTECARDS="true"; fi
+if [ "${NCO}" == "true" ]; then RUN_NOTECARDS="true"; fi
 
 if [ "${RUN_NOTECARDS}" = "true" ]; then
     export NOTEFILESDIR=${MEDLEY_USERDIR}/notefiles
@@ -147,6 +148,7 @@ fi
 #
 xrdb -merge /home/medley/.Xresources
 cd ${MEDLEY_INSTALLDIR}
+export MEDLEY_ONLINE="true"
 export MEDLEYDIR=${MEDLEY_INSTALLDIR}
 export LOGINDIR=${MEDLEY_USERDIR}
 export LDEINIT=${MEDLEY_INIT_PATH}

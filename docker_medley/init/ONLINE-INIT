@@ -1,10 +1,13 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED "26-Feb-2022 22:19:58" {DSK}<home>medley>il>ONLINE-INIT.;2 8357   
+(FILECREATED " 4-Mar-2022 18:29:36" {DSK}<home>medley>il>ONLINE-INIT.;1 8516   
 
-      :CHANGES-TO (VARS ONLINE-INITCOMS)
+      :CHANGES-TO (ADVICE IDLE)
+                  (FNS Online.SftpInitInfo Online.SftpUpdateInfo Online.InitNotecards Online.DoInit 
+                       Online.InitNCO Online.SwitchToInterlispExec)
+                  (VARS ONLINE-INITCOMS)
 
-      :PREVIOUS-DATE "26-Feb-2022 17:24:47" {DSK}<home>medley>il>ONLINE-INIT.;1)
+      :PREVIOUS-DATE "26-Feb-2022 22:19:58" {DSK}<home>medley>il>ONLINE-INIT.;3)
 
 
 (PRETTYCOMPRINT ONLINE-INITCOMS)
@@ -17,9 +20,8 @@
         (INITVARS (Online.LogoutTimeout 30))
         (ADVISE IDLE)
         (FNS Online.SftpInitInfo Online.SftpUpdateInfo Online.InitNotecards Online.DoInit 
-             Online.InitNCO)
+             Online.SwitchToInterlispExec)
         (P (Online.DoInit))
-        (P (SETQ BAZZLE 77))
         (DECLARE%: FIRST (P (BKSYSBUF " "])
 
 (FILESLOAD (SYSLOAD)
@@ -42,7 +44,7 @@
 (DEFINEQ
 
 (Online.SftpInitInfo
-  [LAMBDA NIL                                                (* ; "Edited 17-Dec-2021 01:25 by abc")
+  [LAMBDA NIL                                                (* ; "Edited 17-Dec-2021 01:25 by abc")
     (SETQ Online.SftpPort (UNIX-GETENV "SFTP_PORT"))
     (SETQ Online.SftpPassword (UNIX-GETENV "SFTP_PWD"))
     (SETQ Online.SftpDisplay (CONCAT Online.SftpPort " / " (L-CASE USERNAME)
@@ -55,15 +57,14 @@
                                         MENUFONT _ (FONTCREATE 'CLASSIC 14 'BOLD])
 
 (Online.SftpUpdateInfo
-  [LAMBDA (WHEN)                                             (* ; 
-                                                             "Edited 23-Nov-2021 22:44 by medley")
+  [LAMBDA (WHEN)                                          (* ; "Edited 23-Nov-2021 22:44 by medley")
     (COND
        ((OR (EQ WHEN 'AFTERLOGOUT)
             (EQ WHEN 'AFTERSAVEVM))
         (Online.SftpInitInfo])
 
 (Online.InitNotecards
-  [LAMBDA NIL                                                (* ; "Edited  7-Feb-2022 20:22 by tp7")
+  [LAMBDA NIL                                                (* ; "Edited  7-Feb-2022 20:22 by tp7")
     (PROGN (LOAD? (PACKFILENAME 'HOST "DSK" 'DIRECTORY (CONCAT (UNIX-GETENV 'NC_INSTALLDIR)
                                                               "/system")
                          'NAME "NOTECARDS" 'EXTENSION "LCOM"))
@@ -77,9 +78,16 @@
                          550 220])
 
 (Online.DoInit
-  [LAMBDA NIL                                                (* ; "Edited 26-Feb-2022 17:04 by F G H")
-                                                             (* ; "Edited  6-Feb-2022 23:29 by tp7")
-                                                             (* ; "Edited 17-Dec-2021 22:05 by fgh")
+  [LAMBDA NIL
+
+    (* ;; "Edited  4-Mar-2022 17:55 by F G H: G H")
+
+    (* ;; "Edited 26-Feb-2022 17:04 by F G H")
+
+    (* ;; "Edited  6-Feb-2022 23:29 by tp7")
+
+    (* ;; "Edited 17-Dec-2021 22:05 by fgh")
+
     (PROGN 
            (* ;; "Set up SFTP Info widget in WHO-LINE window")
 
@@ -142,15 +150,17 @@
                       "true")
                (Online.InitNotecards)))
 
-           (* ;; "change to interlisp exec if notecards.online")
+           (* ;; "change to interlisp exec if required")
 
            (COND
-              ((STRING-EQUAL (UNIX-GETENV 'NCO)
-                      "1")
-               (Online.InitNCO])
+              ((OR (STRING-EQUAL (UNIX-GETENV 'MEDLEY_EXEC
+                                        "inter"))
+                   (STRING-EQUAL (UNIX-GETENV 'NCO)
+                          "true"))
+               (Online.SwitchToInterlispExec])
 
-(Online.InitNCO
-  [LAMBDA NIL                                                (* ; "Edited 26-Feb-2022 17:24 by F G H")
+(Online.SwitchToInterlispExec
+  [LAMBDA NIL                                                (* ; "Edited  4-Mar-2022 17:57 by F G H")
     (PROGN [MAPC OPENWINDOWS (FUNCTION (LAMBDA (W)
                                          (COND
                                             ((STREQUAL (WINDOWPROP W 'TITLE)
@@ -165,13 +175,12 @@
 )
 
 (Online.DoInit)
-
-(SETQ BAZZLE 77)
 (DECLARE%: FIRST 
 
 (BKSYSBUF " ")
 )
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (1510 8259 (Online.SftpInitInfo 1520 . 2389) (Online.SftpUpdateInfo 2391 . 2711) (
-Online.InitNotecards 2713 . 3653) (Online.DoInit 3655 . 7345) (Online.InitNCO 7347 . 8257)))))
+  (FILEMAP (NIL (1696 8436 (Online.SftpInitInfo 1706 . 2579) (Online.SftpUpdateInfo 2581 . 2836) (
+Online.InitNotecards 2838 . 3782) (Online.DoInit 3784 . 7508) (Online.SwitchToInterlispExec 7510 . 
+8434)))))
 STOP
