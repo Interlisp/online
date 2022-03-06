@@ -72,12 +72,13 @@ html(lang="en")
         
         var oioMaxHeight = 850;
         function displayRightHeader(event) {
-            if(window.innerHeight < oioMaxHeight)
+            if(window.innerHeight < oioMaxHeight) {
                  document.getElementById("header_img").style.display = "none";
                  document.getElementById("header_text").style.display = "inline-block";
-            else
+            } else {
                  document.getElementById("header_img").style.display = "inline-block";
                  document.getElementById("header_text").style.display = "none";
+            }
         }
         window.addEventListener('resize', displayRightHeader);
         window.addEventListener('load', displayRightHeader);
@@ -91,7 +92,7 @@ html(lang="en")
           div(id="page-header")
             div
               != `<img id="header_img" src="/images/logos/logo_${targetSystem.toLowerCase()}_online.svg" alt="${targetSystem} logo">`
-              != `<div id="header_text">${(targetSystem == "Notecards") ? "Notecards" : "Medley"} Online`</div>
+              != `<div id="header_text">${(targetSystem == "Notecards") ? "Notecards" : "Medley"} Online</div>`
               <p id="header_img_caption">IDE for Interlisp <i>and</i> Common Lisp</p>
           block content
       footer(id="footer")

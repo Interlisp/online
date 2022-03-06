@@ -310,39 +310,69 @@ block content
     .row
         .jumbotron.text-center
             button.main-button(type="button" onclick='startSession("interlisp");')!= "Run " + (isNCO ? "Notecards" : "Medley")
-            div(id="screen-size-div" class="options-div")
-                table
+            div#resume-div.run-option-div
+              table(style="width:350px;border-spacing:0.125em;")
+                thead
                   tr
-                    td(style="width:33%")
-                      &nbsp;
-                    td(style="width:33%")
-                      label with Screen Width:
-                        input(type="number", id="screen-width", class="number-input", value=1024)
-                      label and Screen Height:
-                        input(type="number", id="screen-height", class="number-input", value=808)
-                    td(style="width:33%")
-                      label
-                        input(type="checkbox" id="fill-window-cb" onclick="fillWindowOnClick()")&nbsp;Fill browser window
-            div#resume-div
-                label.run-option
-                    input(type="checkbox" id="resume" onclick="resumeOnClick()" class="checkbox-input")&nbsp;Resume previous session
-                span.in-circle(onclick='helpOnClick("resume");') ?
-            .run-options-div#run-options-div
-                label.
-                   <b>Run Options</b>
-                div#which-exec-div
-                    .run-option#which-exec-label.
-                        input(type="checkbox" id="dummy001" class="checkbox-input" style="visibility:hidden")&nbsp;Initial exec window:
-                    span.in-circle(onclick='helpOnClick("which-exec");') ?
-                    .run-option
-                        label.run-option.run-option-rb#interlisp-exec-label
-                            input(type="radio" id="interlisp_rb" name="which-exec" class="checkbox-input" checked)&nbsp;Interlisp
-                        label.run-option.run-option-rb#commonlisp-exec-label
-                            input(type="radio" id="commonlisp_rb" name="which-exec" class="checkbox-input")&nbsp;Common Lisp
-                div#run_notecards-label-div
-                    label.run-option#run_notecards-label
-                        input(type="checkbox" id="run_notecards" class="checkbox-input")&nbsp;Run Notecards
-                    span.in-circle(onclick='helpOnClick("run_notecards");') ?
+                    th(style="width:50px;")
+                    th(style="width:250px;")
+                    th(style="width:50px;")
+                tbody
+
+                  tr
+                    td
+                    td
+                      label.run-option.
+                        <input type="checkbox" id="resume" onclick="resumeOnClick()" class="checkbox-input">&nbsp;Resume previous session
+                    td
+                      span.in-circle(onclick='helpOnClick("resume");') ?
+
+                  <tr><td></td><td><hr></td><td></td></tr>
+
+                  tr
+                    td
+                    td
+                      table
+                        tr
+                          td(rowspan="2").
+                            Initial Exec:
+                          td(style="text-align:left;")
+                            label.sub-radio.
+                              <input type="radio" id="interlisp_rb" name="which-exec" class="checkbox-input" checked>&nbsp;Interlisp
+                        tr
+                          td(style="text-align:left;")           
+                            label.sub-radio.
+                            <input type="radio" id="commonlisp_rb" name="which-exec" class="checkbox-input">&nbsp;Common Lisp
+                    td
+                      span.in-circle(onclick='helpOnClick("which-exec");') ?
+
+                  <tr><td></td><td><hr></td><td></td></tr>
+
+                  tr
+                    td
+                    td              
+                      label.run-option#run_notecards-label.
+                        <input type="checkbox" id="run_notecards" class="checkbox-input">&nbsp;Run Notecards
+                    td
+                      span.in-circle(onclick='helpOnClick("run_notecards");') ?
+
+                  <tr><td></td><td><hr></td><td></td></tr>
+
+                  tr
+                    td
+                    td(style="text-align:center;")              
+                      div
+                        label Screen Width:&nbsp;
+                          input(type="number", id="screen-width", class="number-input", value=1024, min=100, max=9999 style="width:3.5em;")
+                      div
+                        label Screen Height:&nbsp;
+                          input(type="number", id="screen-height", class="number-input", value=808, min=100, max=9999 style="width:3.5em;")
+                      div(style="text-align:center;")
+                        label.
+                          <input type="checkbox" id="fill-window-cb" onclick="fillWindowOnClick()">&nbsp;Fill browser window
+                    td
+
+                  <tr><td></td><td><hr></td><td></td></tr>
 
     div(id="dev-div" style="display:none;")
         div(id="dev-div-checkbox")
@@ -421,3 +451,27 @@ block content
 
     include disclaimer.pug
     include help_dialogs.pug
+
+    //-
+            div#which-exec-div.run-option-div
+              table(style="width:350px;border-spacing:0px;")
+                thead
+                  tr
+                    th(style="width:50px;")
+                    th(style="width:250px;")
+                    th(style="width:50px;")
+                tbody
+
+
+            div#run_notecards-label-div.run-option-div
+              table(style="width:350px;border-spacing:0px;")
+                thead
+                  tr
+                    th(style="width:50px;")
+                    th(style="width:250px;")
+                    th(style="width:50px;")
+                tbody
+
+                            
+            div(id="screen-size-div" class="options-div")
+                table(style="margin-right:auto;margin-left:auto;")
