@@ -1022,10 +1022,7 @@ export default class RFB extends EventTargetMixin {
         ev.stopPropagation();
         ev.preventDefault();
         
-        // FGH Interlisp Online - for now ignore wheel events 
-        return;
-
-         let pos = clientToElement(ev.clientX, ev.clientY,
+        let pos = clientToElement(ev.clientX, ev.clientY,
                                   this._canvas);
 
         let dX = ev.deltaX;
