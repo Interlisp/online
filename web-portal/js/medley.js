@@ -119,6 +119,7 @@ function xtermRunCmd(req) {
         + ` --mount type=volume,source=${emailish}_home.v2,target=/home/medley`
         + dockerTlsMounts
         + ` --env PORT=${port}`
+        + ` --env NCO=${config.isNCO(req) ? "true" : "false"}`
         + medleyEnvs(req)
         + sftpEnvs(req)
         + ` --label "OIO_PORT=${port}"`
