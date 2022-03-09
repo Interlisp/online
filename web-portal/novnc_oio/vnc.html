@@ -344,6 +344,16 @@
             <label for="OIO_warning_checkbox">Do not show this notice again</label>
         </div>
     </dialog>
+
+    <dialog id="OIO_popup_dlg" class="OIO_dialog">
+        <h2>Error</h2>
+        <p>The File Manager tab failed to open.</p>
+        <p>This is likely due to a popup blocker on your browser.</p>
+        <p>Please disable popup blockers for this website<span id="OIO_popup_dialog_site"></span> in your browser settings and then try again.</p>
+        <div class="OIO_single-button-div">
+            <input type="button" id="OIO_popup_button" value="OK" class="OIO_main-button">
+        </div>
+    </dialog>
     <!-- END Interlisp Online -->
 
     <audio id="noVNC_bell">

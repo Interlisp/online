@@ -394,6 +394,9 @@ const UI = {
         window.addEventListener('beforeunload', UI.closeFileBrowser);
         document.getElementById("OIO_warning_button")
             .addEventListener('click', UI.warningButtonOnClick);
+        document.getElementById("OIO_popup_button")
+            .addEventListener('click', () => {document.getElementById("OIO_popup_dlg").close();});
+        document.getElementById("OIO_popup_dialog_site").innerHTML = ` (${window.location.hostname}) `;
     },
 
 /* ------^-------
@@ -1319,6 +1322,13 @@ const UI = {
         url = nco ? `${url}/files/il/notefiles` : `${url}/files/il`;
         if (u && p) url = `${url}?u=${u}&p=${p}`;
         window.fileBrowserWindow = window.open(url, "_blank");
+        setTimeout(() => {
+            const w = window.fileBrowserWindow;
+            if(!w || w.closed || w.closed == "undefined"){
+                w && !w.closed && w.close();
+                document.getElementById('OIO_popup_dlg').showModal();
+            }
+        }, 1750);
     },
     
     closeFileBrowser() {
