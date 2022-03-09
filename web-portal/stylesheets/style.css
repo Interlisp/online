@@ -125,11 +125,6 @@ h2 {
   width: 50%;
 }
 
-#logged-in-as {
-  font-size: 15px;
-  font-style: italic;
-  padding-bottom: 1em;
-}
 
 #page-header {
   margin: 0em auto 0.25em auto;
@@ -286,26 +281,11 @@ h2 {
     width: 4em;
 }
 
-.checkbox-input {
-    font-size: 16px;
-    width: 1em;
-    height: 1em;
-    vertical-align: middle;
-}
 
 .options-div {
     margin-top: 15px;
 }
 
-#dev-div-buttons {
-    width:350px;
-    margin-right: auto;
-    margin-left: auto;
-    border-style: double;
-    border-width: 5px;
-    border-color: #C0C0C0;
-    padding: 1em;
-}
 
 #dev-div-checkbox .jumbotron {
     padding-bottom: 0em;
@@ -330,19 +310,6 @@ h2 {
 }
 
 
-.run-options-div {
-  max-width: 350px;
-  border-width: 2px;
-  border-radius: 15px;
-  border-color: #2F2F2F;
-  border-style: solid;
-  margin-top: .66em;
-  margin-left: auto;
-  margin-right: auto;
-  padding-top: 0.25em;
-  padding-bottom: 0.5em;
-  font-size: 16px;
-}
 
 
 .run-option {
@@ -354,15 +321,6 @@ h2 {
   display: inline-block;
 }
 
-.run-option-div {
-  max-width: 350px;
-  margin-top: .66em;
-  margin-left: auto;
-  margin-right: auto;
-  padding-top: 0.25em;
-  padding-bottom: 0.5em;
-  font-size: 16px;
-}
 
 .run-option-rb {
    padding-left: 4em;
@@ -463,8 +421,4 @@ h2 {
 
 #which-exec-div {
   font-size:16px;
-}
-
-.sub-radio {
-  
 }

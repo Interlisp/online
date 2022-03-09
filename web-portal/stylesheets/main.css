@@ -1,0 +1,79 @@
+/***************************************************************************
+ *
+ *   main.css:  css code for main.pug on online.interlisp.org web portal.
+ *
+ *   2022-03-08 Frank Halasz
+ *
+ *
+ *   Copyright: 2021-2022 by Interlisp.org
+ *
+ *
+ **************************************************************************/
+
+#logged-in-as {
+  font-size: 15px;
+  font-style: italic;
+  padding-bottom: 1em;
+}
+
+#run-button {
+  font-size: 24px;
+  line-height: 1.6;
+  padding: 1rem 1rem;
+}
+
+#run-options {
+  max-width: 350px;
+  font-size: 16px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 0.25em;
+  padding-bottom: 0.5em;
+}
+
+#ro-table {
+  width:350px;
+  border-spacing:0.125em;
+}
+
+#ro-col1, #ro-col3 {
+  width:50px;
+}
+
+#ro-col2 {
+  width:250px;
+}
+
+#wh-cell {
+  text-align:center;
+}
+
+#fill-windows-label {
+  text-align:center;
+}
+
+#screen-width, #screen-height {
+  width: 3em;
+}
+
+.checkbox-input {
+    width: 1em;
+    height: 1em;
+    vertical-align: middle;
+}
+
+#dev-div-checkbox {
+    font-size: 18px;
+    padding-bottom: 0em;
+}
+
+#dev-div-buttons {
+    width:350px;
+    margin-right: auto;
+    margin-left: auto;
+    border-style: double;
+    border-width: 5px;
+    border-color: #C0C0C0;
+    padding: 1em;
+}
+
