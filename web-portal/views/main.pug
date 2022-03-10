@@ -36,50 +36,48 @@ block headeradds
             if (targetSystem == "Notecards") {
                 document.getElementById("fill_window_cb").checked = true;
                 document.getElementById("dev-div").style.display = "none";
-                document.getElementById("custom_sysout_label").style.display = "none";
                 if(#{isGuest}) {
-                    document.getElementById("run-options").style.display = "none";
+                    hideRow("resume");
                     document.getElementById("do_not_checkbox_div").style.display = "none";
 
                 } else {
-                    document.getElementById("resume-label").style.display = "block";
+                    showRow("resume");
                     document.getElementById("do_not_checkbox_div").style.display = "inline-block";
                 }
-                  document.getElementById("run_notecards_row").style.display = "none";
-                  document.getElementById("run_notecards_rule").style.display = "none";
+                hideRow("run_notecards");
+                hideRow("initial_exec");
                 document.getElementById("run_notecards_cb").checked = true;
                 document.getElementById("custom_sysout_cb").checked = false;
                 document.getElementById("custom_init_cb").checked = false;
-                document.getElementById("stfp_checkbox").checked = false;
+                document.getElementById("sftp_checkbox").checked = false;
                 document.getElementById("interlisp_rb").checked = true;
             } else if(#{isGuest}) {
                 document.getElementById("fill_window_cb").checked = true;
                 document.getElementById("dev-div").style.display = "none";
                 document.getElementById("do_not_checkbox_div").style.display = "none";
-                document.getElementById("custom_sysout_label").style.display = "none";
-                  document.getElementById("resume_row").style.display = "none";
-                  document.getElementById("resume_rule").style.display = "none";
-                  document.getElementById("run_notecards_row").style.display = "block";
-                  document.getElementById("run_notecards_rule").style.display = "block";
+                hideRow("resume");
+                showRow("initial_exec");
+                showRow("run_notecards");
                 document.getElementById("run_notecards_cb").checked = false;
-                document.getElementById("stfp_checkbox").checked = false;
+                document.getElementById("sftp_checkbox").checked = false;
                 document.getElementById("interlisp_rb").checked = true;
             } else {
                 document.getElementById("resume_cb").checked = (localStore.getItem("resume") == "true");
                 document.getElementById("custom_sysout_cb").checked = (localStore.getItem("custom") == "true");
                 document.getElementById("custom_init_cb").checked = (localStore.getItem("custom_init") == "true");
-                document.getElementById("stfp_checkbox").checked = (localStore.getItem("sftp") == "true");
+                document.getElementById("sftp_checkbox").checked = (localStore.getItem("sftp") == "true");
                 document.getElementById("run_notecards_cb").checked = (localStore.getItem("run_notecards") == "true");
                 document.getElementById("fill_window_cb").checked = ((localStore.getItem("fill-window") || 'true') == 'true')
                 document.getElementById("dev-div").style.display = "inline-block";
                 document.getElementById("do_not_checkbox_div").style.display = "inline-block";
-                document.getElementById("custom_sysout_label").style.display = "block";
-                  document.getElementById("resume_row").style.display = "block";
-                  document.getElementById("resume_rule").style.display = "block";
-                  document.getElementById("run_notecards_row").style.display = "block";
-                  document.getElementById("run_notecards_rule").style.display = "block";
+                showRow("resume");
+                showRow("initial_exec");
+                showRow("run_notecards");
                 resumeOnClick();
-                document.getElementById("interlisp_rb").checked = (localStore.getItem("medley_exec") == "inter");
+                if (localStore.getItem("medley_exec") == "common")
+                    document.getElementById("commonlisp_rb").checked = true;
+                else
+                    document.getElementById("interlisp_rb").checked = true;
             }
             fillWindowOnClick();
             document.getElementById("dev-options-checkbox").checked = (localStore.getItem("show_dev_options") == "true");
@@ -107,7 +105,7 @@ block headeradds
             const custom = document.getElementById("custom_sysout_cb").checked ? "true" : "false";
             const customInit = document.getElementById("custom_init_cb").checked ? "true" : "false";
             const runNotecards = document.getElementById("run_notecards_cb").checked ? "true": "false";
-            const startSftp = document.getElementById("stfp_checkbox").checked ? "true": "false";
+            const startSftp = document.getElementById("sftp_checkbox").checked ? "true": "false";
             const medleyExec = document.getElementById("interlisp_rb").checked ? "inter" : "common";
             if(! #{isGuest}) {
                 localStore.setItem("fill-window", fillWindow ? 'true' : 'false');
@@ -209,7 +207,7 @@ block headeradds
 
     script.
         function showDevOptionsOnClick() {
-           const dev_div = document.getElementById('dev-div-buttons');
+           const dev_div = document.getElementById('dev-div-controls');
            const dev_cb = document.getElementById("dev-options-checkbox");
            if(dev_cb.checked) {
                 dev_div.style.display = "inline-block";
@@ -230,18 +228,20 @@ block headeradds
     script.
         function resumeOnClick() {
             const resume = document.getElementById("resume_cb");
-            const custom = document.getElementById("custom_sysout_cb");
-            const customInit = document.getElementById("custom_init_cb");
-            const rnc = document.getElementById("run_notecards_cb");
-            if(resume.checked) {
-                custom.disabled = true;
-                customInit.disabled = true;
-                rnc.disabled = true;
-                
+            if(resume && resume.checked) {
+                disableRow("custom_sysout");
+                disableRow("custom_init");
+                disableRow("run_notecards");
+                disableRow("initial_exec");
+                document.getElementById("interlisp_rb").disabled = true;
+                document.getElementById("commonlisp_rb").disabled = true;
             } else {
-                custom.disabled = false;
-                customInit.disabled = false;
-                rnc.disabled = false;
+                enableRow("custom_sysout");
+                enableRow("custom_init");
+                enableRow("run_notecards");
+                enableRow("initial_exec");
+                document.getElementById("interlisp_rb").disabled = false;
+                document.getElementById("commonlisp_rb").disabled = false;
             }
         }
 
@@ -305,6 +305,29 @@ block headeradds
             }
         }
 
+    script.
+        function hideRow(rowId) {
+            document.getElementById(`${rowId}_row`).style.visibility = "collapse";
+            document.getElementById(`${rowId}_rule`).style.visibility = "collapse";
+         }
+
+         function showRow(rowId) {
+            document.getElementById(`${rowId}_row`).style.visibility = "visible";
+            document.getElementById(`${rowId}_rule`).style.visibility = "visible";
+         }
+
+         function disableRow(rowId) {
+            document.getElementById(`${rowId}_row`).style.color = "rgb(174, 174, 174)";
+            const cb = document.getElementById(`${rowId}_cb`);
+            if (cb) cb.disabled = true;
+         }
+
+         function enableRow(rowId) {
+            document.getElementById(`${rowId}_row`).style.color = "rgb(0, 0, 0)";
+            const cb = document.getElementById(`${rowId}_cb`);
+            if (cb) cb.disabled = false;
+         }
+
 block content
     .row.text-center#logged-in-as
         form#dummy002(method="POST" action="/user/logout" style="display:none")
@@ -330,7 +353,7 @@ block content
               td
                 span.in-circle(onclick='helpOnClick("resume");') ?
             <tr id="resume_rule"><td></td><td><hr></td><td></td></tr>
-            tr
+            tr#initial_exec_row
               //- Initial Exec
               td
               td
@@ -347,12 +370,12 @@ block content
                       <input type="radio" id="commonlisp_rb" name="which-exec" class="checkbox-input">&nbsp;Common Lisp
               td
                 span.in-circle(onclick='helpOnClick("which-exec");') ?
-            <tr><td></td><td><hr></td><td></td></tr>
+            <tr id="initial_exec_rule"><td></td><td><hr></td><td></td></tr>
             tr#run_notecards_row
               //- Run Notecards
               td
               td              
-                label.
+                label.run-option.
                   <input type="checkbox" id="run_notecards_cb" class="checkbox-input">&nbsp;Run Notecards
               td
                 span.in-circle(onclick='helpOnClick("run_notecards");') ?
@@ -377,25 +400,24 @@ block content
       .text-center#dev-div-checkbox
         label.
           <input type="checkbox" id="dev-options-checkbox" onclick="showDevOptionsOnClick();" class="checkbox-input">&nbsp;Show advanced options
-      #dev-div-buttons(style="display:none;")
-        #custom_sysout_label
+      #dev-div-controls(style="display:none;")
+        #custom_sysout_row
           label.run-option.dev-div-run-option.
             <input type="checkbox" id="custom_sysout_cb" class="checkbox-input">&nbsp;Run custom sysout
           span.in-circle(onclick='helpOnClick("custom");') ?
-        #custom-init-label
+        #custom_init_row
           label.run-option.dev-div-run-option.
             <input type="checkbox" id="custom_init_cb" class="checkbox-input">&nbsp;Use custom site init
           span.in-circle(onclick='helpOnClick("custom-init");') ?
         #sftp-label
           label.run-option.dev-div-run-option.
-            <input type="checkbox" id="stfp_checkbox" class="checkbox-input">&nbsp;Start SFTP Server
+            <input type="checkbox" id="sftp_checkbox" class="checkbox-input">&nbsp;Start SFTP Server
           span.in-circle(onclick='helpOnClick("sftp");') ?
-        br
-        .text-center
-          button(type="button" onclick='startSession("xterm");').main-button Start Terminal Session
-          br
-        .text-center
-          button(type="button" onclick='reset();').main-button Reset Home Directory
+        #dev-div-buttons
+          .text-center.dev-div-button
+            button(type="button" onclick='startSession("xterm");').main-button Start Terminal Session
+          .text-center.dev-div-button
+            button(type="button" onclick='reset();').main-button Reset Home Directory
 
     dialog#reconnect-dialog
         p You already have an <span id="rd-type-span">Interlisp</span> session running.

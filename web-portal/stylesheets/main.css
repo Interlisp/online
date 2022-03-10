@@ -53,7 +53,7 @@
 }
 
 #screen-width, #screen-height {
-  width: 3em;
+  width: 3.5em;
 }
 
 .checkbox-input {
@@ -67,13 +67,29 @@
     padding-bottom: 0em;
 }
 
-#dev-div-buttons {
-    width:350px;
-    margin-right: auto;
-    margin-left: auto;
-    border-style: double;
-    border-width: 5px;
-    border-color: #C0C0C0;
-    padding: 1em;
+#dev-div-controls {
+  width:350px;
+  margin-right: auto;
+  margin-left: auto;
+  border-style: double;
+  border-width: 5px;
+  border-color: #C0C0C0;
+  padding: 1em;
 }
 
+#dev-div-buttons {
+  font-size: 16px;
+  line-height: 1.33;
+}
+
+.dev-div-button {
+  margin-top: 0.75em;  
+}
+
+.dev-div-run-option {
+  width:200px;
+}
+
+tr:disabled {
+  color:#E0E0E0;
+}
