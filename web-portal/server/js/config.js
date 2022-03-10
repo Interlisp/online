@@ -73,7 +73,9 @@ exports.tlsChainPath = tlsChainPath;
 var tlsFullChainPath =  path.join(tlsCertDir, tlsFullChainFilename);
 exports.tlsFullChainPath = tlsFullChainPath;
 
-var noVncDir = path.join(__dirname, '..', 'novnc');
+var clientDirRelativeTo_dirname = '../../client';
+
+var noVncDir = path.join(__dirname, clientDirRelativeTo_dirname, 'novnc');
 exports.noVncDir = noVncDir;
 var noVncHomePage = path.join(noVncDir, 'vnc.html');
 exports.noVncHomePage = noVncHomePage;
@@ -86,13 +88,13 @@ exports.runAsGroupname = runAsGroupname;
 var logPath = path.join('/srv/oio/log', 'oio.log');
 exports.logPath = logPath;
 
-var viewsPath = path.join(__dirname, '..', 'views');
+var viewsPath = path.join(__dirname, clientDirRelativeTo_dirname, 'views');
 exports.viewsPath = viewsPath;
 
-var stylesheetsPath = path.join(__dirname, '..', 'stylesheets');
+var stylesheetsPath = path.join(__dirname, clientDirRelativeTo_dirname, 'stylesheets');
 exports.stylesheetsPath = stylesheetsPath;
 
-var polyfillsPath = path.join(__dirname, '..', 'polyfills');
+var polyfillsPath = path.join(__dirname, clientDirRelativeTo_dirname, 'polyfills');
 exports.polyfillsPath = polyfillsPath;
 
 var sessionSecret = keys.sessionSecret;
@@ -107,7 +109,7 @@ exports.gmailUsername = gmailUsername;
 var gmailFrom = "Interlisp Online <registration@interlisp.org>";
 exports.gmailFrom = gmailFrom;
 
-var imagesDir = path.join(__dirname, '..', 'images');
+var imagesDir = path.join(__dirname, clientDirRelativeTo_dirname, 'images');
 exports.imagesDir = imagesDir;
 
 var noDockerRm = isDev && false;

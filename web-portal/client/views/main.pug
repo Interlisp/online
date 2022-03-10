@@ -1,0 +1,174 @@
+//-
+    /***************************************************************************
+     *
+     *   main.pug:   "main" page for online.interlisp.org web portal.
+     *               This is where the user starts up interlisp, etc.,
+     *
+     *   2021-11-22 Frank Halasz
+     *
+     *
+     *   Copyright: 2021-2022 by Interlisp.org
+     *
+     *
+     **************************************************************************/
+ 
+extends layout
+
+block variables
+
+block headeradds
+
+    script.
+        const isGuest = #{isGuest};
+        const isVerified = #{isVerified};
+        const nodisclaimer = #{nodisclaimer};
+
+    link(rel="stylesheet", href="/stylesheets/main.css")
+
+    script(src="/views/js/main.js")
+        
+
+block content
+    .row.text-center#logged-in-as
+        form#dummy002(method="POST" action="/user/logout" style="display:none")
+        != `Logged in as: ${login}.<a id="logout-a" onclick="document.getElementById('dummy002').submit();"><span id="logout-span">LOGOUT</span></a>` 
+
+    .row.text-center#run-button
+        button.main-button(type="button" onclick='startSession("interlisp");')!= "Run " + (isNCO ? "Notecards" : "Medley")
+    
+    .row.text-center#run-options
+        table#ro-table
+          thead
+            tr
+              th#ro-col1
+              th#ro-col2
+              th#ro-col3
+          tbody
+            //- Resume on click
+            tr#resume_row
+              td
+              td
+                label.run-option.
+                  <input type="checkbox" id="resume_cb" onclick="resumeOnClick()" class="checkbox-input">&nbsp;Resume previous session
+              td
+                span.in-circle(onclick='helpOnClick("resume");') ?
+            <tr id="resume_rule"><td></td><td><hr></td><td></td></tr>
+            tr#initial_exec_row
+              //- Initial Exec
+              td
+              td
+                table
+                  tr
+                    td(rowspan="2").
+                      Initial Exec:
+                    td(style="text-align:left;")
+                      label.
+                        <input type="radio" id="interlisp_rb" name="which-exec" class="checkbox-input" checked>&nbsp;Interlisp
+                  tr
+                    td(style="text-align:left;")           
+                      label.
+                      <input type="radio" id="commonlisp_rb" name="which-exec" class="checkbox-input">&nbsp;Common Lisp
+              td
+                span.in-circle(onclick='helpOnClick("which-exec");') ?
+            <tr id="initial_exec_rule"><td></td><td><hr></td><td></td></tr>
+            tr#run_notecards_row
+              //- Run Notecards
+              td
+              td              
+                label.run-option.
+                  <input type="checkbox" id="run_notecards_cb" class="checkbox-input">&nbsp;Run Notecards
+              td
+                span.in-circle(onclick='helpOnClick("run_notecards");') ?
+            <tr id="run_notecards_rule"><td></td><td><hr></td><td></td></tr>
+            tr
+              //- Screen Width and Height
+              td
+              td#wh-cell              
+                div
+                  label Screen Width:&nbsp;
+                    input(type="number", id="screen-width", class="number-input", value=1024, min=100, max=9999)
+                div
+                  label Screen Height:&nbsp;
+                    input(type="number", id="screen-height", class="number-input", value=808, min=100, max=9999)
+                #fill-window-label
+                  label.
+                    <input type="checkbox" id="fill_window_cb" onclick="fillWindowOnClick()">&nbsp;Fill browser window
+              td
+            <tr><td></td><td><hr></td><td></td></tr>
+
+    .row#dev-div(style="display:none;")
+      .text-center#dev-div-checkbox
+        label.
+          <input type="checkbox" id="dev-options-checkbox" onclick="showDevOptionsOnClick();" class="checkbox-input">&nbsp;Show advanced options
+      #dev-div-controls(style="display:none;")
+        #custom_sysout_row
+          label.run-option.dev-div-run-option.
+            <input type="checkbox" id="custom_sysout_cb" class="checkbox-input">&nbsp;Run custom sysout
+          span.in-circle(onclick='helpOnClick("custom");') ?
+        #custom_init_row
+          label.run-option.dev-div-run-option.
+            <input type="checkbox" id="custom_init_cb" class="checkbox-input">&nbsp;Use custom site init
+          span.in-circle(onclick='helpOnClick("custom-init");') ?
+        #sftp-label
+          label.run-option.dev-div-run-option.
+            <input type="checkbox" id="sftp_checkbox" class="checkbox-input">&nbsp;Start SFTP Server
+          span.in-circle(onclick='helpOnClick("sftp");') ?
+        #dev-div-buttons
+          .text-center.dev-div-button
+            button(type="button" onclick='startSession("xterm");').main-button Start Terminal Session
+          .text-center.dev-div-button
+            button(type="button" onclick='reset();').main-button Reset Home Directory
+
+    dialog.vdialog#reconnect-dialog
+        p You already have an <span id="rd-type-span">Interlisp</span> session running.
+        p Do you want to <b>reconnect</b> to this session or
+        p <b>kill</b> this session and start a new one?
+        br
+        .button-div
+            button(type="button" onclick='rdDone("reconnect");').main-button Reconnect
+            button(type="button" onclick='rdDone("kill");').main-button Kill
+
+    dialog.vdialog#alert-dialog
+        p <span id="alert-span">Alert</span>
+        br
+        .single-button-div
+            button(type="button" onclick='alertOk();').main-button OK
+
+    dialog.vdialog#verification-dialog1
+        h2  Notice
+        p.
+            This account has not been verified.  You are free to use online.interlisp.org to
+            explore the many wonders of Interlisp.
+        p.
+            However, any account that has not been verified within 7 days of its creation
+            may be deleted without notice.
+        p.
+            A verification email was sent to #{login} when the account was created.  Please follow the
+            directions in this email to verify your account.
+        .single-button-div
+            button(type="button" onclick='verificationClose(1, false);').main-button OK
+        .single-button-div
+            button(type="button" onclick='verificationClose(1, true);').main-button Resend Verification Email
+
+    dialog.vdialog#verification-dialog2
+        h2  Notice
+        p.
+            As part of the re-registration process, we are asking you to verify your email address.
+            You are free to continue to use online.interlisp.org to
+            explore the many wonders of Interlisp.
+        p.
+            However, if your account email is not been verified within the next 7 days, it
+            may be deleted without notice.
+        p.
+            A verification email was just sent to #{login}.  Please follow the
+            directions in this email to verify your account.
+        .single-button-div
+            button(type="button" onclick='verification_close(2, false);').main-button OK
+
+    script.
+        function disclaimerCheckboxCallback() {
+            fetch(`/user/nodisclaimer`).then(response => {console.log(response);});
+        }
+
+    include disclaimer.pug
+    include help_dialogs.pug

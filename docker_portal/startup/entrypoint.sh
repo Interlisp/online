@@ -16,5 +16,5 @@ export MONGODB_URL="mongodb://%2Fsrv%2Foio-nomount%2Fmongodb%2Fmongodb-27017.soc
 /usr/bin/mongod --config /opt/oio/mongodb/mongodb.conf --fork
 EOF
 #
-cd /opt/oio/web-portal
+cd /opt/oio/web-portal/server
 /usr/bin/node js/server.js

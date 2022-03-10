@@ -20,7 +20,9 @@ block variables
 
 block headeradds
 
-   script.
+    link(rel="stylesheet", href="/stylesheets/login.css")
+
+    script.
    
         const guestUsername = "#{guestUsername}";
         const guestPassword = "#{guestPassword}";
@@ -105,7 +107,7 @@ block content
         New user?  Register <a href=/user/register>here</a> 
         
     .row
-        .jumbotron.text-center
+        .text-center#guest_button_div
             span.in-circle(style="visibility:hidden") ?
             span &nbsp;&nbsp;&nbsp;
             button(type="button" id="guest_button" onclick="loginAsGuest()").main-button Login As Guest

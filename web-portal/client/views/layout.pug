@@ -22,7 +22,10 @@ html(lang="en")
   head
     meta(charset="utf-8")
     meta(name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no")
-    link(rel="stylesheet", href="/stylesheets/style.css")
+
+    link(rel="stylesheet", href="/stylesheets/common.css")
+    link(rel="stylesheet", href="/stylesheets/layout.css")
+
     link(rel="icon" sizes="16x16" type="image/png" href="/images/icons/Interlisp-FavIcon-16x16.png")
     link(rel="icon" sizes="24x24" type="image/png" href="/images/icons/Interlisp-FavIcon-24x24.png")
     link(rel="icon" sizes="32x32" type="image/png" href="/images/icons/Interlisp-FavIcon-32x32.png")
@@ -69,28 +72,36 @@ html(lang="en")
         };
         try {document.addEventListener("DOMContentLoaded", $buo_f,false)}
         catch(e){window.attachEvent("onload", $buo_f)}
+        
         var oioMaxHeight = 850;
-        window.addEventListener('resize', (event) => {
-                  if(window.innerHeight < oioMaxHeight)
-                       document.getElementById("header_img").style.display = "none";
-                  else
-                       document.getElementById("header_img").style.display = "inline-block";
-        });
+        function displayRightHeader(event) {
+            if(window.innerHeight < oioMaxHeight) {
+                 document.getElementById("header_img").style.display = "none";
+                 document.getElementById("header_text").style.display = "inline-block";
+            } else {
+                 document.getElementById("header_img").style.display = "inline-block";
+                 document.getElementById("header_text").style.display = "none";
+            }
+        }
+        window.addEventListener('resize', displayRightHeader);
+        window.addEventListener('load', displayRightHeader);
 
     title #{title}
     block headeradds
   body
-    div(id="page-container")
+    div(id="page-container")  
       div(id="content-wrap")
         .container
           div(id="page-header")
             div
-              != '<img id="header_img" src="/images/' + targetSystem + '-Online.png" alt="' + targetSystem + ' logo" width="200" height="100">'
+              != `<img id="header_img" src="/images/logos/logo_${targetSystem.toLowerCase()}_online.svg" alt="${targetSystem} logo">`
+              != `<div id="header_text">${(targetSystem == "Notecards") ? "Notecards" : "Medley"} Online</div>`
+              <p id="header_img_caption">IDE for Interlisp <i>and</i> Common Lisp</p>
           block content
       footer(id="footer")
         table
           tr
             td#copyright-div.
-              &copy; Copyright 2022 by <a href="http://www.interlisp.org">www.interlisp.org</a>
+              &copy; Copyright 2022 by <a href="http://interlisp.org">Interlisp.Org</a>
             td#sponsor-button-div
               button#sponsor-button(type="button", onclick='window.open("https://github.com/sponsors/Interlisp?o=esb", "_blank");') Sponsor Interlisp.org

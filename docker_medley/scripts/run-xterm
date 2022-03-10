@@ -81,7 +81,13 @@ fi
 su ${MEDLEY_UNAME} <<EOF
 set -x
 xrdb -merge /home/medley/.Xresources
-(echo ".         Files are now available by SFTP to notecards.online using port 2${PORT}.  Username is '${MEDLEY_UNAME}'.  Password is ${SFTP_PWD}" | xmessage -file - -geometry ${width}x66+5+0)  &
+if [ "${NCO}" == "true" ];
+then
+    sitename="notecards.online"
+else
+    sitename="online.interlisp.org"
+fi
+(echo ".         Files are now available by SFTP to ${sitename} using port 2${PORT}.  Username is '${MEDLEY_UNAME}'.  Password is ${SFTP_PWD}" | xmessage -file - -geometry ${width}x66+5+0)  &
 twm &
 sleep 1
 export TMOUT=1800

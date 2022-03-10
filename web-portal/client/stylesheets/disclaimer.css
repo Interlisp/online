@@ -1,0 +1,23 @@
+/***************************************************************************
+ *
+ *   disclaimer.css:  css code for disclaimer.pug on online.interlisp.org web portal.
+ *
+ *   2022-03-08 Frank Halasz
+ *
+ *
+ *   Copyright: 2021-2022 by Interlisp.org
+ *
+ *
+ **************************************************************************/
+#disclaimer-dialog .single-button-div, .vdialog .single-button-div {
+  margin-top: 1.5em;
+}
+
+#disclaimer-dialog .checkbox-div {
+  margin: 2em auto 1em auto;
+}
+
+#disclaimer-dialog h2, .vdialog h2 {
+  margin: 0em auto 0.75em auto;
+}
+
