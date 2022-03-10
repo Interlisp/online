@@ -125,17 +125,32 @@ h2 {
   width: 50%;
 }
 
-#logged-in-as {
-  font-size: 15px;
-  font-style: italic;
-  padding-bottom: 1em;
-}
 
 #page-header {
   margin: 0em auto 0.25em auto;
   font-size: 24px;
   color: #337ab7;
   text-align: center;
+}
+
+#header_img {
+ width:300px;
+ height:100px;  
+}
+
+#header_text {
+  color:#337ab7;
+  font-family:"Times New Roman",Times,serif;
+  font-size:18pt;
+  font-weight:700;
+}
+
+#header_img_caption {
+  margin-top:0.25em;
+  color:#337ab7;
+  font-family:"Times New Roman",Times,serif;
+  font-size:18pt;
+  font-weight:700;
 }
 
 #sponsor-button {
@@ -256,7 +271,7 @@ h2 {
   margin: 0em auto 0.75em auto;
 }
 
-.options-div label, #dev-div-checkbox {
+.options-div label {
     font-size: 16px;
     display: block;
 }
@@ -266,62 +281,16 @@ h2 {
     width: 4em;
 }
 
-.checkbox-input {
-    font-size: 16px;
-    width: 1em;
-    height: 1em;
-    vertical-align: middle;
-}
 
 .options-div {
     margin-top: 15px;
 }
 
-#dev-div-buttons {
-    width:350px;
-    margin-right: auto;
-    margin-left: auto;
-    border-style: double;
-    border-width: 5px;
-    border-color: #C0C0C0;
-    padding: 1em;
-}
 
-#dev-div-checkbox .jumbotron {
-    padding-bottom: 0em;
-    font-size: 18px;
-}
-
-#dev-div-buttons .jumbotron {
-    padding-bottom: 0.25em;
-    padding-top: 0.25em;
-    display:inline-block;
-    font-size:16px    
-}
 
 h2 {
     margin-bottom: 0em;
     font-size: 30px;
-}
-
-#dev-options-div {
-    font-size: 20px;
-    width:auto;
-}
-
-
-.run-options-div {
-  max-width: 350px;
-  border-width: 2px;
-  border-radius: 15px;
-  border-color: #2F2F2F;
-  border-style: solid;
-  margin-top: .66em;
-  margin-left: auto;
-  margin-right: auto;
-  padding-top: 0.25em;
-  padding-bottom: 0.5em;
-  font-size: 16px;
 }
 
 
@@ -330,12 +299,15 @@ h2 {
   margin-left: auto;
   margin-right: auto;
   text-align: left;
+  font-size: 16px;
   display: inline-block;
 }
 
-.dev-div-run-option {
-  width:200px;
+
+.run-option-rb {
+   padding-left: 4em;
 }
+
 
 .in-circle {
     display: inline-block;
@@ -379,10 +351,6 @@ h2 {
   max-width: 525px;
   padding: 0em 1.5em 0em 1.5em;
   font-size: 14px;
-  border-width: 1px;
-  border-color: #337ab7;
-  border-style: solid;
-  border-radius: 10px;
   text-align: center;
   margin: 1em auto .5em auto;
 }
@@ -408,4 +376,28 @@ h2 {
 
 #nc_do_not_checkbox_div {
   margin-top: 1em;
+}
+
+#logout-span {
+  font-style: italic;
+  text-transform: uppercase;
+  text-decoration: underline;
+}
+
+#logout-a {
+  margin-left: 1.5em;
+  cursor: default;
+}
+
+#logout-a :hover {
+  background-color: #eaeef1;;
+}
+
+#logout-a :active {
+  background-color: #eaeef1;;
+  color: #337ab7;
+}
+
+#which-exec-div {
+  font-size:16px;
 }
