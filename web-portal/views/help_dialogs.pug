@@ -98,3 +98,15 @@ dialog(id="help-dialog-custom-init").help-dialog
         If ~/il/init/ONLINE-INIT(.LCOM) does not exist, the standard ONLINE-INIT will be used instead.
     .single-button-div
         button(type="button" onclick='helpDialogClose("custom-init");').main-button OK
+
+dialog(id="help-dialog-which-exec").help-dialog
+    h2  Help
+    p.
+        Medley supports both Interlisp and Common Lisp.  The system starts up with a single Exec window running a
+        read-eval-print loop (REPL) for executing Lisp.  This Exec window can be either Interlisp- or Common Lisp-based. 
+    p.
+        This option selects whether the initial Exec window is Interlisp- or Common Lisp-based.
+    p.
+        Additional Exec windows based on either Interlisp or Common Lisp can be started at any time from the background menu.
+    .single-button-div
+        button(type="button" onclick='helpDialogClose("which-exec");').main-button OK

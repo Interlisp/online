@@ -1,13 +1,14 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED " 4-Mar-2022 18:29:36" {DSK}<home>medley>il>ONLINE-INIT.;1 8516   
+(FILECREATED " 9-Mar-2022 20:45:34" {DSK}<home>medley>il>ONLINE-INIT.;1 8573   
 
       :CHANGES-TO (ADVICE IDLE)
-                  (FNS Online.SftpInitInfo Online.SftpUpdateInfo Online.InitNotecards Online.DoInit 
-                       Online.InitNCO Online.SwitchToInterlispExec)
                   (VARS ONLINE-INITCOMS)
+                  (FNS Online.SftpInitInfo Online.SftpUpdateInfo Online.InitNotecards Online.DoInit 
+                       Online.SwitchToInterlispExec)
 
-      :PREVIOUS-DATE "26-Feb-2022 22:19:58" {DSK}<home>medley>il>ONLINE-INIT.;3)
+      :PREVIOUS-DATE " 4-Mar-2022 18:29:36" {DSK}<usr>local>interlisp>medley>greetfiles>ONLINE-INIT.;1
+)
 
 
 (PRETTYCOMPRINT ONLINE-INITCOMS)
@@ -79,6 +80,8 @@
 
 (Online.DoInit
   [LAMBDA NIL
+
+    (* ;; "Edited  9-Mar-2022 20:44 by F G H: G H: G H")
 
     (* ;; "Edited  4-Mar-2022 17:55 by F G H: G H")
 
@@ -153,8 +156,8 @@
            (* ;; "change to interlisp exec if required")
 
            (COND
-              ((OR (STRING-EQUAL (UNIX-GETENV 'MEDLEY_EXEC
-                                        "inter"))
+              ((OR (STRING-EQUAL (UNIX-GETENV 'MEDLEY_EXEC)
+                          "inter")
                    (STRING-EQUAL (UNIX-GETENV 'NCO)
                           "true"))
                (Online.SwitchToInterlispExec])
@@ -180,7 +183,7 @@
 (BKSYSBUF " ")
 )
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (1696 8436 (Online.SftpInitInfo 1706 . 2579) (Online.SftpUpdateInfo 2581 . 2836) (
-Online.InitNotecards 2838 . 3782) (Online.DoInit 3784 . 7508) (Online.SwitchToInterlispExec 7510 . 
-8434)))))
+  (FILEMAP (NIL (1705 8493 (Online.SftpInitInfo 1715 . 2588) (Online.SftpUpdateInfo 2590 . 2845) (
+Online.InitNotecards 2847 . 3791) (Online.DoInit 3793 . 7565) (Online.SwitchToInterlispExec 7567 . 
+8491)))))
 STOP
