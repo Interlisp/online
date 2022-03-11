@@ -95,8 +95,9 @@ html(lang="en")
           div(id="page-header")
             div
               != `<img id="header_img" src="/images/logos/logo_${targetSystem.toLowerCase()}_online.svg" alt="${targetSystem} logo">`
-              != `<div id="header_text">${(targetSystem == "Notecards") ? "Notecards" : "Medley"} Online</div>`
-              <p id="header_img_caption">IDE for Interlisp <i>and</i> Common Lisp</p>
+              != `<div id="header_text" style="display:none">${(targetSystem == "Notecards") ? "Notecards" : "Medley"} Online</div>`
+              - var captionText = isNCO ? "Hypertext circa 1985" : "IDE for Interlisp <i>and</i> Common Lisp";
+              != `<p id="header_img_caption">${captionText}</p>`
           block content
       footer(id="footer")
         table
