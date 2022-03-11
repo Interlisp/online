@@ -77,16 +77,17 @@ fi
 /usr/local/bin/filebrowser -d ${FILEBROWSER_DATABASE} --port ${FILEBROWSER_PORT} \
           ${FILEBROWSER_CERT} ${FILEBROWSER_KEY} &
 #
-#
-su ${MEDLEY_UNAME} <<EOF
-set -x
-xrdb -merge /home/medley/.Xresources
 if [ "${NCO}" == "true" ];
 then
     sitename="notecards.online"
 else
     sitename="online.interlisp.org"
 fi
+#
+#
+su ${MEDLEY_UNAME} <<EOF
+set -x
+xrdb -merge /home/medley/.Xresources
 (echo ".         Files are now available by SFTP to ${sitename} using port 2${PORT}.  Username is '${MEDLEY_UNAME}'.  Password is ${SFTP_PWD}" | xmessage -file - -geometry ${width}x66+5+0)  &
 twm &
 sleep 1
