@@ -97,6 +97,9 @@ exports.stylesheetsPath = stylesheetsPath;
 var polyfillsPath = path.join(__dirname, clientDirRelativeTo_dirname, 'polyfills');
 exports.polyfillsPath = polyfillsPath;
 
+var clientJsPath = path.join(__dirname, clientDirRelativeTo_dirname, 'js');
+exports.clientJsPath = clientJsPath;
+
 var sessionSecret = keys.sessionSecret;
 exports.sessionSecret = sessionSecret;
 
