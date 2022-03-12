@@ -1,4 +1,4 @@
-# Dockerfile to create a docker image that converts v1 volumes to v2 for oio.
+# Dockerfile to create a docker image that backs up v1 volumes for oio.
 #
 # 2022-02-15 Frank Halasz
 # 

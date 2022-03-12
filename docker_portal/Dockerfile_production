@@ -79,20 +79,20 @@ RUN mkdir -p /opt/oio/web-portal \
 COPY --chown=oio:oio web-portal /opt/oio/web-portal
 WORKDIR /opt/oio
 # setup novnc
-COPY --chown=oio:oio web-portal/novnc_oio/rfb.js                web-portal/novnc/core/rfb.js
-COPY --chown=oio:oio web-portal/novnc_oio/vnc.html              web-portal/novnc/vnc.html
-COPY --chown=oio:oio web-portal/novnc_oio/ui.js                 web-portal/novnc/app/ui.js
-COPY --chown=oio:oio web-portal/novnc_oio/Interlisp-FavIcon-*   web-portal/novnc/app/images/icons
-COPY --chown=oio:oio web-portal/novnc_oio/W7970888_internet_online_file_upload_download_icon.svg   web-portal/novnc/app/images/
-COPY --chown=oio:oio web-portal/novnc_oio/dialog.css            web-portal/novnc/oio/dialog.css
-COPY --chown=oio:oio web-portal/polyfills/dialog-polyfill.css   web-portal/novnc/oio/dialog-polyfill.css
-COPY --chown=oio:oio web-portal/polyfills/dialog-polyfill.js    web-portal/novnc/oio/dialog-polyfill.js
+COPY --chown=oio:oio web-portal/client/novnc_oio/rfb.js                web-portal/client/novnc/core/rfb.js
+COPY --chown=oio:oio web-portal/client/novnc_oio/vnc.html              web-portal/client/novnc/vnc.html
+COPY --chown=oio:oio web-portal/client/novnc_oio/ui.js                 web-portal/client/novnc/app/ui.js
+COPY --chown=oio:oio web-portal/client/novnc_oio/Interlisp-FavIcon-*   web-portal/client/novnc/app/images/icons
+COPY --chown=oio:oio web-portal/client/novnc_oio/W7970888_internet_online_file_upload_download_icon.svg   web-portal/client/novnc/app/images/
+COPY --chown=oio:oio web-portal/client/novnc_oio/dialog.css            web-portal/client/novnc/oio/dialog.css
+COPY --chown=oio:oio web-portal/client/polyfills/dialog-polyfill.css   web-portal/client/novnc/oio/dialog-polyfill.css
+COPY --chown=oio:oio web-portal/client/polyfills/dialog-polyfill.js    web-portal/client/novnc/oio/dialog-polyfill.js
 #
 COPY --chown=oio:oio docker_portal/mongodb/mongodb.conf         mongodb/mongodb.conf
 COPY --chown=oio:oio docker_portal/startup/entrypoint.sh        startup/entrypoint.sh
 RUN chmod u+x startup/entrypoint.sh
 # get node_modules
-WORKDIR /opt/oio/web-portal
+WORKDIR /opt/oio/web-portal/server
 RUN npm ci
 #
 #  Create srv directory structure

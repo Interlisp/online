@@ -1,2 +1,2 @@
 #!/bin/bash
-docker build -t v1-v2 -f ./Dockerfile_v1-v2 .
+docker build -t backup-v1 -f ./Dockerfile_backup-v1 .

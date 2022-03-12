@@ -1,14 +1,12 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED " 9-Mar-2022 20:45:34" {DSK}<home>medley>il>ONLINE-INIT.;1 8573   
+(FILECREATED "11-Mar-2022 13:31:35" {DSK}<home>medley>il>initdir>ONLINE-INIT.;9 8452   
 
       :CHANGES-TO (ADVICE IDLE)
-                  (VARS ONLINE-INITCOMS)
                   (FNS Online.SftpInitInfo Online.SftpUpdateInfo Online.InitNotecards Online.DoInit 
                        Online.SwitchToInterlispExec)
 
-      :PREVIOUS-DATE " 4-Mar-2022 18:29:36" {DSK}<usr>local>interlisp>medley>greetfiles>ONLINE-INIT.;1
-)
+      :PREVIOUS-DATE "11-Mar-2022 13:28:27" {DSK}<home>medley>il>initdir>ONLINE-INIT.;8)
 
 
 (PRETTYCOMPRINT ONLINE-INITCOMS)
@@ -17,8 +15,9 @@
        [(FILES (SYSLOAD)
                MEDLEYDIR-INIT VTCHAT)
         (GLOBALVARS Online.LogoutTimeout Online.SftpPort Online.SftpPassword Online.SftpDisplay 
-               IDLE.PROFILE Online.SftpDisplayMenu)
-        (INITVARS (Online.LogoutTimeout 30))
+               IDLE.PROFILE Online.SftpDisplayMenu ONLINEP)
+        (INITVARS (Online.LogoutTimeout 30)
+               ONLINEP)
         (ADVISE IDLE)
         (FNS Online.SftpInitInfo Online.SftpUpdateInfo Online.InitNotecards Online.DoInit 
              Online.SwitchToInterlispExec)
@@ -30,10 +29,12 @@
 (DECLARE%: DOEVAL@COMPILE DONTCOPY
 
 (GLOBALVARS Online.LogoutTimeout Online.SftpPort Online.SftpPassword Online.SftpDisplay IDLE.PROFILE
-       Online.SftpDisplayMenu)
+       Online.SftpDisplayMenu ONLINEP)
 )
 
 (RPAQ? Online.LogoutTimeout 30)
+
+(RPAQ? ONLINEP NIL)
 
 [XCL:REINSTALL-ADVICE 'IDLE :BEFORE '((:LAST (if (IGREATERP (IQUOTIENT (IDIFFERENCE (CLOCK 0)
                                                                               (CLOCK 1))
@@ -80,14 +81,6 @@
 
 (Online.DoInit
   [LAMBDA NIL
-
-    (* ;; "Edited  9-Mar-2022 20:44 by F G H: G H: G H")
-
-    (* ;; "Edited  4-Mar-2022 17:55 by F G H: G H")
-
-    (* ;; "Edited 26-Feb-2022 17:04 by F G H")
-
-    (* ;; "Edited  6-Feb-2022 23:29 by tp7")
 
     (* ;; "Edited 17-Dec-2021 22:05 by fgh")
 
@@ -153,6 +146,13 @@
                       "true")
                (Online.InitNotecards)))
 
+           (* ;; "set ONLINEP as a definitive flag that this is an online session")
+
+           (COND
+              ((STRING-EQUAL (UNIX-GETENV 'MEDLEY_ONLINE)
+                      "true")
+               (SETTOPVAL 'ONLINEP T)))
+
            (* ;; "change to interlisp exec if required")
 
            (COND
@@ -164,15 +164,15 @@
 
 (Online.SwitchToInterlispExec
   [LAMBDA NIL                                                (* ; "Edited  4-Mar-2022 17:57 by F G H")
-    (PROGN [MAPC OPENWINDOWS (FUNCTION (LAMBDA (W)
-                                         (COND
-                                            ((STREQUAL (WINDOWPROP W 'TITLE)
-                                                    "Exec  (XCL)")
-                                             (PROGN (WINDOWPROP W 'TITLE "Exec  (INTERLISP)")
-                                                    (MOVEW W (create POSITION
-                                                                    XCOORD _ 50
-                                                                    YCOORD _ (IDIFFERENCE 
-                                                                                    SCREENHEIGHT 460]
+    (PROGN [MAPC (OPENWINDOWS)
+                 (FUNCTION (LAMBDA (W)
+                             (COND
+                                ((STREQUAL (WINDOWPROP W 'TITLE)
+                                        "Exec  (XCL)")
+                                 (PROGN (WINDOWPROP W 'TITLE "Exec  (INTERLISP)")
+                                        (MOVEW W (create POSITION
+                                                        XCOORD _ 50
+                                                        YCOORD _ (IDIFFERENCE SCREENHEIGHT 460]
            (XCL:SET-DEFAULT-EXEC-TYPE 'INTERLISP)
            (XCL:SET-EXEC-TYPE 'INTERLISP])
 )
@@ -183,7 +183,7 @@
 (BKSYSBUF " ")
 )
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (1705 8493 (Online.SftpInitInfo 1715 . 2588) (Online.SftpUpdateInfo 2590 . 2845) (
-Online.InitNotecards 2847 . 3791) (Online.DoInit 3793 . 7565) (Online.SwitchToInterlispExec 7567 . 
-8491)))))
+  (FILEMAP (NIL (1720 8372 (Online.SftpInitInfo 1730 . 2603) (Online.SftpUpdateInfo 2605 . 2860) (
+Online.InitNotecards 2862 . 3806) (Online.DoInit 3808 . 7594) (Online.SwitchToInterlispExec 7596 . 
+8370)))))
 STOP

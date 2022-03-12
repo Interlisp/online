@@ -119,7 +119,7 @@ block content
           .text-center.dev-div-button
             button(type="button" onclick='reset();').main-button Reset Home Directory
 
-    dialog#reconnect-dialog
+    dialog.vdialog#reconnect-dialog
         p You already have an <span id="rd-type-span">Interlisp</span> session running.
         p Do you want to <b>reconnect</b> to this session or
         p <b>kill</b> this session and start a new one?
@@ -128,7 +128,7 @@ block content
             button(type="button" onclick='rdDone("reconnect");').main-button Reconnect
             button(type="button" onclick='rdDone("kill");').main-button Kill
 
-    dialog#alert-dialog
+    dialog.vdialog#alert-dialog
         p <span id="alert-span">Alert</span>
         br
         .single-button-div

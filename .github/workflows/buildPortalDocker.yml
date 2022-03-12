@@ -140,7 +140,7 @@ jobs:
       # Decrypt secrets in web-portal code
       - name: Decrypt cpt files
         run: |
-          cat web-portal/js/keys.js.cpt | K="${{ secrets.CCRYPT_KEY }}" ccdecrypt -E "K" > web-portal/js/keys.js
+          cat web-portal/server/js/keys.js.cpt | K="${{ secrets.CCRYPT_KEY }}" ccdecrypt -E "K" > web-portal/server/js/keys.js
 
       # Get novnc
       - name: Checkout novnc code
@@ -148,7 +148,7 @@ jobs:
         with:
           repository: 'novnc/noVNC.git'
           ref: 'v1.3.0'
-          path: "./web-portal/novnc"
+          path: "./web-portal/client/novnc"
 
       # Do the Production Docker Build using the Dockerfile_production
       # Push the result to Docker Hub
@@ -174,7 +174,7 @@ jobs:
       # Decrypt secrets in web-portal code
       - name: Decrypt cpt files
         run: |
-          cat web-portal/js/keys.js.cpt | K="${{ secrets.CCRYPT_KEY }}" ccdecrypt -E "K" > web-portal/js/keys.js
+          cat web-portal/server/js/keys.js.cpt | K="${{ secrets.CCRYPT_KEY }}" ccdecrypt -E "K" > web-portal/server/js/keys.js
 
       # Get novnc
       - name: Checkout novnc code
@@ -182,7 +182,7 @@ jobs:
         with:
           repository: 'novnc/noVNC.git'
           ref: 'v1.3.0'
-          path: "./web-portal/novnc"
+          path: "./web-portal/client/novnc"
 
       # Do the Development Docker Build using the Dockerfile_development
       # Push the result to Docker Hub

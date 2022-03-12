@@ -1,0 +1,31 @@
+/***************************************************************************
+ *
+ *   help_dialogs.css:  css code for help_dialogs.pug on online.interlisp.org web portal.
+ *
+ *   2022-03-08 Frank Halasz
+ *
+ *
+ *   Copyright: 2021-2022 by Interlisp.org
+ *
+ *
+ **************************************************************************/
+
+.help-dialog {
+  max-width: 500px;
+}
+
+.help-dialog h2 {
+   margin-top: .5em;
+   margin-bottom: 0.25em;
+}
+
+.help-dialog .single-button-div {
+   margin-top: 1.5em;
+}
+
+.help-dialog p {
+  padding-left: 2em;
+  padding-right: 2em;
+  text-align: justify;
+  line-height: 1.5;
+}
