@@ -1,12 +1,11 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED "11-Mar-2022 13:31:35" {DSK}<home>medley>il>initdir>ONLINE-INIT.;9 8452   
+(FILECREATED "18-Mar-2022 18:54:20" {DSK}<home>medley>il>initdir>ONLINE-INIT.;5 8434   
 
-      :CHANGES-TO (ADVICE IDLE)
-                  (FNS Online.SftpInitInfo Online.SftpUpdateInfo Online.InitNotecards Online.DoInit 
-                       Online.SwitchToInterlispExec)
+      :CHANGES-TO (VARS ONLINE-INITCOMS)
+                  (FNS Online.DoInit XCL-USER::INTERLISP)
 
-      :PREVIOUS-DATE "11-Mar-2022 13:28:27" {DSK}<home>medley>il>initdir>ONLINE-INIT.;8)
+      :PREVIOUS-DATE "18-Mar-2022 18:41:35" {DSK}<home>medley>il>initdir>ONLINE-INIT.;4)
 
 
 (PRETTYCOMPRINT ONLINE-INITCOMS)
@@ -20,7 +19,7 @@
                ONLINEP)
         (ADVISE IDLE)
         (FNS Online.SftpInitInfo Online.SftpUpdateInfo Online.InitNotecards Online.DoInit 
-             Online.SwitchToInterlispExec)
+             XCL-USER::INTERLISP)
         (P (Online.DoInit))
         (DECLARE%: FIRST (P (BKSYSBUF " "])
 
@@ -80,7 +79,7 @@
                          550 220])
 
 (Online.DoInit
-  [LAMBDA NIL
+  [LAMBDA NIL                                                (* ; "Edited 18-Mar-2022 18:53 by fgh")
 
     (* ;; "Edited 17-Dec-2021 22:05 by fgh")
 
@@ -160,10 +159,10 @@
                           "inter")
                    (STRING-EQUAL (UNIX-GETENV 'NCO)
                           "true"))
-               (Online.SwitchToInterlispExec])
+               (BKSYSBUF "(INTERLISP)"])
 
-(Online.SwitchToInterlispExec
-  [LAMBDA NIL                                                (* ; "Edited  4-Mar-2022 17:57 by F G H")
+(XCL-USER::INTERLISP
+  [LAMBDA NIL                                                (* ; "Edited 18-Mar-2022 18:53 by fgh")
     (PROGN [MAPC (OPENWINDOWS)
                  (FUNCTION (LAMBDA (W)
                              (COND
@@ -183,7 +182,6 @@
 (BKSYSBUF " ")
 )
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (1720 8372 (Online.SftpInitInfo 1730 . 2603) (Online.SftpUpdateInfo 2605 . 2860) (
-Online.InitNotecards 2862 . 3806) (Online.DoInit 3808 . 7594) (Online.SwitchToInterlispExec 7596 . 
-8370)))))
+  (FILEMAP (NIL (1624 8354 (Online.SftpInitInfo 1634 . 2507) (Online.SftpUpdateInfo 2509 . 2764) (
+Online.InitNotecards 2766 . 3710) (Online.DoInit 3712 . 7583) (XCL-USER::INTERLISP 7585 . 8352)))))
 STOP
