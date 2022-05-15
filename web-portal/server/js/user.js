@@ -1,14 +1,14 @@
 /*******************************************************************************
- * 
+ *
  *   user.js:  User registration and login for online.interlisp.org
- *             web portal. 
- * 
- * 
+ *             web portal.
+ *
+ *
  *   2021-11-22 Frank Halasz
- * 
- * 
- *   Copyright: 2021-2022 by Interlisp.org 
- * 
+ *
+ *
+ *   Copyright: 2021-2022 by Interlisp.org
+ *
  *
  ******************************************************************************/
 
@@ -16,12 +16,12 @@ const config = require("./config");
 const url = require('url');
 const express = require("express");
 const passport = require('passport');
-const {userModel} = require('./mongodb');
+const {userModel, loginModel} = require('./mongodb');
 const validateEmail = require('email-addresses').parseOneAddress;
 const crypto = require('crypto');
 const gmailSend = require('./gmail-send')({user: config.gmailUsername, pass: config.gmailPassword, from: config.gmailFrom });
 
-// 
+//
 //  The router
 //
 const userRouter = express.Router();
@@ -61,7 +61,7 @@ passport.deserializeUser(userModel.deserializeUser());
           const user = await userModel.findByUsername(config.guestUsername);
           if (!user)
             userModel.register(
-                {   
+                {
                   username: config.guestUsername,
                   uname: "guest",
                   firstname: "Guest",
@@ -72,7 +72,7 @@ passport.deserializeUser(userModel.deserializeUser());
                   created: Date.now(),
                   lastLogin: 0,
                   verificationToken: "used"
-               }, 
+               },
                 config.guestPassword,
                 async (err, thisModel, passwordErr) => {
                     if(err) {
@@ -92,20 +92,20 @@ passport.deserializeUser(userModel.deserializeUser());
 //
 //
 
-userRouter.post('/login', 
+userRouter.post('/login',
             (req, res, next) => {
                   passport.authenticate('local',
                   (err, user, info) => {
                     if (err) {
                       return next(err);
                     }
-                
+
                     if (!user) {
                       console.dir(info);
                       return res.redirect('/user/login?info=' + info);
                     }
-                    
-            
+
+
                     req.logIn(user, async function(err) {
                       if (err) {
                         return next(err);
@@ -115,32 +115,37 @@ userRouter.post('/login',
                           } catch (err) {
                                 console.log("Update last login time error: " + err);
                           }
-                          if(user.uname) 
+                          try {
+                               await loginModel.create({username: user.username, timestamp: Date.now()});
+                          } catch (err) {
+                               console.log("Error in logging login: " + err);
+                          }
+                          if(user.uname)
                               return res.redirect('/main');
-                          else 
+                          else
                               return res.render('reregister', {isNCO: config.isNCO(req)});
                       }
                     });
-                
+
                   })(req, res, next);
             }
 );
 
 userRouter.get('/login',
-    (req, res) => { 
-        res.render('login', 
+    (req, res) => {
+        res.render('login',
                     {
-                      verificationNotice: "false", 
-                      guestUsername: config.guestUsername, 
+                      verificationNotice: "false",
+                      guestUsername: config.guestUsername,
                       guestPassword: config.guestPassword,
                       isNCO: config.isNCO(req)
-                    }      
-        ); 
+                    }
+        );
     }
 );
 
 userRouter.post('/logout',
-  (req, res) => { 
+  (req, res) => {
         req.logout();
         res.redirect('/user/login');
         }
@@ -168,9 +173,9 @@ userRouter.post('/register',
     (req, res, next) => {
         const token = generateToken();
         userModel.register(
-            {   
-                username: req.body.username, 
-                active: false, 
+            {
+                username: req.body.username,
+                active: false,
                 uname: req.body.uname,
                 firstname: req.body.firstname,
                 lastname: req.body.lastname,
@@ -181,14 +186,14 @@ userRouter.post('/register',
                 numLogins: 0,
                 lastLogin: 0,
                 verificationToken: token
-            }, 
+            },
             req.body.password,
             async (err, thisModel, passwordErr) => {
                 if(!err) {
                     try {
                         const {result,full} =
-                           await gmailSend({to: req.body.username, 
-                                       subject: "Email verification for online.interlisp.org", 
+                           await gmailSend({to: req.body.username,
+                                       subject: "Email verification for online.interlisp.org",
                                        html: generateEmailBody(req, req.body.firstname, token) });
                         if(false) console.dir(result);
                         if(false) console.dir(full);
@@ -196,9 +201,9 @@ userRouter.post('/register',
                     catch(err) {
                         console.log("Gmail send error: " + err);
                     }
-                    return res.render('login', { verificationNotice: "true", 
-                                                 email: req.body.username, 
-                                                 guestUsername: config.guestUsername, 
+                    return res.render('login', { verificationNotice: "true",
+                                                 email: req.body.username,
+                                                 guestUsername: config.guestUsername,
                                                  guestPassword: config.guestPassword
                                                 });
                 }
@@ -206,8 +211,8 @@ userRouter.post('/register',
                     return res.redirect('/user/register?info=' + err);
                 }
             }
-        );        
-    }    
+        );
+    }
 );
 
 userRouter.post('/reregister',
@@ -215,7 +220,7 @@ userRouter.post('/reregister',
         try {
             const token = generateToken();
             let repRes = await userModel.updateOne(
-                {   username: req.user.username }, 
+                {   username: req.user.username },
                 {   uname: req.body.uname,
                     firstname: req.body.firstname,
                     lastname: req.body.lastname,
@@ -232,13 +237,13 @@ userRouter.post('/reregister',
             res.redirect('/main?rr=1');
         } catch(err) {
             res.redirect('/user/reregister?info=' + err);
-        }        
+        }
     }
 );
 
 //
 //
-//  Routes to handle nodisclainmer 
+//  Routes to handle nodisclainmer
 //
 //
 
@@ -252,7 +257,7 @@ userRouter.getNoDisclaimer = async function(req) {
         } catch(err) {
             console.dir("get nodisclaimer error: " + err);
             return false;
-        }        
+        }
 };
 
 userRouter.get('/nodisclaimer',
@@ -267,7 +272,7 @@ userRouter.get('/nodisclaimer',
         } catch(err) {
             console.dir("nodisclaimer error: " + err);
             res.redirect('/main');
-        }        
+        }
     }
 );
 
@@ -284,7 +289,7 @@ userRouter.getIsVerified = async function(req) {
         } catch(err) {
             console.dir("get getIsVerified error: " + err);
             return false;
-        }        
+        }
 };
 
 userRouter.get('/verify',
@@ -292,8 +297,8 @@ userRouter.get('/verify',
         const token = req.query.token;
         try {
             let repRes = await userModel.updateOne(
-                {   verificationToken: token }, 
-                {   
+                {   verificationToken: token },
+                {
                     isVerified: true,
                     verificationToken: "used"
                 }
@@ -303,7 +308,7 @@ userRouter.get('/verify',
         } catch(err) {
             console.dir("isVerified error: " + err);
             res.redirect('/');
-        }        
+        }
     }
 );
 
@@ -320,12 +325,12 @@ async function resendVerification(req) {
         } catch(err) {
             console.dir("get get token error: " + err);
             return false;
-        }        
-    
+        }
+
     try {
         const {result,full} =
-           await gmailSend({to: req.user.username, 
-                       subject: "Email verification for online.interlisp.org", 
+           await gmailSend({to: req.user.username,
+                       subject: "Email verification for online.interlisp.org",
                        html: generateEmailBody(req, req.user.firstname, token) });
     }
     catch(err) {
@@ -337,7 +342,7 @@ async function resendVerification(req) {
 userRouter.get('/resendverification',
     async(req, res, next) => {
         const result = resendVerification(req);
-        if(result) 
+        if(result)
             res.send('OK');
         else
             res.send('Not OK');
@@ -351,7 +356,7 @@ userRouter.get('/nofilemgrwarning',
         if(doSet) {
             try {
                 let repRes = await userModel.updateOne(
-                    { username: req.user.username }, 
+                    { username: req.user.username },
                     { noFileMgrWarning: true }
                 );
                 console.dir(repRes);
@@ -359,7 +364,7 @@ userRouter.get('/nofilemgrwarning',
             } catch(err) {
                 console.dir("/nofilemgrwarning error: " + err);
                 res.status(500).send('Error');
-            }        
+            }
         } else {
             try {
                 const userObj = await userModel.findOne({ username: req.user.username });
@@ -368,8 +373,8 @@ userRouter.get('/nofilemgrwarning',
             } catch(err) {
                 console.dir("/nofilemgrwarning error: " + err);
                 res.status(500).send('Error');
-            }        
-        } 
+            }
+        }
     }
 );
 
