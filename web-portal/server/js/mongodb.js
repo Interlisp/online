@@ -1,18 +1,18 @@
 /*******************************************************************************
- * 
+ *
  *   mongodb.js: Support for the mongodb user registration database for
  *               online.interlisp.org.  Used by both the userRouter (user.js)
  *               and the adminRouter (admin.js)
  *
- *  
+ *
  *   2022-02-08 Frank Halasz
- * 
- * 
- *   Copyright: 2022 by Interlisp.org 
- * 
+ *
+ *
+ *   Copyright: 2022 by Interlisp.org
+ *
  *
  ******************************************************************************/
- 
+
 const config = require("./config");
 const mongoose = require('mongoose');
 const passportLocalMongoose = require('passport-local-mongoose');
@@ -40,5 +40,16 @@ const userSchema = new mongoose.Schema({
 userSchema.plugin(passportLocalMongoose);
 const userModel = mongoose.model('userInfo', userSchema, 'userInfo');
 
+const loginSchema = new mongoose.Schema({
+  username: {type: String},
+  timestamp: {type: Date, default: 0}
+});
+const loginModel = mongoose.model('loginLog', loginSchema, 'loginLog');
+
+
 exports.userSchema = userSchema;
 exports.userModel = userModel;
+
+
+exports.loginSchema = loginSchema;
+exports.loginModel = loginModel;
