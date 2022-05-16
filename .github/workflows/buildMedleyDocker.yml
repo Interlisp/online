@@ -14,7 +14,7 @@
 #set -x
 #
 
-name: 'Build/Push Medley Docker Image'
+name: 'Build/Push Online-Medley Docker Image'
 
 # Run this workflow on ...
 on:
