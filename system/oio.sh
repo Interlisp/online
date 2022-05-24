@@ -46,7 +46,7 @@ list_new_users() {
         match="{\$match: {created: {\$exists: true}, created: {\$gte: ISODate('$1')}}},"
         list_users_core "$match"
 }
-#{loginDate: {\$gte: ISODate('$1')}}
+
 count_guests() {
         cat >/tmp/tmp-$$ <<-EOF
             var l=db.loginLog.find({username: "guest@online.interlisp.org", timestamp: {\$gte: ISODate('$1')}}).count();
@@ -125,7 +125,7 @@ case $1 in
        if [ -z "$2" ]; then
            sDate="$(date --date '-1 month' '+%Y-%m-%d')"
        else
-           sDate="$4"
+           sDate="$2"
        fi
        count_guests $sDate
        ;;
