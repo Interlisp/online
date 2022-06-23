@@ -57,3 +57,7 @@ for sub in development production;
 #  
 #
 if [ ! -e "/etc/letsencrypt" ]; then mkdir -p /etc/letsencrypt; fi
+#
+#  Install scripts in ~/bin
+#
+

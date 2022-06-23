@@ -146,3 +146,76 @@ sudo certbot renew
 # restart the web-portal service/container
 sudo systemctl start oio.service
 ```
+
+
+## Bring new Medely release online
+
+1. Make sure that the Docker image corresponding to the new Medley release has been created and uploaded to 
+Docker Hub under interlisp/medley.  When listing the Tags (sorted by Newest) under interlisp/medley, there should be
+a tag whose first "part" (up to the first underscore) corresponds to the release tag for the new Medley release.
+This will ususally be the second tag listed immediately after the "latest" tag.  If no matching tag can be found,
+then you will have to back and run the `Build/Push Docker Image` action in the Medley repo on Github.
+
+2.  In the interlisp/online Github repo, run the `Build/Push Online-Medley Docker Image` action.  This will create an
+online Docker image for the new Medley release and store it in the Github Conatiner Repository tagged as 
+`ghcr.io/interlisp/online-medley:development`.
+
+3.  Test this new online-Medley image as follows:
+
+    3.1 Connect via ssh to the online.interlisp.org host as described in Section 2 above. 
+
+    3.2  Execute: `oio medley pulldev`
+
+    3.3  From a web browser go to `https://online.interlisp.org:8081` to connect to the development version
+         of Interlisp Online.  Login (or login as guest) and Run Medley.  The Medley that starts should be the new
+         Medley release.  Run it through its paces to make it works.  Then logout of Medley.
+
+4.  Retag new online-Medley image from :development to :production
+
+    4.1   Connect via ssh to the online.interlisp.org host as described in Section 2 above.
+
+    4.2   Execute: `oio medley dev2prod`
+
+    4.3  Next time you `Run Medley` at `https://online.interlisp.org`, you should get the new Medley release.
+
+## Bring an updated Portal online
+
+1. In the interlisp/online Github repo, run the `Build/Push Portal Docker Image` action.  This will create two
+new Docker images containing the online Portal code (online-development and online-production) and
+store them in the Github Container Registry tagged as `ghcr.io/interlisp/online-development:latest` and
+`ghcr.io/interlisp/online-production:latest`.  The portal code in these two Docker images is the same, but the
+online-development image includes many additional tools to help in developing and testing the portal code.
+The online-production image includes just what is necessay to run the portal in production.
+
+2.  Test the updated Portal as follows:
+
+    2.1   Connect via ssh to the online.interlisp.org host as described in Section 2 above.
+
+    2.2   Execute: `oio portal pulldev`.  This will pull the online-development:latest Docker image from the GHCR onto
+          the online.interlisp.org host.
+
+    2.3   Execute: `sudo systemctl restart oio-dev.service` to restart the oio-dev service to run the new docker
+          image.
+
+    2.4   From a web browser go to `https://online.interlisp.org:8081` to connect to the newly updated development
+          version of Interlisp Online.
+
+    2.5   Run Interlisp Online through its paces to check that the updates (and base functions) are working correctly.
+
+3.  Install the production version of the updated portal
+
+     3.1  Connect via ssh to the online.interlisp.org host as described in Section 2 above.
+
+     3.2  Execute `oio portal pullprod`.  This will pull the online-production:latest Docker image from the GHCR onto
+          the online.interlisp.org host.
+
+     3.3  Execute: `sudo systemctl restart oio.service` to restart the oio service to run the new docker
+          image.
+
+     3.4  From a web browser go to `https://online.interlisp.org` to connect to the newly updated production
+          version of Interlisp Online and make sure evything is working as expected.
+
+
+  
+
+     
