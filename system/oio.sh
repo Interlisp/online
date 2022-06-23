@@ -112,7 +112,7 @@ case $1 in
                ;;
            *)
                echo "Unknown command: ${oio} users $2 $3 $4"
-               echo "Use 'help' for usage."
+               echo "Use '${oio} help' for usage."
                echo "Exiting"
                exit 1
                ;;
@@ -130,6 +130,64 @@ case $1 in
        count_guests $sDate
        ;;
 
+     # install docker images for new onine-medley release
+     medley)
+        case "I$2I" in
+
+
+           IpulldevI)
+		docker pull ghcr.io/interlisp/online-medley:development
+                echo "Online-medley development release pulled from Github Container Registry"
+           ;;
+
+           Idev2prodI)
+		lastlast1=$(docker images -q ghcr.io/interlisp/online-medley:lastlastproduction)
+		docker tag ghcr.io/interlisp/online-medley:lastproduction ghcr.io/interlisp/online-medley:lastlastproduction
+		docker tag ghcr.io/interlisp/online-medley:production ghcr.io/interlisp/online-medley:lastproduction
+		docker tag ghcr.io/interlisp/online-medley:development ghcr.io/interlisp/online-medley:production
+		echo "Online-medley moved from development to production."
+           ;;
+
+           *)
+               echo "Unknown command: ${oio} medley $2"
+               echo "Use '${oio} help' for usage."
+               echo "Exiting"
+               exit 1
+           ;;
+
+	esac
+     ;;
+
+     # install docker image for new portal releases - dev and production
+     portal)
+	case "I$2I" in
+
+	  IpulldevI)
+		current=$(docker images -q ghcr.io/interlisp/online-development:latest)
+		docker pull ghcr.io/interlisp/online-development:latest
+		if [ ! -z "${current}" ]; then docker image rm ${current}; echo 2 ${current}; fi
+                echo "Latest online-development docker image pulled from GHCR"
+          ;;
+
+          IpullprodI)
+		lastlast2=$(docker images -q ghcr.io/interlisp/online-production:lastlast)
+		docker tag ghcr.io/interlisp/online-production:last ghcr.io/interlisp/online-production:lastlast
+		docker tag ghcr.io/interlisp/online-production:latest ghcr.io/interlisp/online-production:last
+		docker pull ghcr.io/interlisp/online-production:latest
+		if [ ! -z "${lastlast2}" ]; then docker image rm ${lastlast2}; echo 2 ${lastlast2}; fi
+                echo "Latest online-production docker image pulled from GHCR"
+	  ;;
+
+           *)
+               echo "Unknown command: ${oio} portal $2"
+               echo "Use '${oio} help' for usage."
+               echo "Exiting"
+               exit 1
+           ;;
+
+        esac
+     ;;
+
     help)
         echo "Usage:"
         echo "${oio} status:  lists status of oio and oio-dev docker containers"
@@ -144,12 +202,20 @@ case $1 in
         echo
         echo "${oio} guests:  count of guest logins in the last month"
         echo "${oio} guests YYYY-MM-DD:  count of guest logins since YYYY-MM-DD"
-        ;;
+        echo
+	echo "${oio} medley pulldev:  pull latest development (test) online-medley image from GHCR"
+        echo "${oio} medley dev2prod:  move current development online-medley image to production status"
+	echo
+	echo "${oio} portal pulldev:  pull latest development portal (online-development) docker image from GHCR"
+        echo "${oio} portal pullprod:  pull latest production portal (online-production) docker image from GHCR"
+        echo
+	;;
 
     *)
         echo "Unknown command: ${oio} $1 $2 $3 $4"
-        echo "Use 'help' for usage."
+        echo "Use '${oio} help' for usage."
         echo "Exiting"
+
         exit 1
         ;;
 esac

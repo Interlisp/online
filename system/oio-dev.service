@@ -23,6 +23,7 @@ ExecStart=/usr/bin/docker run \
                :::DOCKER_REGISTRY:::===DOCKER_NAMESPACE===/online-development:latest
 Restart=no
 ExecStop=/usr/bin/docker container kill oio-dev
+ExecStop=/usr/bin/docker container rm oio-dev
 
 [Install]
 WantedBy=multi-user.target
