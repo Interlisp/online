@@ -12,6 +12,7 @@ Environment=NODE_ENV=development
 WorkingDirectory=/home/ubuntu
 ExecStart=/usr/bin/docker run \
                --name oio-dev \
+               --rm \
                -p 8080:80 \
                -p 8081:443 \
                -v /var/run/docker.sock:/var/run/docker.sock \
@@ -23,7 +24,6 @@ ExecStart=/usr/bin/docker run \
                :::DOCKER_REGISTRY:::===DOCKER_NAMESPACE===/online-development:latest
 Restart=no
 ExecStop=/usr/bin/docker container kill oio-dev
-ExecStop=/usr/bin/docker container rm oio-dev
 
 [Install]
 WantedBy=multi-user.target
