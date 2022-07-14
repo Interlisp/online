@@ -57,6 +57,26 @@ count_guests() {
         docker exec ${oio} mongosh $mongo_uri --file /tmp/tmp-$$ | grep "^~" | sed s/^~//
 }
 
+count_logins() {
+        cat >/tmp/tmp-$$ <<-EOF
+            var l=db.loginLog.find({username: {\$not: /^guest@online.interlisp.org\$/}, timestamp: {\$gte: ISODate('$1')}}).count();
+            print("~", l);
+	EOF
+	docker cp /tmp/tmp-$$ ${oio}:/tmp/tmp-$$
+        rm /tmp/tmp-$$
+        docker exec ${oio} mongosh $mongo_uri --file /tmp/tmp-$$ | grep "^~" | sed s/^~//
+}
+
+show_logins() {
+        cat >/tmp/tmp-$$ <<-EOF
+            var l=db.loginLog.find({username: {\$not: /^guest@online.interlisp.org\$/}, timestamp: {\$gte: ISODate('$1')}});
+            l.forEach( doc => print("~", doc.username) );
+	EOF
+	docker cp /tmp/tmp-$$ ${oio}:/tmp/tmp-$$
+        rm /tmp/tmp-$$
+        docker exec ${oio} mongosh $mongo_uri --file /tmp/tmp-$$ | grep "^~" | sed s/^~//
+}
+
 
 #
 #  Main case statement
@@ -130,6 +150,38 @@ case $1 in
        count_guests $sDate
        ;;
 
+    # show/count non-guest logins since
+    logins)
+       mongo_uri=$(docker exec ${oio} bash -c "echo \$MONGO_URI")
+       case "$2" in
+           count)
+               if [ -z "$3" ]; then
+                   sDate="$(date --date '-1 month' '+%Y-%m-%d')"
+               else
+                   sDate="$3"
+               fi
+               count_logins $sDate
+           ;;
+
+           show)
+	       if [ -z "$3" ]; then
+	           sDate="$(date --date '-1 month' '+%Y-%m-%d')"
+	       else
+	           sDate="$3"
+	       fi
+	       show_logins $sDate
+           ;;
+
+           *)
+               echo "Unknown command: ${oio} logins $2"
+               echo "Use '${oio} help' for usage."
+               echo "Exiting"
+               exit 1
+            ;;
+
+       esac
+     ;;
+
      # install docker images for new onine-medley release
      medley)
         case "I$2I" in
@@ -190,6 +242,7 @@ case $1 in
 
     help)
         echo "Usage:"
+        echo
         echo "${oio} status:  lists status of oio and oio-dev docker containers"
         echo "${oio} status all:  lists status of all oio docker containers including running user medley containers"
         echo
@@ -202,6 +255,12 @@ case $1 in
         echo
         echo "${oio} guests:  count of guest logins in the last month"
         echo "${oio} guests YYYY-MM-DD:  count of guest logins since YYYY-MM-DD"
+        echo
+        echo "${oio} logins count:  count of non-guest logins in the last month"
+        echo "${oio} logins count YYYY-MM-DD:  count of non-guest logins since YYYY-MM-DD"
+        echo
+        echo "${oio} logins show:  show non-guest logins in the last month"
+        echo "${oio} logins show YYYY-MM-DD:  show non-guest logins since YYYY-MM-DD"
         echo
 	echo "${oio} medley pulldev:  pull latest development (test) online-medley image from GHCR"
         echo "${oio} medley dev2prod:  move current development online-medley image to production status"
