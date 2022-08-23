@@ -1,11 +1,14 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED "18-Mar-2022 18:54:20" {DSK}<home>medley>il>initdir>ONLINE-INIT.;5 8434   
+(FILECREATED "23-Aug-2022 13:16:27" {DSK}<home>larry>online>docker_medley>init>ONLINE-INIT.;2 8698   
 
       :CHANGES-TO (VARS ONLINE-INITCOMS)
-                  (FNS Online.DoInit XCL-USER::INTERLISP)
+                  (ADVICE IDLE)
+                  (FNS Online.SftpInitInfo Online.SftpUpdateInfo Online.InitNotecards Online.DoInit 
+                       XCL-USER::INTERLISP)
 
-      :PREVIOUS-DATE "18-Mar-2022 18:41:35" {DSK}<home>medley>il>initdir>ONLINE-INIT.;4)
+      :PREVIOUS-DATE "18-Mar-2022 18:54:20" {DSK}<home>larry>online>docker_medley>init>ONLINE-INIT.;1
+)
 
 
 (PRETTYCOMPRINT ONLINE-INITCOMS)
@@ -87,7 +90,8 @@
            (* ;; "Set up SFTP Info widget in WHO-LINE window")
 
            (Online.SftpInitInfo)
-           (NCONC1 AROUNDEXITFNS 'Online.SftpUpdateInfo)
+           (CL:UNLESS (FMEMB 'Online.SftpUpdateInfo AROUNDEXITFNS)
+               (NCONC1 AROUNDEXITFNS 'Online.SftpUpdateInfo))
            [COND
               ([NOTANY *WHO-LINE-ENTRY-REGISTRY* (FUNCTION (LAMBDA (ENTRY)
                                                              (STRING-EQUAL (CAR ENTRY)
@@ -104,6 +108,7 @@
            (* ;; "  Set the IDLE timeout ")
 
            (LISTPUT IDLE.PROFILE 'TIMEOUT Online.LogoutTimeout)
+           (LISTPUT IDLE.PROFILE 'SAVEVM 1)
 
            (* ;; " Adjust windows so that the exec window and the prompt window don't overlap")
 
@@ -182,6 +187,6 @@
 (BKSYSBUF " ")
 )
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (1624 8354 (Online.SftpInitInfo 1634 . 2507) (Online.SftpUpdateInfo 2509 . 2764) (
-Online.InitNotecards 2766 . 3710) (Online.DoInit 3712 . 7583) (XCL-USER::INTERLISP 7585 . 8352)))))
+  (FILEMAP (NIL (1772 8618 (Online.SftpInitInfo 1782 . 2655) (Online.SftpUpdateInfo 2657 . 2912) (
+Online.InitNotecards 2914 . 3858) (Online.DoInit 3860 . 7847) (XCL-USER::INTERLISP 7849 . 8616)))))
 STOP
