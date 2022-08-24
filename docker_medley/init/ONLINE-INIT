@@ -1,13 +1,13 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED "23-Aug-2022 13:16:27" {DSK}<home>larry>online>docker_medley>init>ONLINE-INIT.;2 8698   
+(FILECREATED "23-Aug-2022 21:28:00" {DSK}<home>larry>online>docker_medley>init>ONLINE-INIT.;3 8271   
 
-      :CHANGES-TO (VARS ONLINE-INITCOMS)
-                  (ADVICE IDLE)
+      :CHANGES-TO (ADVICE IDLE)
                   (FNS Online.SftpInitInfo Online.SftpUpdateInfo Online.InitNotecards Online.DoInit 
                        XCL-USER::INTERLISP)
+                  (VARS ONLINE-INITCOMS)
 
-      :PREVIOUS-DATE "18-Mar-2022 18:54:20" {DSK}<home>larry>online>docker_medley>init>ONLINE-INIT.;1
+      :PREVIOUS-DATE "23-Aug-2022 13:16:27" {DSK}<home>larry>online>docker_medley>init>ONLINE-INIT.;2
 )
 
 
@@ -20,7 +20,6 @@
                IDLE.PROFILE Online.SftpDisplayMenu ONLINEP)
         (INITVARS (Online.LogoutTimeout 30)
                ONLINEP)
-        (ADVISE IDLE)
         (FNS Online.SftpInitInfo Online.SftpUpdateInfo Online.InitNotecards Online.DoInit 
              XCL-USER::INTERLISP)
         (P (Online.DoInit))
@@ -37,14 +36,6 @@
 (RPAQ? Online.LogoutTimeout 30)
 
 (RPAQ? ONLINEP NIL)
-
-[XCL:REINSTALL-ADVICE 'IDLE :BEFORE '((:LAST (if (IGREATERP (IQUOTIENT (IDIFFERENCE (CLOCK 0)
-                                                                              (CLOCK 1))
-                                                                   1000)
-                                                        30)
-                                                 then (LOGOUT]
-
-(READVISE IDLE)
 (DEFINEQ
 
 (Online.SftpInitInfo
@@ -187,6 +178,6 @@
 (BKSYSBUF " ")
 )
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (1772 8618 (Online.SftpInitInfo 1782 . 2655) (Online.SftpUpdateInfo 2657 . 2912) (
-Online.InitNotecards 2914 . 3858) (Online.DoInit 3860 . 7847) (XCL-USER::INTERLISP 7849 . 8616)))))
+  (FILEMAP (NIL (1345 8191 (Online.SftpInitInfo 1355 . 2228) (Online.SftpUpdateInfo 2230 . 2485) (
+Online.InitNotecards 2487 . 3431) (Online.DoInit 3433 . 7420) (XCL-USER::INTERLISP 7422 . 8189)))))
 STOP
