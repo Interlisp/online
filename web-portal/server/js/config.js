@@ -1,15 +1,15 @@
 /*******************************************************************************
- * 
- *   config.js: Global configuration settings for online.interlisp.org web portal
- * 
- * 
- *   2021-11-16 Frank Halasz
- * 
- * 
- *   Copyright: 2021-2022 by Interlisp.org 
- * 
  *
- ******************************************************************************///
+ *   config.js: Global configuration settings for online.interlisp.org web portal
+ *
+ *
+ *   2021-11-16 Frank Halasz
+ *
+ *
+ *   Copyright: 2021-2022 by Interlisp.org
+ *
+ *
+ *******************************************************************************/
 
 var path = require('path');
 var fs = require('fs');
@@ -131,12 +131,12 @@ var isGuestUser = function isGuestUser(username) { return (guestUsername == user
 exports.isGuestUser = isGuestUser;
 
 const badchars = new RegExp("[!#$%&'*+/=?^`{|}~]", "g");
-var emailish = 
-    function(email) { 
+var emailish =
+    function(email) {
         if(isGuestUser(email))
             return `guest-${Math.floor(Math.random() * 99999)}`;
         else
-            return email.replace(badchars, '-').replace("@", ".-."); 
+            return email.replace(badchars, '-').replace("@", ".-.");
     };
 exports.emailish = emailish;
 
@@ -147,3 +147,6 @@ var isNCO = function(req) {
     return (req.hostname.toLowerCase().replace(/^www\./,"") == "notecards.online");
 };
 exports.isNCO = isNCO;
+
+var medleyMemoryArg = "64";
+exports.medleyMemoryArg = medleyMemoryArg;
