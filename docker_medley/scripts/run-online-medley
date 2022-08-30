@@ -6,7 +6,7 @@
 #
 #    2021-11-11 Frank Halasz
 #
-#    Copyright: 2022 by Interlisp.org 
+#    Copyright: 2022 by Interlisp.org
 #
 #
 #set -x
@@ -24,6 +24,13 @@ if [ "${NCO}" == "true" ];
    else VMEM_PATH="${MEDLEY_USERDIR}/vmem/lisp.virtualmem"
 fi
 
+if [ -z "${MEDLEY_MEMORY}" ];
+then
+    medley_memory_arg=""
+else
+    medley_memory_arg="-m ${MEDLEY_MEMORY}"
+fi
+
 if [ $# -gt 0 ]; then
     case "$1" in
 	    sysout)
@@ -32,14 +39,14 @@ if [ $# -gt 0 ]; then
 	    custom)
 			if [ -f ${CUSTOM_SYSOUT_PATH} ]; then
 				sysout=${CUSTOM_SYSOUT_PATH}
-			else 
+			else
 				sysout=${RELEASE_SYSOUT_PATH}
 			fi
 			;;
 	    vmem)
 			if [ -f ${VMEM_PATH} ]; then
 				sysout=""
-			else 
+			else
 				sysout=${RELEASE_SYSOUT_PATH}
 			fi
 			;;
@@ -73,14 +80,14 @@ else
 fi
 #
 export SFTP_PORT=2${PORT}
-if [ -z "${SFTP_SERVER}" ]; then 
+if [ -z "${SFTP_SERVER}" ]; then
     export SFTP_SERVER="false";
 fi
-if [ "${SFTP_SERVER}" == "true" ]; then 
+if [ "${SFTP_SERVER}" == "true" ]; then
     /usr/sbin/sshd -e -p ${SFTP_PORT}
 fi
 #
-if [ -z "${SFTP_PWD}" ]; then 
+if [ -z "${SFTP_PWD}" ]; then
     export SFTP_PWD=$(date +%s | sha256sum | base64 | head -c 8);
 fi
 echo medley:${SFTP_PWD} | chpasswd
@@ -95,7 +102,7 @@ export DISPLAY=:0
 for i in {1..10}
     do
         xdpyinfo > /dev/null
-        if [ $? -eq 0 ]; 
+        if [ $? -eq 0 ];
             then
                 break
             else
@@ -122,7 +129,7 @@ fi
 export FILEBROWSER_DATABASE=/usr/local/filebrowser/filebrowser.db
 export FILEBROWSER_PORT=3${PORT}
 if [ ${SUPPORT_HTTPS} = "yes" ];
-then 
+then
   export FILEBROWSER_CERT="--cert /etc/letsencrypt/live/online.interlisp.org/fullchain.pem"
   export FILEBROWSER_KEY="--key /etc/letsencrypt/live/online.interlisp.org/privkey.pem"
 else
@@ -153,5 +160,5 @@ export MEDLEYDIR=${MEDLEY_INSTALLDIR}
 export LOGINDIR=${MEDLEY_USERDIR}
 export LDEINIT=${MEDLEY_INIT_PATH}
 export MAIKODIR="/usr/local/interlisp/maiko"
-./run-medley -noscroll -g ${width}x${height} -sc ${width}x${height} -vmem ${VMEM_PATH} ${sysout}
+./run-medley -noscroll ${medley_memory_arg} -g ${width}x${height} -sc ${width}x${height} -vmem ${VMEM_PATH} ${sysout}
 EOF

@@ -1,15 +1,15 @@
 /*******************************************************************************
- * 
+ *
  *   medley.js:  Router to handle starting up Interlisp (and xterm) on the
  *               online.interlis.org web portal.  Mainly used to call
  *               docker to startup medley docker containers as needed.
- * 
- * 
+ *
+ *
  *   2021-11-22 Frank Halasz
- * 
- * 
- *   Copyright: 2021-2022 by Interlisp.org 
- * 
+ *
+ *
+ *   Copyright: 2021-2022 by Interlisp.org
+ *
  *
  ******************************************************************************/
 
@@ -74,6 +74,7 @@ function medleyEnvs(req) {
             + ` --env MEDLEY_INITIALS='${u.initials || "medley"}'`
             + ` --env RUN_NOTECARDS=${nc}`
             + ` --env MEDLEY_EXEC=${exec}`
+            + ` --env MEDLEY_MEMORY=${config.medleyMemoryArg}`
     ;
 }
 
@@ -170,7 +171,7 @@ function killIfNeeded(req, res, next) {
         docker
             .command(`container kill ${req.emailish}`)
             .then(data => { req.isRunning = false; next(); })
-            .catch(err => { console.log(err); res.status(500).send(err); } );        
+            .catch(err => { console.log(err); res.status(500).send(err); } );
     }
     else {
         next();
@@ -233,7 +234,7 @@ function returnCheckSession(req, res, next) {
 
 function filterGuest(req, res,next) {
     if(config.isGuestUser(req.user.username)) {
-        res.status(403); 
+        res.status(403);
         res.send("xterm not allowed for guest");
     }
     else next();
