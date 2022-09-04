@@ -1,11 +1,13 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED "18-Mar-2022 18:54:20" {DSK}<home>medley>il>initdir>ONLINE-INIT.;5 8434   
+(FILECREATED " 4-Sep-2022 16:45:19" {DSK}<home>larry>online>docker_medley>init>ONLINE-INIT.;5 8331   
 
-      :CHANGES-TO (VARS ONLINE-INITCOMS)
-                  (FNS Online.DoInit XCL-USER::INTERLISP)
+      :CHANGES-TO (ADVICE (SAVEVM :IN \IDLER))
+                  (FNS Online.DoInit)
+                  (VARS ONLINE-INITCOMS)
 
-      :PREVIOUS-DATE "18-Mar-2022 18:41:35" {DSK}<home>medley>il>initdir>ONLINE-INIT.;4)
+      :PREVIOUS-DATE " 4-Sep-2022 16:41:05" {DSK}<home>larry>online>docker_medley>init>ONLINE-INIT.;4
+)
 
 
 (PRETTYCOMPRINT ONLINE-INITCOMS)
@@ -17,7 +19,7 @@
                IDLE.PROFILE Online.SftpDisplayMenu ONLINEP)
         (INITVARS (Online.LogoutTimeout 30)
                ONLINEP)
-        (ADVISE IDLE)
+        (ADVISE (SAVEVM :IN \IDLER))
         (FNS Online.SftpInitInfo Online.SftpUpdateInfo Online.InitNotecards Online.DoInit 
              XCL-USER::INTERLISP)
         (P (Online.DoInit))
@@ -35,13 +37,13 @@
 
 (RPAQ? ONLINEP NIL)
 
-[XCL:REINSTALL-ADVICE 'IDLE :BEFORE '((:LAST (if (IGREATERP (IQUOTIENT (IDIFFERENCE (CLOCK 0)
-                                                                              (CLOCK 1))
-                                                                   1000)
-                                                        30)
-                                                 then (LOGOUT]
+[XCL:REINSTALL-ADVICE '(SAVEVM :IN \IDLER)
+       :AROUND
+       '((:LAST (COND
+                   (ONLINEP (LOGOUT))
+                   (T *]
 
-(READVISE IDLE)
+(READVISE (SAVEVM :IN \IDLER))
 (DEFINEQ
 
 (Online.SftpInitInfo
@@ -79,7 +81,11 @@
                          550 220])
 
 (Online.DoInit
-  [LAMBDA NIL                                                (* ; "Edited 18-Mar-2022 18:53 by fgh")
+  [LAMBDA NIL
+
+    (* ;; "Edited  4-Sep-2022 16:44 by larry")
+
+    (* ;; "Edited 18-Mar-2022 18:53 by fgh")
 
     (* ;; "Edited 17-Dec-2021 22:05 by fgh")
 
@@ -103,6 +109,7 @@
 
            (* ;; "  Set the IDLE timeout ")
 
+           (LISTPUT IDLE.PROFILE 'SAVEVM 1)
            (LISTPUT IDLE.PROFILE 'TIMEOUT Online.LogoutTimeout)
 
            (* ;; " Adjust windows so that the exec window and the prompt window don't overlap")
@@ -182,6 +189,6 @@
 (BKSYSBUF " ")
 )
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (1624 8354 (Online.SftpInitInfo 1634 . 2507) (Online.SftpUpdateInfo 2509 . 2764) (
-Online.InitNotecards 2766 . 3710) (Online.DoInit 3712 . 7583) (XCL-USER::INTERLISP 7585 . 8352)))))
+  (FILEMAP (NIL (1470 8251 (Online.SftpInitInfo 1480 . 2353) (Online.SftpUpdateInfo 2355 . 2610) (
+Online.InitNotecards 2612 . 3556) (Online.DoInit 3558 . 7480) (XCL-USER::INTERLISP 7482 . 8249)))))
 STOP
