@@ -166,16 +166,8 @@
      height="300"
      id="use2692"
      transform="translate(147.4565)" />
-  <use
-     xlink:href="#window-icon"
-     x="712.71698"
-     y="1246.713"
-     width="372"
-     height="300"
-     id="use2694"
-     transform="translate(147.4565)" />
   <text
-     x="1397.4565"
+     x="1283.4565"
      y="1500"
      font-family="'Times New Roman', Times, serif"
      font-weight="bold"
