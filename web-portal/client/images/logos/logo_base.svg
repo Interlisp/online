@@ -1,27 +1,164 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg preserveAspectRatio="xMidYMid meet" width="100%" height="100%" viewBox="0 0 2922 1600" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:serif="http://www.serif.com/">
-    <symbol id="window-icon" viewBox="0 0 372 300">
-        <rect x="10" y="10" width="352" height="280" style="fill:#fff;stroke:#000;stroke-width:20;"/>        
-		<line x1="10" y1="30" x2="362" y2="30" style="fill:#fff;stroke:#000;stroke-width:20;"/>
-    </symbol>
-    <use xlink:href="#window-icon" x="1250" y="650"  width="372" height="300"></use>
-    <use xlink:href="#window-icon" x="1202.303" y="415.561"  width="372" height="300"></use>
-    <use xlink:href="#window-icon" x="1066.795" y="218.396"  width="372" height="300"></use>
-    <use xlink:href="#window-icon" x="865.021" y="89.852"  width="372" height="300"></use>
-    <use xlink:href="#window-icon" x="629.06" y="50.366"  width="372" height="300"></use>
-    <use xlink:href="#window-icon" x="396.429" y="106.215"  width="372" height="300"></use>
-    <use xlink:href="#window-icon" x="204.113" y="248.522"  width="372" height="300"></use>
-    <use xlink:href="#window-icon" x="82.689" y="454.659"  width="372" height="300"></use>
-    <use xlink:href="#window-icon" x="51.462" y="691.854"  width="372" height="300"></use>
-    <use xlink:href="#window-icon" x="115.396" y="922.394"  width="372" height="300"></use>
-    <use xlink:href="#window-icon" x="264.327" y="1109.627"  width="372" height="300"></use>
-    <use xlink:href="#window-icon" x="474.577" y="1223.783"  width="372" height="300"></use>
-    <use xlink:href="#window-icon" x="712.717" y="1246.713"  width="372" height="300"></use>
-    <circle cx="650" cy="650" r="20" style="display:none;fill:#fff;stroke:#f00;stroke-width:5;"/>
-    <circle cx="650" cy="650" r="600" style="display:none;fill:none;stroke:#00f;stroke-width:5;"/>
-    <rect x="0" y="0" width="2922" height="1600" style="display:none;fill:none;stroke:#0f0;stroke-width:10;"/>
-    <text x="1250" y="1500" font-family="Times New Roman, Times, serif" font-weight="bold" font-size="420">Interlisp</text>
+<svg
+   preserveAspectRatio="xMidYMid meet"
+   width="100%"
+   height="100%"
+   viewBox="0 0 2922 1600"
+   version="1.1"
+   id="svg908"
+   sodipodi:docname="logo_base.svg"
+   inkscape:version="1.1.2 (b8e25be833, 2022-02-05)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs912" />
+  <sodipodi:namedview
+     id="namedview910"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     inkscape:zoom="0.705625"
+     inkscape:cx="1460.4074"
+     inkscape:cy="800"
+     inkscape:window-width="3440"
+     inkscape:window-height="1351"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg908" />
+  <symbol
+     id="window-icon"
+     viewBox="0 0 372 300">
+    <rect
+       x="10"
+       y="10"
+       width="352"
+       height="280"
+       style="fill:#fff;stroke:#000;stroke-width:20;"
+       id="rect869" />
+    <line
+       x1="10"
+       y1="30"
+       x2="362"
+       y2="30"
+       style="fill:#fff;stroke:#000;stroke-width:20;"
+       id="line871" />
+  </symbol>
+  <use
+     xlink:href="#window-icon"
+     x="1250"
+     y="650"
+     width="372"
+     height="300"
+     id="use874" />
+  <use
+     xlink:href="#window-icon"
+     x="1202.303"
+     y="415.561"
+     width="372"
+     height="300"
+     id="use876" />
+  <use
+     xlink:href="#window-icon"
+     x="1066.795"
+     y="218.396"
+     width="372"
+     height="300"
+     id="use878" />
+  <use
+     xlink:href="#window-icon"
+     x="865.021"
+     y="89.852"
+     width="372"
+     height="300"
+     id="use880" />
+  <use
+     xlink:href="#window-icon"
+     x="629.06"
+     y="50.366"
+     width="372"
+     height="300"
+     id="use882" />
+  <use
+     xlink:href="#window-icon"
+     x="396.429"
+     y="106.215"
+     width="372"
+     height="300"
+     id="use884" />
+  <use
+     xlink:href="#window-icon"
+     x="204.113"
+     y="248.522"
+     width="372"
+     height="300"
+     id="use886" />
+  <use
+     xlink:href="#window-icon"
+     x="82.689"
+     y="454.659"
+     width="372"
+     height="300"
+     id="use888" />
+  <use
+     xlink:href="#window-icon"
+     x="51.462"
+     y="691.854"
+     width="372"
+     height="300"
+     id="use890" />
+  <use
+     xlink:href="#window-icon"
+     x="115.396"
+     y="922.394"
+     width="372"
+     height="300"
+     id="use892" />
+  <use
+     xlink:href="#window-icon"
+     x="264.327"
+     y="1109.627"
+     width="372"
+     height="300"
+     id="use894" />
+  <use
+     xlink:href="#window-icon"
+     x="474.577"
+     y="1223.783"
+     width="372"
+     height="300"
+     id="use896" />
+  <circle
+     cx="650"
+     cy="650"
+     r="20"
+     style="display:none;fill:#fff;stroke:#f00;stroke-width:5;"
+     id="circle900" />
+  <circle
+     cx="650"
+     cy="650"
+     r="600"
+     style="display:none;fill:none;stroke:#00f;stroke-width:5;"
+     id="circle902" />
+  <rect
+     x="0"
+     y="0"
+     width="2922"
+     height="1600"
+     style="display:none;fill:none;stroke:#0f0;stroke-width:10;"
+     id="rect904" />
+  <text
+     x="1136"
+     y="1500"
+     font-family="'Times New Roman', Times, serif"
+     font-weight="bold"
+     font-size="420px"
+     id="text906">Interlisp</text>
 </svg>
-
-

@@ -73,8 +73,8 @@
      style="display:none;fill:none;stroke:#00ff00;stroke-width:10"
      id="rect2700" />
   <g
-     id="g102532"
-     transform="translate(-141.73439,-2.8046961)">
+     id="g1596"
+     transform="translate(50.999908)">
     <use
        xlink:href="#window-icon"
        x="1250"
@@ -82,7 +82,7 @@
        width="372"
        height="300"
        id="use2670"
-       transform="translate(148.95648,-0.93177986)" />
+       transform="translate(7.22209,-3.736476)" />
     <use
        xlink:href="#window-icon"
        x="1202.303"
@@ -90,7 +90,7 @@
        width="372"
        height="300"
        id="use2672"
-       transform="translate(148.95648,-0.93177986)" />
+       transform="translate(7.22209,-3.736476)" />
     <use
        xlink:href="#window-icon"
        x="1066.795"
@@ -98,7 +98,7 @@
        width="372"
        height="300"
        id="use2674"
-       transform="translate(148.95648,-0.93177986)" />
+       transform="translate(7.22209,-3.736476)" />
     <use
        xlink:href="#window-icon"
        x="865.021"
@@ -106,7 +106,7 @@
        width="372"
        height="300"
        id="use2676"
-       transform="translate(148.95648,-0.93177986)" />
+       transform="translate(7.22209,-3.736476)" />
     <use
        xlink:href="#window-icon"
        x="629.06"
@@ -114,7 +114,7 @@
        width="372"
        height="300"
        id="use2678"
-       transform="translate(148.95648,-0.93177986)" />
+       transform="translate(7.22209,-3.736476)" />
     <use
        xlink:href="#window-icon"
        x="396.42899"
@@ -122,7 +122,7 @@
        width="372"
        height="300"
        id="use2680"
-       transform="translate(148.95648,-0.93177986)" />
+       transform="translate(7.22209,-3.736476)" />
     <use
        xlink:href="#window-icon"
        x="204.11301"
@@ -130,7 +130,7 @@
        width="372"
        height="300"
        id="use2682"
-       transform="translate(148.95648,-0.93177986)" />
+       transform="translate(7.22209,-3.736476)" />
     <use
        xlink:href="#window-icon"
        x="82.689003"
@@ -138,7 +138,7 @@
        width="372"
        height="300"
        id="use2684"
-       transform="translate(148.95648,-0.93177986)" />
+       transform="translate(7.22209,-3.736476)" />
     <use
        xlink:href="#window-icon"
        x="51.462002"
@@ -146,7 +146,7 @@
        width="372"
        height="300"
        id="use2686"
-       transform="translate(148.95648,-0.93177986)" />
+       transform="translate(7.22209,-3.736476)" />
     <use
        xlink:href="#window-icon"
        x="115.396"
@@ -154,7 +154,7 @@
        width="372"
        height="300"
        id="use2688"
-       transform="translate(148.95648,-0.93177986)" />
+       transform="translate(7.22209,-3.736476)" />
     <use
        xlink:href="#window-icon"
        x="264.327"
@@ -162,7 +162,7 @@
        width="372"
        height="300"
        id="use2690"
-       transform="translate(148.95648,-0.93177986)" />
+       transform="translate(7.22209,-3.736476)" />
     <use
        xlink:href="#window-icon"
        x="474.577"
@@ -170,26 +170,18 @@
        width="372"
        height="300"
        id="use2692"
-       transform="translate(148.95648,-0.93177986)" />
-    <use
-       xlink:href="#window-icon"
-       x="712.71698"
-       y="1246.713"
-       width="372"
-       height="300"
-       id="use2694"
-       transform="translate(148.95648,-0.93177986)" />
+       transform="translate(7.22209,-3.736476)" />
     <text
-       x="1398.9565"
-       y="1297.0682"
+       x="1155.2222"
+       y="1294.2635"
        font-family="'Times New Roman', Times, serif"
        font-weight="bold"
        font-size="420px"
        id="text2702"
        style="font-size:375px;fill:#337ab7;fill-opacity:1;stroke:#000000;stroke-opacity:1">Medley</text>
     <text
-       x="1525.9707"
-       y="1600.597"
+       x="1282.2363"
+       y="1597.7924"
        font-family="'Times New Roman', Times, serif"
        font-weight="bold"
        font-size="420px"
