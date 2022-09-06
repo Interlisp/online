@@ -1,1 +1,2 @@
 docker_medley/filebrowser/filebrowser filter=lfs diff=lfs merge=lfs -text
+docker_medley/gh/*.deb filter=lfs diff=lfs merge=lfs -text

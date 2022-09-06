@@ -29,6 +29,7 @@ ARG MAIKO_RELEASE=unknown
 ARG MEDLEY_RELEASE=unknown
 ARG NOTECARDS_RELEASE=unknown
 ARG REPO_OWNER=Interlisp
+ARG PLATFORM=amd64
 
 LABEL name="online.interlisp.org"
 LABEL description="The Medley Interlisp environment used by online.interlisp.org"
@@ -53,14 +54,15 @@ ENV MEDLEY_USERDIR=${HOMEDIR}/il
 ARG NC_INSTALLDIR=/usr/local/interlisp/notecards
 ENV NC_INSTALLDIR=${NC_INSTALLDIR}
 
-# install git & gh (github cli) 
+# install apt-utils, curl, git 
 RUN apt-get update \
     && apt-get install -y apt-utils \
     && apt-get install -y curl \
-    && ( curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg ) \
-    && ( echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null ) \
-    && apt-get update \
-    && apt-get install -y git gh
+    && apt-get install -y git
+
+# install gh (github cli)
+COPY gh/gh_2.14.7_linux_*.deb /tmp
+RUN dpkg -i /tmp/gh_2.14.7_linux_${PLATFORM}.deb; rm /tmp/gh_2.14.7_linux_*.deb
 
 #  install websockify for use with noVNC
 RUN apt-get install -y websockify

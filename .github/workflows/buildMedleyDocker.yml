@@ -73,6 +73,10 @@ jobs:
       # Checkout latest commit
       - name: Checkout Online code
         uses: actions/checkout@v2
+        with:
+          lfs: true
+      - name: Checkout lfs files
+        run: git lfs checkout
 
       # Setup release tag
       - name: Setup Release Tag
@@ -169,6 +173,12 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      # Set up platform variable so it can be used by Docker build
+      - name: Strip the linux/ from the platform input 
+        id: platform_var
+        run: |
+          echo ::set-output name=platform::$(echo "${{ needs.inputs.outputs.platform }}" | sed s-linux/--)
+
       # Do the Docker Build using the Dockerfile in the repository
       # checked out and the release tars just downloaded.
       # Push the result to Docker Hub
@@ -184,6 +194,7 @@ jobs:
             DOCKER_NAMESPACE=${{ steps.release_info.outputs.docker_namespace }}
             REPO_OWNER=${{ github.repository_owner }}
             NOTECARDS_RELEASE=${{ steps.nc_release_info.outputs.nc_release_tag }}
+            PLATFORM=${{ steps.platform_var.outputs.platform }}
           context: ./docker_medley
           file: ./docker_medley/Dockerfile_medley
           platforms: ${{ needs.inputs.outputs.platform }}
