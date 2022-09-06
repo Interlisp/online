@@ -61,7 +61,8 @@ RUN apt-get update \
     && apt-get install -y git
 
 # install gh (github cli)
-RUN dpkg -i gh/gh_2.14.7_linux_${PLATFORM}.deb
+COPY gh/gh_2.14.7_linux_*.deb /tmp
+RUN dpkg -i /tmp/gh_2.14.7_linux_${PLATFORM}.deb; rm /tmp/gh_2.14.7_linux_*.deb
 
 #  install websockify for use with noVNC
 RUN apt-get install -y websockify
