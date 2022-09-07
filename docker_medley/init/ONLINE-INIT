@@ -1,12 +1,11 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED " 4-Sep-2022 16:45:19" {DSK}<home>larry>online>docker_medley>init>ONLINE-INIT.;5 8331   
+(FILECREATED " 6-Sep-2022 17:31:32" {DSK}<home>medley>il>ONLINE-INIT.;1 8467   
 
-      :CHANGES-TO (ADVICE (SAVEVM :IN \IDLER))
+      :CHANGES-TO (VARS ONLINE-INITCOMS)
                   (FNS Online.DoInit)
-                  (VARS ONLINE-INITCOMS)
 
-      :PREVIOUS-DATE " 4-Sep-2022 16:41:05" {DSK}<home>larry>online>docker_medley>init>ONLINE-INIT.;4
+      :PREVIOUS-DATE " 4-Sep-2022 16:45:19" {DSK}<usr>local>interlisp>medley>greetfiles>ONLINE-INIT.;1
 )
 
 
@@ -16,7 +15,7 @@
        [(FILES (SYSLOAD)
                MEDLEYDIR-INIT VTCHAT)
         (GLOBALVARS Online.LogoutTimeout Online.SftpPort Online.SftpPassword Online.SftpDisplay 
-               IDLE.PROFILE Online.SftpDisplayMenu ONLINEP)
+               IDLE.PROFILE IDLE.BOUNCING.BOX Online.SftpDisplayMenu ONLINEP)
         (INITVARS (Online.LogoutTimeout 30)
                ONLINEP)
         (ADVISE (SAVEVM :IN \IDLER))
@@ -30,7 +29,7 @@
 (DECLARE%: DOEVAL@COMPILE DONTCOPY
 
 (GLOBALVARS Online.LogoutTimeout Online.SftpPort Online.SftpPassword Online.SftpDisplay IDLE.PROFILE
-       Online.SftpDisplayMenu ONLINEP)
+       IDLE.BOUNCING.BOX Online.SftpDisplayMenu ONLINEP)
 )
 
 (RPAQ? Online.LogoutTimeout 30)
@@ -83,6 +82,8 @@
 (Online.DoInit
   [LAMBDA NIL
 
+    (* ;; "Edited  6-Sep-2022 17:22 by fgh")
+
     (* ;; "Edited  4-Sep-2022 16:44 by larry")
 
     (* ;; "Edited 18-Mar-2022 18:53 by fgh")
@@ -107,10 +108,11 @@
                       (NCONC *WHO-LINE-ENTRY-REGISTRY* (LAST *WHO-LINE-ENTRIES*))
                       (INSTALL-WHO-LINE-OPTIONS]
 
-           (* ;; "  Set the IDLE timeout ")
+           (* ;; "  Set the IDLE timeout, set to SAVEVM 1 min after idle, set idle bouncing box")
 
            (LISTPUT IDLE.PROFILE 'SAVEVM 1)
            (LISTPUT IDLE.PROFILE 'TIMEOUT Online.LogoutTimeout)
+           (SETQ IDLE.BOUNCING.BOX "Press any key to continue")
 
            (* ;; " Adjust windows so that the exec window and the prompt window don't overlap")
 
@@ -189,6 +191,6 @@
 (BKSYSBUF " ")
 )
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (1470 8251 (Online.SftpInitInfo 1480 . 2353) (Online.SftpUpdateInfo 2355 . 2610) (
-Online.InitNotecards 2612 . 3556) (Online.DoInit 3558 . 7480) (XCL-USER::INTERLISP 7482 . 8249)))))
+  (FILEMAP (NIL (1438 8387 (Online.SftpInitInfo 1448 . 2321) (Online.SftpUpdateInfo 2323 . 2578) (
+Online.InitNotecards 2580 . 3524) (Online.DoInit 3526 . 7616) (XCL-USER::INTERLISP 7618 . 8385)))))
 STOP
