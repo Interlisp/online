@@ -1,11 +1,10 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED " 6-Sep-2022 17:31:32" {DSK}<home>medley>il>ONLINE-INIT.;1 8467   
+(FILECREATED "11-Sep-2022 01:14:05" {DSK}<home>medley>il>ONLINE-INIT.;1 8606   
 
-      :CHANGES-TO (VARS ONLINE-INITCOMS)
-                  (FNS Online.DoInit)
+      :CHANGES-TO (FNS Online.InitNotecards)
 
-      :PREVIOUS-DATE " 4-Sep-2022 16:45:19" {DSK}<usr>local>interlisp>medley>greetfiles>ONLINE-INIT.;1
+      :PREVIOUS-DATE " 6-Sep-2022 17:31:32" {DSK}<usr>local>interlisp>medley>greetfiles>ONLINE-INIT.;1
 )
 
 
@@ -66,10 +65,12 @@
         (Online.SftpInitInfo])
 
 (Online.InitNotecards
-  [LAMBDA NIL                                                (* ; "Edited  7-Feb-2022 20:22 by tp7")
+  [LAMBDA NIL                                                (* ; "Edited 11-Sep-2022 01:09 by fgh")
+                                                             (* ; "Edited  7-Feb-2022 20:22 by tp7")
     (PROGN (LOAD? (PACKFILENAME 'HOST "DSK" 'DIRECTORY (CONCAT (UNIX-GETENV 'NC_INSTALLDIR)
                                                               "/system")
                          'NAME "NOTECARDS" 'EXTENSION "LCOM"))
+           (ADVISE 'NC.LogoutAdvice 'BEFORE 'FIRST '(RETURN T))
            (NC.BringUpNoteCardsIcon (create POSITION
                                            XCOORD _ 750
                                            YCOORD _ (IDIFFERENCE SCREENHEIGHT 228)))
@@ -191,6 +192,6 @@
 (BKSYSBUF " ")
 )
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (1438 8387 (Online.SftpInitInfo 1448 . 2321) (Online.SftpUpdateInfo 2323 . 2578) (
-Online.InitNotecards 2580 . 3524) (Online.DoInit 3526 . 7616) (XCL-USER::INTERLISP 7618 . 8385)))))
+  (FILEMAP (NIL (1404 8526 (Online.SftpInitInfo 1414 . 2287) (Online.SftpUpdateInfo 2289 . 2544) (
+Online.InitNotecards 2546 . 3663) (Online.DoInit 3665 . 7755) (XCL-USER::INTERLISP 7757 . 8524)))))
 STOP
