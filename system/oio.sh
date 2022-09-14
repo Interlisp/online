@@ -14,16 +14,34 @@ oio=$(basename "$0")
 oio=${oio%.sh}
 
 #
+#  Timezone that we should assume dates sent in as args from the user are in
+#
+declare T_ZONE="America/Los_Angeles"
+
+#
 # functions used to query user database
 #
+
+get_mongo_uri() {
+    echo "$(docker exec ${oio} bash -c "echo \$MONGO_URI")"
+}
+
+exec_mongosh() {
+	cat >/tmp/tmp-$$
+	docker cp /tmp/tmp-$$ ${oio}:/tmp/tmp-$$
+        rm /tmp/tmp-$$
+        docker exec ${oio} mongosh "`get_mongo_uri`" --file /tmp/tmp-$$ | grep "^~" | sed s/^~//
+	docker exec ${oio} rm /tmp/tmp-$$
+}
+
 list_users_core() {
-   	cat >/tmp/tmp-$$ <<-EOF
+   	exec_mongosh <<-EOF
             var l=db.userInfo.aggregate([
                     $1
                     {\$project:
                         { _id:0, created:1, username:1, numLogins:1, lastLogin:1,
-                          cdate: { \$dateToString: {date: '\$created', format: '%Y-%m-%d', onNull: 'xxxx-xx-xx'}},
-                          lldate: { \$dateToString: {date: '\$lastLogin', format: '%Y-%m-%d', onNull: 'xxxx-xx-xx'}}
+                          cdate: { \$dateToString: {date: '\$created', format: '%Y-%m-%d', timezone: '${T_ZONE}', onNull: 'xxxx-xx-xx'}},
+                          lldate: { \$dateToString: {date: '\$lastLogin', format: '%Y-%m-%d', timezone: '${T_ZONE}', onNull: 'xxxx-xx-xx'}}
                         }
                     }]);
             print("~#Logins     Created       Last Login    Username");
@@ -33,9 +51,6 @@ list_users_core() {
                   nl = nl.substring(nl.length-3);
                   print("~", nl, "      ", doc.cdate, "  ", doc.lldate, "  ", doc.username);} );
 	EOF
-	docker cp /tmp/tmp-$$ ${oio}:/tmp/tmp-$$
-        rm /tmp/tmp-$$
-        docker exec ${oio} mongosh $mongo_uri --file /tmp/tmp-$$ | grep "^~" | sed s/^~//
 }
 
 list_users() {
@@ -47,36 +62,57 @@ list_new_users() {
         list_users_core "$match"
 }
 
+set_date() {
+        local e_date
+
+	if [ -z "$1" ]; then
+	    e_date="$(date --date '-1 month' '+%Y-%m-%d')"
+	else
+	    e_date="$1"
+	fi
+	tz_offset=`TZ=T_ZONE date --date "${e_date} 00:00 +00" +%z`
+	e_date="${e_date}T00:00:00${tz_offset}"
+        echo "${e_date}"
+}
+
 count_guests() {
-        cat >/tmp/tmp-$$ <<-EOF
+        exec_mongosh <<-EOF
             var l=db.loginLog.find({username: "guest@online.interlisp.org", timestamp: {\$gte: ISODate('$1')}}).count();
             print("~", l);
 	EOF
-	docker cp /tmp/tmp-$$ ${oio}:/tmp/tmp-$$
-        rm /tmp/tmp-$$
-        docker exec ${oio} mongosh $mongo_uri --file /tmp/tmp-$$ | grep "^~" | sed s/^~//
 }
 
 count_logins() {
-        cat >/tmp/tmp-$$ <<-EOF
+        exec_mongosh <<-EOF
             var l=db.loginLog.find({username: {\$not: /^guest@online.interlisp.org\$/}, timestamp: {\$gte: ISODate('$1')}}).count();
             print("~", l);
 	EOF
-	docker cp /tmp/tmp-$$ ${oio}:/tmp/tmp-$$
-        rm /tmp/tmp-$$
-        docker exec ${oio} mongosh $mongo_uri --file /tmp/tmp-$$ | grep "^~" | sed s/^~//
 }
 
 show_logins() {
-        cat >/tmp/tmp-$$ <<-EOF
+        exec_mongosh <<-EOF
             var l=db.loginLog.find({username: {\$not: /^guest@online.interlisp.org\$/}, timestamp: {\$gte: ISODate('$1')}});
             l.forEach( doc => print("~", doc.username) );
 	EOF
-	docker cp /tmp/tmp-$$ ${oio}:/tmp/tmp-$$
-        rm /tmp/tmp-$$
-        docker exec ${oio} mongosh $mongo_uri --file /tmp/tmp-$$ | grep "^~" | sed s/^~//
 }
 
+log_logins() {
+        exec_mongosh <<-EOF
+            var l=db.loginLog.aggregate([
+	            {\$match: {timestamp: {\$gte: ISODate('$1')}}},
+                    {\$project:
+                        { _id:0, username:1, timestamp:1,
+                          logdate:
+                             {\$dateToString: {date: '\$timestamp', format: '%Y-%m-%d %H:%M', timezone: '${T_ZONE}'}},
+			  dow:
+                             {\$dayOfWeek: {date: '\$timestamp', timezone: '${T_ZONE}'}}
+                        }
+                    }
+		]);
+            var n=["", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+            l.forEach( doc => print("~", n[doc.dow], doc.logdate, doc.username) );
+	EOF
+}
 
 #
 #  Main case statement
@@ -90,7 +126,7 @@ case $1 in
         if [ "$2" = "all" ]; then
             docker container ls --format 'table {{.ID}}\t{{.Names}}\t{{.Status}}'
         else
-            docker container ls --format 'table {{.ID}}\t{{.Names}}\t{{.Status}}'
+            docker container ls --format 'table {{.ID}}\t{{.Names}}\t{{.Status}}' --filter name=^oio\|oio-dev\$
         fi
         ;;
 
@@ -113,17 +149,11 @@ case $1 in
 
    # query user database
    users)
-       mongo_uri=$(docker exec ${oio} bash -c "echo \$MONGO_URI")
        case $2 in
            list)
                case "$3" in
                    "new")
-                       if [ -z "$4" ]; then
-                           sDate="$(date --date '-1 month' '+%Y-%m-%d')"
-                       else
-                           sDate="$4"
-                       fi
-                       list_new_users $sDate
+                       list_new_users `set_date "$4"`
                        ;;
                    *)
                        list_users
@@ -141,35 +171,22 @@ case $1 in
 
     # count guest logins since
     guests)
-       mongo_uri=$(docker exec ${oio} bash -c "echo \$MONGO_URI")
-       if [ -z "$2" ]; then
-           sDate="$(date --date '-1 month' '+%Y-%m-%d')"
-       else
-           sDate="$2"
-       fi
-       count_guests $sDate
+       count_guests `set_date "$2"`
        ;;
 
     # show/count non-guest logins since
     logins)
-       mongo_uri=$(docker exec ${oio} bash -c "echo \$MONGO_URI")
        case "$2" in
            count)
-               if [ -z "$3" ]; then
-                   sDate="$(date --date '-1 month' '+%Y-%m-%d')"
-               else
-                   sDate="$3"
-               fi
-               count_logins $sDate
+               count_logins `set_date "$3"`
            ;;
 
            show)
-	       if [ -z "$3" ]; then
-	           sDate="$(date --date '-1 month' '+%Y-%m-%d')"
-	       else
-	           sDate="$3"
-	       fi
-	       show_logins $sDate
+	       show_logins `set_date "$3"` | /usr/bin/sort | /usr/bin/uniq -c
+           ;;
+
+           log)
+               log_logins `set_date "$3"`
            ;;
 
            *)
@@ -261,6 +278,9 @@ case $1 in
         echo
         echo "${oio} logins show:  show non-guest logins in the last month"
         echo "${oio} logins show YYYY-MM-DD:  show non-guest logins since YYYY-MM-DD"
+        echo
+        echo "${oio} logins log:  show logins log for the last month"
+        echo "${oio} logins log YYYY-MM-DD:  show logins log since YYYY-MM-DD"
         echo
 	echo "${oio} medley pulldev:  pull latest development (test) online-medley image from GHCR"
         echo "${oio} medley dev2prod:  move current development online-medley image to production status"
