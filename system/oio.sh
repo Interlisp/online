@@ -70,7 +70,7 @@ set_date() {
 	else
 	    e_date="$1"
 	fi
-	tz_offset=`TZ=T_ZONE date --date "${e_date} 00:00 +00" +%z`
+	tz_offset=`TZ=${T_ZONE} date --date "${e_date} 00:00 +00" +%z`
 	e_date="${e_date}T00:00:00${tz_offset}"
         echo "${e_date}"
 }
