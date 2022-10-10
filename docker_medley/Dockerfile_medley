@@ -62,7 +62,7 @@ RUN apt-get update \
 
 # install tigervnc server
 RUN apt-get purge -y tightvncserver \
-    apt-get install -y tigervnc-standalone-server
+    && apt-get install -y tigervnc-standalone-server
 
 # install gh (github cli)
 COPY gh/gh_2.14.7_linux_*.deb /tmp
