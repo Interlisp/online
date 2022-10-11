@@ -1750,6 +1750,7 @@ const UI = {
         // // Display the desktop name in the document title
         // document.title = e.detail.name + " - " + PAGE_TITLE;
         document.title = PAGE_TITLE;
+        console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ " + UI.desktopName);
     },
 
     bell(e) {
