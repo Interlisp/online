@@ -97,7 +97,9 @@ if [ ${SUPPORT_HTTPS} = "yes" ];
   then /usr/bin/websockify --daemon --key ${TLS_KEYFILE} --cert ${TLS_CERTFILE} --ssl-only ${PORT} localhost:1${PORT}
   else /usr/bin/websockify --daemon  ${PORT} localhost:1${PORT}
 fi
-/usr/bin/Xvnc -geometry ${width}x${height} -rfbport 1${PORT} -nolisten tcp -localhost -NeverShared -DisconnectClients=0 :0 &
+/usr/bin/Xvnc -geometry ${width}x${height} -rfbport 1${PORT} -SecurityTypes TLSNone \
+              -nolisten tcp -localhost -NeverShared -DisconnectClients=0 \
+              :0 &
 export DISPLAY=:0
 for i in {1..10}
     do
