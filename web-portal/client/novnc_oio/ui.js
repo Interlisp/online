@@ -104,7 +104,7 @@ const UI = {
         UI.addSettingsHandlers();
         document.getElementById("noVNC_status")
             .addEventListener('click', UI.hideStatus);
-            
+
         //
         // Interlisp Online
         //
@@ -384,7 +384,7 @@ const UI = {
         window.addEventListener('webkitfullscreenchange', UI.updateFullscreenButton);
         window.addEventListener('msfullscreenchange', UI.updateFullscreenButton);
     },
-    
+
     //
     // Interlisp Online
     //
@@ -1157,7 +1157,7 @@ const UI = {
         //
         // UI.openControlbar();
         // UI.openConnectPanel();
-        window.location.assign(window.location.origin + "/main?fromvnc=1");
+        //window.location.assign(window.location.origin + "/main?fromvnc=1");
     },
 
     securityFailed(e) {
