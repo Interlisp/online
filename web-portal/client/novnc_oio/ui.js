@@ -1285,6 +1285,7 @@ const UI = {
     async openFileBrowser() {
         if(window.fileBrowserWindow && !window.fileBrowserWindow.closed ) {
             window.fileBrowserWindow.focus();
+
         } else {
             let noWarn;
             let response = await window.fetch('/user/nofilemgrwarning');
@@ -1294,8 +1295,8 @@ const UI = {
             }
             else noWarn = false;
             if(noWarn)
-              UI.openFileBrowserFinish();  
-            else 
+              UI.openFileBrowserFinish();
+            else
               document.getElementById('OIO_warning_dlg').showModal();
         }
     },
@@ -1303,7 +1304,7 @@ const UI = {
     async warningButtonOnClick() {
         const checked = document.getElementById("OIO_warning_checkbox").checked;
         if(checked) {
-             let response = await window.fetch('/user/nofilemgrwarning?set=1');  
+             let response = await window.fetch('/user/nofilemgrwarning?set=1');
              if(!response.ok) {
                  console.log("fetch error /user/nofilemgrwarning");
                  console.dir(response);
@@ -1312,7 +1313,7 @@ const UI = {
         document.getElementById('OIO_warning_dlg').close();
         UI.openFileBrowserFinish();
     },
-    
+
     openFileBrowserFinish() {
         const urlParams = new URLSearchParams(window.location.search);
         const u = urlParams.get('u') || "";
@@ -1330,7 +1331,7 @@ const UI = {
             }
         }, 1750);
     },
-    
+
     closeFileBrowser() {
         if(window.fileBrowserWindow && !window.fileBrowserWindow.closed ) window.fileBrowserWindow.close();
     },
@@ -1744,13 +1745,26 @@ const UI = {
         WebUtil.initLogging(UI.getSetting('logging'));
     },
 
+    // Interlisp Online
     updateDesktopName(e) {
-        UI.desktopName = e.detail.name;
-        // Interlisp Online
-        // // Display the desktop name in the document title
-        // document.title = e.detail.name + " - " + PAGE_TITLE;
-        document.title = PAGE_TITLE;
+        let payload = e.detail.name;
+        if (payload.match(/^5d4f26d9d86696b6/)) {
+            let url=payload.slice(16);
+            window.open(url,"OIO.CLHS");
+	} else {
+            UI.desktopName = payload;
+            // Display the desktop name in the document title
+            document.title = PAGE_TITLE;
+        }
     },
+    //updateDesktopName(e) {
+    //    UI.desktopName = e.detail.name;
+    //    // Display the desktop name in the document title
+    //    document.title = e.detail.name + " - " + PAGE_TITLE;
+    //},
+    //
+    // End Interlisp Online
+
 
     bell(e) {
         if (WebUtil.getConfigVar('bell', 'on') === 'on') {
