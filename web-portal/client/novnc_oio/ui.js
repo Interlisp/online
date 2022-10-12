@@ -1157,7 +1157,7 @@ const UI = {
         //
         // UI.openControlbar();
         // UI.openConnectPanel();
-        //window.location.assign(window.location.origin + "/main?fromvnc=1");
+        window.location.assign(window.location.origin + "/main?fromvnc=1");
     },
 
     securityFailed(e) {
@@ -1277,11 +1277,11 @@ const UI = {
  * ==============
  *   FILEBROWSER
  * ------v------*/
-    
+
     //
     // Interlisp Online
     //
-    
+
     async openFileBrowser() {
         if(window.fileBrowserWindow && !window.fileBrowserWindow.closed ) {
             window.fileBrowserWindow.focus();
@@ -1299,7 +1299,7 @@ const UI = {
               document.getElementById('OIO_warning_dlg').showModal();
         }
     },
-    
+
     async warningButtonOnClick() {
         const checked = document.getElementById("OIO_warning_checkbox").checked;
         if(checked) {
@@ -1750,7 +1750,6 @@ const UI = {
         // // Display the desktop name in the document title
         // document.title = e.detail.name + " - " + PAGE_TITLE;
         document.title = PAGE_TITLE;
-        console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ " + UI.desktopName);
     },
 
     bell(e) {
