@@ -108,7 +108,7 @@ const UI = {
         //
         // Interlisp Online
         //
-        UI.addFileBrowserHandlers();
+        UI.addOIOHandlers();
 
         // Bootstrap fallback input handler
         UI.keyboardinputReset();
@@ -388,12 +388,16 @@ const UI = {
     //
     // Interlisp Online
     //
-    addFileBrowserHandlers() {
+    addOIOHandlers() {
         document.getElementById("OIO_filebrowser_button")
             .addEventListener('click', UI.openFileBrowser);
         window.addEventListener('beforeunload', UI.closeFileBrowser);
         document.getElementById("OIO_warning_button")
             .addEventListener('click', UI.warningButtonOnClick);
+        document.getElementById("OIO_CLHS_tab_ok_button")
+            .addEventListener('click', UI.clhsNoticeButtonOnClick);
+        document.getElementById("OIO_CLHS_tab_cancel_button")
+            .addEventListener('click', UI.clhsNoticeButtonOnClick);
         document.getElementById("OIO_popup_button")
             .addEventListener('click', () => {document.getElementById("OIO_popup_dlg").close();});
         document.getElementById("OIO_popup_dialog_site").innerHTML = ` (${window.location.hostname}) `;
@@ -1327,6 +1331,7 @@ const UI = {
             const w = window.fileBrowserWindow;
             if(!w || w.closed || w.closed == "undefined"){
                 w && !w.closed && w.close();
+                document.getElementById('OIO_popup_identifier').innerHTML = "File Manager";
                 document.getElementById('OIO_popup_dlg').showModal();
             }
         }, 1750);
@@ -1338,6 +1343,64 @@ const UI = {
 
 /* ------^-------
  *  FILEBROWSER
+ * ==============
+ *  OPEN_CLHS_TAB
+ * ------v------*/
+
+    //
+    // Interlisp Online
+    //
+
+    async openCLHSTab(url) {
+            let noWarn;
+            let response = await window.fetch('/user/clhstabnotice');
+            if(response.ok) {
+                let txt = await response.text();
+                noWarn = (txt == "true");
+            }
+            else noWarn = false;
+            if(noWarn)
+              UI.openCLHSTabFinish(url);
+            else {
+                const dlg = document.getElementById('OIO_CLHS_tab_notice_dlg');
+                dlg.clhsURL = url;
+                dlg.showModal();
+            }
+        }
+    },
+
+    async clhsNoticeButtonOnClick(e) {
+        const checked = document.getElementById("OIO_CLHS_tab_notice_checkbox").checked;
+        const isCancel = (e.target.value == "Cancel");
+        if(isCancel) {
+	    document.getElementById('OIO_CLHS_tab_notice_dlg').close();
+	} else {
+            const dlg = document.getElementById('OIO_CLHS_tab_notice_dlg');
+            const url = dlg.clhsURL;
+	    if(checked) {
+                let response = await window.fetch('/user/clhstabnotice?set=1');
+                if(!response.ok) {
+                console.log("fetch error /user/clhstabnotice");
+                console.dir(response);
+            }
+            dlg.close();
+            UI.openCLHSTabFinish(url);
+	}
+    },
+
+    openCLHSTabFinish(url) {
+        let w = window.open(url, "_blank");
+        setTimeout(() => {
+            if(!w || w.closed || w.closed == "undefined"){
+                w && !w.closed && w.close();
+                document.getElementById('OIO_popup_identifier').innerHTML = "Common Lisp Hyperspec";
+                document.getElementById('OIO_popup_dlg').showModal();
+            }
+        }, 1750);
+    },
+
+/* ------^-------
+ *  OPEN_NEW_TAB
  * ==============
  *     RESIZE
  * ------v------*/
@@ -1750,7 +1813,7 @@ const UI = {
         let payload = e.detail.name;
         if (payload.match(/^5d4f26d9d86696b6/)) {
             let url=payload.slice(16);
-            window.open(url,"OIO.CLHS");
+            UI.openCLHSTab(url);
 	} else {
             UI.desktopName = payload;
             // Display the desktop name in the document title

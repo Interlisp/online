@@ -34,7 +34,8 @@ const userSchema = new mongoose.Schema({
   numLogins: {type: Number, default: 0 },
   verificationToken: {type: String, default: "notAssigned"},
   isAdmin: {type: Boolean, default: false},
-  noFileMgrWarning: {type: Boolean, default: false}
+  noFileMgrWarning: {type: Boolean, default: false},
+  noCLHSTabNotice: {type: Boolean, default: false}
 });
 
 userSchema.plugin(passportLocalMongoose);
