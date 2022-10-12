@@ -106,12 +106,14 @@ RUN mkdir -p ${MEDLEY_USERDIR} \
 RUN mkdir -p ${MEDLEY_USERDIR}/sysout \
     && chown ${USER_NAME}:${USER_NAME} ${MEDLEY_USERDIR}/sysout
 
-# copy the run-XXX scripts into ${MEDLEY_INSTALLDIR}/../online/bin
+# copy the run-XXX and other scripts into ${MEDLEY_INSTALLDIR}/../online/bin
 ARG ONLINE_BINDIR=${MEDLEY_INSTALLDIR}/../online/bin
 RUN mkdir -p ${ONLINE_BINDIR} \
     && chown root:root ${ONLINE_BINDIR}
 COPY scripts/* ${ONLINE_BINDIR}
-RUN chmod ugo+x ${ONLINE_BINDIR}/*
+RUN chmod ugo+x ${ONLINE_BINDIR}/* \
+    && ln -s ${ONLINE_BINDIR}/request_new_tab.sh ${ONLINE_BINDIR}/request_new_tab
+
 
 # copy INIT file into home directory
 COPY --chown=${USER_NAME}:${USER_NAME} init/INIT ${MEDLEY_USERDIR}
