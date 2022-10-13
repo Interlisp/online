@@ -8,11 +8,14 @@
 #    messages.
 #
 #    Intended for use by the HELPSYS LispUsers package to open Common Lisp Hyperspec documentation for
-#    online.interlisp.org. 
+#    online.interlisp.org.
 #
 #    2022-10-11 Frank Halasz
 #
 #
 URL=5d4f26d9d86696b6$1
+OLD_NAME=$(/usr/bin/vncconfig -display ${DISPLAY} -get desktop)
 /usr/bin/vncconfig -display ${DISPLAY} -set desktop="${URL}"
+/usr/bin/vncconfig -display ${DISPLAY} -set desktop="${OLD_NAME}"
+
 

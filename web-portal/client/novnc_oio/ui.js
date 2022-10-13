@@ -1352,20 +1352,19 @@ const UI = {
     //
 
     async openCLHSTab(url) {
-            let noWarn;
-            let response = await window.fetch('/user/clhstabnotice');
-            if(response.ok) {
-                let txt = await response.text();
-                noWarn = (txt == "true");
-            }
-            else noWarn = false;
-            if(noWarn)
-              UI.openCLHSTabFinish(url);
-            else {
-                const dlg = document.getElementById('OIO_CLHS_tab_notice_dlg');
-                dlg.clhsURL = url;
-                dlg.showModal();
-            }
+        let noWarn;
+        let response = await window.fetch('/user/clhstabnotice');
+        if(response.ok) {
+            let txt = await response.text();
+            noWarn = (txt == "true");
+        }
+        else noWarn = false;
+        if(noWarn)
+          UI.openCLHSTabFinish(url);
+        else {
+            const dlg = document.getElementById('OIO_CLHS_tab_notice_dlg');
+            dlg.clhsURL = url;
+            dlg.showModal();
         }
     },
 
@@ -1380,8 +1379,9 @@ const UI = {
 	    if(checked) {
                 let response = await window.fetch('/user/clhstabnotice?set=1');
                 if(!response.ok) {
-                console.log("fetch error /user/clhstabnotice");
-                console.dir(response);
+                    console.log("fetch error /user/clhstabnotice");
+                    console.dir(response);
+                }
             }
             dlg.close();
             UI.openCLHSTabFinish(url);

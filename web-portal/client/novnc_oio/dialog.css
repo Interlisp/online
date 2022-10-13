@@ -30,6 +30,12 @@
   margin-top: 1em;
 }
 
+.OIO_dialog .OIO_two-button-div .OIO_main-button {
+  min-width:7em;
+  margin-left:1em;
+  margin-right: 1em;
+}
+
 .OIO_dialog .OIO_checkbox-div {
   margin: 1em auto 0em auto;
   font-size:14px;
