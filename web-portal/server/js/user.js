@@ -366,13 +366,17 @@ userRouter.get('/nofilemgrwarning',
                 res.status(500).send('Error');
             }
         } else {
-            try {
-                const userObj = await userModel.findOne({ username: req.user.username });
-                const noWarning = userObj.noFileMgrWarning;
-                res.status(200).send(noWarning ? "true" : "false");
-            } catch(err) {
-                console.dir("/nofilemgrwarning error: " + err);
-                res.status(500).send('Error');
+            if(config.isGuestUser(req.user.username))
+                res.status(200).send("guest");
+            else {
+                try {
+                    const userObj = await userModel.findOne({ username: req.user.username });
+                    const noWarning = userObj.noFileMgrWarning;
+                    res.status(200).send(noWarning ? "true" : "false");
+                } catch(err) {
+                    console.dir("/nofilemgrwarning error: " + err);
+                    res.status(500).send('Error');
+                }
             }
         }
     }
@@ -395,13 +399,17 @@ userRouter.get('/clhstabnotice',
                 res.status(500).send('Error');
             }
         } else {
-            try {
-                const userObj = await userModel.findOne({ username: req.user.username });
-                const noNotice = userObj.noCLHSTabNotice;
-                res.status(200).send(noNotice ? "true" : "false");
-            } catch(err) {
-                console.dir("/clhstabnotice error: " + err);
-                res.status(500).send('Error');
+            if(config.isGuestUser(req.user.username))
+                res.status(200).send("guest");
+            else {
+                try {
+                    const userObj = await userModel.findOne({ username: req.user.username });
+                    const noNotice = userObj.noCLHSTabNotice;
+                    res.status(200).send(noNotice ? "true" : "false");
+                } catch(err) {
+                    console.dir("/clhstabnotice error: " + err);
+                    res.status(500).send('Error');
+                }
             }
         }
     }

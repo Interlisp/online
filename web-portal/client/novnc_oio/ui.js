@@ -1291,17 +1291,21 @@ const UI = {
             window.fileBrowserWindow.focus();
 
         } else {
-            let noWarn;
+            let noWarn = false;
+            let guest = false;
             let response = await window.fetch('/user/nofilemgrwarning');
             if(response.ok) {
                 let txt = await response.text();
                 noWarn = (txt == "true");
+                guest = (txt == "guest");
             }
-            else noWarn = false;
             if(noWarn)
               UI.openFileBrowserFinish();
-            else
-              document.getElementById('OIO_warning_dlg').showModal();
+            else {
+              const dlg = document.getElementById('OIO_warning_dlg');
+	      if(guest) document.getElementById('OIO_do_not_checkbox_div').hidden = true;
+              dlg.showModal();
+            }
         }
     },
 
@@ -1352,17 +1356,19 @@ const UI = {
     //
 
     async openCLHSTab(url) {
-        let noWarn;
+        let noWarn = false;
+        let guest = false;
         let response = await window.fetch('/user/clhstabnotice');
         if(response.ok) {
             let txt = await response.text();
             noWarn = (txt == "true");
+            guest = (txt == "guest");
         }
-        else noWarn = false;
         if(noWarn)
           UI.openCLHSTabFinish(url);
         else {
             const dlg = document.getElementById('OIO_CLHS_tab_notice_dlg');
+	    if(guest) document.getElementById('OIO_CLHS_do_not_checkbox_div').hidden = true;
             dlg.clhsURL = url;
             dlg.showModal();
         }
