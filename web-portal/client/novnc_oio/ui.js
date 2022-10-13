@@ -104,7 +104,7 @@ const UI = {
         UI.addSettingsHandlers();
         document.getElementById("noVNC_status")
             .addEventListener('click', UI.hideStatus);
-            
+
         //
         // Interlisp Online
         //
@@ -384,7 +384,7 @@ const UI = {
         window.addEventListener('webkitfullscreenchange', UI.updateFullscreenButton);
         window.addEventListener('msfullscreenchange', UI.updateFullscreenButton);
     },
-    
+
     //
     // Interlisp Online
     //
@@ -1277,11 +1277,11 @@ const UI = {
  * ==============
  *   FILEBROWSER
  * ------v------*/
-    
+
     //
     // Interlisp Online
     //
-    
+
     async openFileBrowser() {
         if(window.fileBrowserWindow && !window.fileBrowserWindow.closed ) {
             window.fileBrowserWindow.focus();
@@ -1299,7 +1299,7 @@ const UI = {
               document.getElementById('OIO_warning_dlg').showModal();
         }
     },
-    
+
     async warningButtonOnClick() {
         const checked = document.getElementById("OIO_warning_checkbox").checked;
         if(checked) {
