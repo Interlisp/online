@@ -345,9 +345,22 @@
         </div>
     </dialog>
 
+    <dialog id="OIO_CLHS_tab_notice_dlg" class="OIO_dialog">
+        <h2>Notice</h2>
+        <p>The requested page from the Common Lisp Hyperspec will open in a new tab in your browser.</p>
+        <div class="OIO_two-button-div">
+            <input type="button" id="OIO_CLHS_tab_ok_button" value="OK" class="OIO_main-button">
+            <input type="button" id="OIO_CLHS_tab_cancel_button" value="Cancel" class="OIO_main-button">
+        </div>
+        <div class="OIO_checkbox-div" id="OIO_CLHS_do_not_checkbox_div">
+            <input type="checkbox" id="OIO_CLHS_tab_notice_checkbox" name="OIO_CLHS_tab_notice_checkbox">
+            <label for="OIO_CLHS_tab_notice_checkbox">Do not show this notice again</label>
+        </div>
+    </dialog>
+
     <dialog id="OIO_popup_dlg" class="OIO_dialog">
         <h2>Error</h2>
-        <p>The File Manager tab failed to open.</p>
+        <p>The <span id="OIO_popup_identifier">File Manager</span> tab failed to open.</p>
         <p>This is likely due to a popup blocker on your browser.</p>
         <p>Please disable popup blockers for this website<span id="OIO_popup_dialog_site"></span> in your browser settings and then try again.</p>
         <div class="OIO_single-button-div">

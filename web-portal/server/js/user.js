@@ -378,6 +378,35 @@ userRouter.get('/nofilemgrwarning',
     }
 );
 
+
+userRouter.get('/clhstabnotice',
+    async(req, res, next) => {
+        const doSet = req.query.set || false;
+        if(doSet) {
+            try {
+                let repRes = await userModel.updateOne(
+                    { username: req.user.username },
+                    { noCLHSTabNotice: true }
+                );
+                console.dir(repRes);
+                res.status(200).send('OK');
+            } catch(err) {
+                console.dir("/clhstabnotice error: " + err);
+                res.status(500).send('Error');
+            }
+        } else {
+            try {
+                const userObj = await userModel.findOne({ username: req.user.username });
+                const noNotice = userObj.noCLHSTabNotice;
+                res.status(200).send(noNotice ? "true" : "false");
+            } catch(err) {
+                console.dir("/clhstabnotice error: " + err);
+                res.status(500).send('Error');
+            }
+        }
+    }
+);
+
 //
 //
 //  Exports
