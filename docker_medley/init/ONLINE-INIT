@@ -1,10 +1,10 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED "12-Oct-2022 19:45:03" {DSK}<home>medley>il>ONLINE-INIT.;3 9000   
+(FILECREATED "12-Oct-2022 20:08:46" {DSK}<home>medley>il>ONLINE-INIT.;4 9002   
 
       :CHANGES-TO (FNS Online.DoInit)
 
-      :PREVIOUS-DATE "11-Oct-2022 22:17:35" {DSK}<home>medley>il>ONLINE-INIT.;2)
+      :PREVIOUS-DATE "12-Oct-2022 19:45:03" {DSK}<home>medley>il>ONLINE-INIT.;3)
 
 
 (PRETTYCOMPRINT ONLINE-INITCOMS)
@@ -82,7 +82,7 @@
 (Online.DoInit
   [LAMBDA NIL
 
-    (* ;; "Edited 12-Oct-2022 19:44 by fgh")
+    (* ;; "Edited 12-Oct-2022 20:08 by fgh")
 
     (* ;; "Edited  6-Sep-2022 17:22 by fgh")
 
@@ -170,8 +170,7 @@
 
            (* ;; "Temp 2022-10-12 to get latest HELPSYS into online without a release")
 
-           (FILESLOAD (FROM LISPUSERS)
-                  HELPSYS)
+           (LOAD '{DSK}/home/medley/il/medley/lispusers/HELPSYS.LCOM T)
 
            (* ;; "change to interlisp exec if required")
 
@@ -203,6 +202,6 @@
 (BKSYSBUF " ")
 )
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (1373 8920 (Online.SftpInitInfo 1383 . 2256) (Online.SftpUpdateInfo 2258 . 2513) (
-Online.InitNotecards 2515 . 3632) (Online.DoInit 3634 . 8149) (XCL-USER::INTERLISP 8151 . 8918)))))
+  (FILEMAP (NIL (1373 8922 (Online.SftpInitInfo 1383 . 2256) (Online.SftpUpdateInfo 2258 . 2513) (
+Online.InitNotecards 2515 . 3632) (Online.DoInit 3634 . 8151) (XCL-USER::INTERLISP 8153 . 8920)))))
 STOP
