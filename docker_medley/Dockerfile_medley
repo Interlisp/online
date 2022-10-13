@@ -144,3 +144,8 @@ RUN mkdir -p /etc/letsencrypt/live/online.interlisp.org/ \
 WORKDIR ${HOMEDIR}
 USER root:root
 ENTRYPOINT USER=${USER_NAME} /bin/bash
+
+# temp patch 2022-10-12
+# COPY HELPSYS fixes into lispusers
+COPY --chown=${USER_NAME}:${USER_NAME} misc/HELPSYS ${MEDLEY_INSTALLDIR}/lispusers/HELPSYS
+COPY --chown=${USER_NAME}:${USER_NAME} misc/HELPSYS.LCOM ${MEDLEY_INSTALLDIR}/lispusers/HELPSYS.LCOM
