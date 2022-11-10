@@ -80,7 +80,7 @@ function medleyEnvs(req) {
 
 function networkParams(port) {
     var params;
-    if (config.networkHostMode === true)
+    if (config.medleyNetworkHostMode === true)
         params =` --network host`;
     else
         params =
