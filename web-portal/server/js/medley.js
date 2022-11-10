@@ -130,7 +130,7 @@ function xtermRunCmd(req) {
     const port = req.oioPort;
     const cmd =
         `run -d ${config.noDockerRm ? "" : "--rm"}`
-        + ` --network host`
+        + networkParams(port)
         + ` --name ${emailish}${config.isDev ? `-${Math.floor(Math.random() * 99999)}` : ``}`
         + ` --mount type=volume,source=${emailish}_home.v2,target=/home/medley`
         + dockerTlsMounts
