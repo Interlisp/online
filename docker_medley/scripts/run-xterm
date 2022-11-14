@@ -39,8 +39,10 @@ if [ ${SUPPORT_HTTPS} = "yes" ];
   then /usr/bin/websockify --daemon --key ${TLS_KEYFILE} --cert ${TLS_CERTFILE} --ssl-only ${PORT} localhost:1${PORT}
   else /usr/bin/websockify --daemon  ${PORT} localhost:1${PORT}
 fi
-/usr/bin/Xvnc -geometry ${width}x${height} -rfbport 1${PORT} -nolisten tcp -localhost -nevershared -dontdisconnect :0 &
-export DISPLAY=:0
+/usr/bin/Xvnc -geometry ${width}x${height} -rfbport 1${PORT} -SecurityTypes None \
+              -nolisten tcp -localhost -NeverShared -DisconnectClients=0 \
+              :${PORT} &
+export DISPLAY=:${PORT}
 for i in {1..10}
     do
         xdpyinfo > /dev/null

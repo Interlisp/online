@@ -78,6 +78,21 @@ function medleyEnvs(req) {
     ;
 }
 
+function networkParams(port) {
+    var params;
+    if (config.medleyNetworkHostMode === true)
+        params =` --network host`;
+    else
+        params =
+            ` --network bridge`
+            + ` -p ${port}:${port}`
+            + ` -p 1${port}:1${port}`
+            + ` -p 2${port}:2${port}`
+            + ` -p 3${port}:3${port}`
+            ;
+    return params;
+}
+
 function interlispRunCmd(req) {
     const emailish = req.emailish;
     const port = req.oioPort;
@@ -88,7 +103,7 @@ function interlispRunCmd(req) {
     const screen_height = req.query.screen_height || 808;
     const cmd =
             `run -d ${config.noDockerRm ? "" : "--rm"}`
-            + ` --network host`
+            + networkParams(port)
             + ` --name ${emailish}`
             + (config.isGuestUser(req.user.username) ? "" : ` --mount type=volume,source=${config.homeVolume(req.user.username)},target=/home/medley`)
             + dockerTlsMounts
@@ -115,7 +130,7 @@ function xtermRunCmd(req) {
     const port = req.oioPort;
     const cmd =
         `run -d ${config.noDockerRm ? "" : "--rm"}`
-        + ` --network host`
+        + networkParams(port)
         + ` --name ${emailish}${config.isDev ? `-${Math.floor(Math.random() * 99999)}` : ``}`
         + ` --mount type=volume,source=${emailish}_home.v2,target=/home/medley`
         + dockerTlsMounts

@@ -150,3 +150,7 @@ exports.isNCO = isNCO;
 
 var medleyMemoryArg = "64";
 exports.medleyMemoryArg = medleyMemoryArg;
+
+var medleyNetworkHostMode = false;
+exports.medleyNetworkHostMode = medleyNetworkHostMode;
+
