@@ -1,0 +1,63 @@
+(DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
+
+(FILECREATED "12-Nov-2022 14:07:50" {DSK}<home>frank>il>online>docker_medley>loadup>LOADUP-ONLINE.;10 2286   
+
+      :CHANGES-TO (FNS Online.RemoveBackgroundMenuItem Online.LOADUP)
+
+      :PREVIOUS-DATE "12-Nov-2022 13:25:30" 
+{DSK}<home>frank>il>online>docker_medley>loadup>LOADUP-ONLINE.;8)
+
+
+(PRETTYCOMPRINT LOADUP-ONLINECOMS)
+
+(RPAQQ LOADUP-ONLINECOMS ((GLOBALVARS *ALL-BUTTONS* BackgroundMenuCommands BackgroundMenu)
+                          (FNS Online.LOADUP Online.RemoveBackgroundMenuItem)))
+(DECLARE%: DOEVAL@COMPILE DONTCOPY
+
+(GLOBALVARS *ALL-BUTTONS* BackgroundMenuCommands BackgroundMenu)
+)
+(DEFINEQ
+
+(Online.LOADUP
+  [LAMBDA NIL                                                (* ; "Edited 12-Nov-2022 14:03 by FGH")
+    (PROGN 
+           (* ;; " Delete button(s) that are created when lispusers/BUTTONS is loaded")
+
+           (for B in *ALL-BUTTONS* do (DELETE-BUTTON B))
+
+           (* ;; " Remove the BUTTONS BackgroundMenu item")
+
+           (Online.RemoveBackgroundMenuItem "Button Control")
+
+           (* ;; " Remove the NoteCards Background Menu Item")
+
+           (Online.RemoveBackgroundMenuItem 'NoteCards)
+
+           (* ;; " Remove the CLOS Background Menu Item")
+
+           (Online.RemoveBackgroundMenuItem 'BrowseClass)
+
+           (* ;; " Get rid of Notecards logout prevention")
+
+           (ADVISE 'NC.LogoutAdvice 'BEFORE 'FIRST '(RETURN T))
+
+           (* ;; 
+           "Remove default CHAT display type so that VT100 can become the default CHAT display type")
+
+           (RPLACA (CAR CHAT.DISPLAYTYPES)
+                  NIL])
+
+(Online.RemoveBackgroundMenuItem
+  [LAMBDA (ItemStringOrAtom)
+    (DECLARE (GLOBALVARS SBG))                               (* ; "Edited 12-Nov-2022 14:07 by FGH")
+    (LET (SAVEX)
+         (SETQ BackgroundMenuCommands (REMOVE (SETQ SAVEX (SASSOC ItemStringOrAtom 
+                                                                 BackgroundMenuCommands))
+                                             BackgroundMenuCommands))
+         (SETQ BackgroundMenu NIL)
+         (SETQ SBG (APPEND (LIST SAVEX)
+                          SBG])
+)
+(DECLARE%: DONTCOPY
+  (FILEMAP (NIL (688 2263 (Online.LOADUP 698 . 1713) (Online.RemoveBackgroundMenuItem 1715 . 2261)))))
+STOP

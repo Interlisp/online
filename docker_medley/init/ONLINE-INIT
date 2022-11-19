@@ -1,29 +1,31 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED "12-Oct-2022 20:23:38" {DSK}<home>medley>il>ONLINE-INIT.;5 9007   
+(FILECREATED "12-Nov-2022 14:56:51" {DSK}<home>frank>il>online>docker_medley>init>ONLINE-INIT.;5 12258  
 
-      :CHANGES-TO (FNS Online.DoInit)
+      :CHANGES-TO (FNS Online.CreateButtons Online.ActivateRooms)
+                  (VARS ONLINE-INITCOMS)
 
-      :PREVIOUS-DATE "12-Oct-2022 20:08:46" {DSK}<home>medley>il>ONLINE-INIT.;4)
+      :PREVIOUS-DATE "12-Nov-2022 14:41:58" 
+{DSK}<home>frank>il>online>docker_medley>init>ONLINE-INIT.;4)
 
 
 (PRETTYCOMPRINT ONLINE-INITCOMS)
 
 (RPAQQ ONLINE-INITCOMS
        [(FILES (SYSLOAD)
-               MEDLEYDIR-INIT VTCHAT)
+               MEDLEYDIR-INIT)
         (GLOBALVARS Online.LogoutTimeout Online.SftpPort Online.SftpPassword Online.SftpDisplay 
                IDLE.PROFILE IDLE.BOUNCING.BOX Online.SftpDisplayMenu ONLINEP)
         (INITVARS (Online.LogoutTimeout 30)
                ONLINEP)
         (ADVISE (SAVEVM :IN \IDLER))
         (FNS Online.SftpInitInfo Online.SftpUpdateInfo Online.InitNotecards Online.DoInit 
-             XCL-USER::INTERLISP)
+             Online.CreateButtons Online.ActivateCLOS Online.ActivateRooms XCL-USER::INTERLISP)
         (P (Online.DoInit))
         (DECLARE%: FIRST (P (BKSYSBUF " "])
 
 (FILESLOAD (SYSLOAD)
-       MEDLEYDIR-INIT VTCHAT)
+       MEDLEYDIR-INIT)
 (DECLARE%: DOEVAL@COMPILE DONTCOPY
 
 (GLOBALVARS Online.LogoutTimeout Online.SftpPort Online.SftpPassword Online.SftpDisplay IDLE.PROFILE
@@ -64,23 +66,33 @@
         (Online.SftpInitInfo])
 
 (Online.InitNotecards
-  [LAMBDA NIL                                                (* ; "Edited 11-Sep-2022 01:09 by fgh")
+  [LAMBDA NIL
+    (DECLARE (GLOBALVARS BackgroundMenuCommands BackgroundMenu))
+                                                             (* ; "Edited 12-Nov-2022 14:41 by FGH")
+                                                             (* ; "Edited 11-Sep-2022 01:09 by fgh")
                                                              (* ; "Edited  7-Feb-2022 20:22 by tp7")
-    (PROGN (LOAD? (PACKFILENAME 'HOST "DSK" 'DIRECTORY (CONCAT (UNIX-GETENV 'NC_INSTALLDIR)
-                                                              "/system")
-                         'NAME "NOTECARDS" 'EXTENSION "LCOM"))
-           (ADVISE 'NC.LogoutAdvice 'BEFORE 'FIRST '(RETURN T))
-           (NC.BringUpNoteCardsIcon (create POSITION
+    (PROGN (NC.BringUpNoteCardsIcon (create POSITION
                                            XCOORD _ 750
                                            YCOORD _ (IDIFFERENCE SCREENHEIGHT 228)))
            (NC.FileBrowserMenu NC.NoteCardsIconWindow (PACKFILENAME 'HOST "DSK" 'DIRECTORY
                                                              (CONCAT (UNIX-GETENV 'NOTEFILESDIR))
                                                              'NAME "*" 'EXTENSION "notefile")
                   (CREATEREGION 50 (IDIFFERENCE SCREENHEIGHT 700)
-                         550 220])
+                         550 220))
+           (if (NULL (SASSOC 'NoteCards BackgroundMenuCommands))
+               then (PROGN [SETQ BackgroundMenuCommands (APPEND BackgroundMenuCommands
+                                                               (LIST '(NoteCards (
+                                                                              NC.BringUpNoteCardsIcon
+                                                                                  )
+                                                                             
+                                                               "Bring up the NoteCards control icon."
+                                                                             ]
+                           (SETQ BackgroundMenu NIL])
 
 (Online.DoInit
   [LAMBDA NIL
+
+    (* ;; "Edited 12-Nov-2022 13:57 by FGH")
 
     (* ;; "Edited 12-Oct-2022 20:23 by fgh")
 
@@ -138,12 +150,6 @@
                                                         XCOORD _ 50
                                                         YCOORD _ (IDIFFERENCE SCREENHEIGHT 460]
 
-           (* ;; 
-           "Remove default CHAT display type so that VT100 can become the default CHAT display type")
-
-           (RPLACA (CAR CHAT.DISPLAYTYPES)
-                  NIL)
-
            (* ;; " Set up INITIALSLST based on information passed in from the Linux environment")
 
            [SETQ INITIALSLST (LIST (LIST USERNAME (UNIX-GETENV 'MEDLEY_FIRSTNAME)
@@ -179,7 +185,59 @@
                           "inter")
                    (STRING-EQUAL (UNIX-GETENV 'NCO)
                           "true"))
-               (BKSYSBUF "(INTERLISP)"])
+               (BKSYSBUF "(INTERLISP)")))
+
+           (* ;; " create the ROOMS, Notecards and CLOS Activation Buttons")
+
+           (Online.CreateButtons])
+
+(Online.CreateButtons
+  [LAMBDA NIL                                                (* ; "Edited 12-Nov-2022 14:52 by FGH")
+    NIL
+
+    (* ;; " Create activation buttons for Rooms, Notecards and CLOS")
+
+    (CREATE-BUTTON '(Online.InitNotecards)
+           "NOTECARDS"
+           (create POSITION
+                  XCOORD _ (IDIFFERENCE SCREENWIDTH 200)
+                  YCOORD _ (IDIFFERENCE SCREENHEIGHT 400)))
+    (CREATE-BUTTON '(Online.ActivateRooms)
+           "ROOMS"
+           (create POSITION
+                  XCOORD _ (IDIFFERENCE SCREENWIDTH 200)
+                  YCOORD _ (IDIFFERENCE SCREENHEIGHT 475)))
+    (CREATE-BUTTON '(Online.ActivateCLOS)
+           "CLOS"
+           (create POSITION
+                  XCOORD _ (IDIFFERENCE SCREENWIDTH 200)
+                  YCOORD _ (IDIFFERENCE SCREENHEIGHT 550])
+
+(Online.ActivateCLOS
+  [LAMBDA NIL
+    (DECLARE (GLOBALVARS BackgroundMenuCommands BackgroundMenu))
+                                                             (* ; "Edited 12-Nov-2022 14:41 by FGH")
+    (if (NULL (SASSOC "CLOS Browse Class" BackgroundMenuCommands))
+        then (PROGN [SETQ BackgroundMenuCommands
+                     (APPEND BackgroundMenuCommands
+                            (LIST '("CLOS Browse Class" (CLOS-BROWSER::BROWSE-CLASS)
+                                          "Bring up a class browser."
+                                          (SUBITEMS (|all in a package| (CLOS-BROWSER::BROWSE-CLASS
+                                                                         (
+                                                                     CLOS-BROWSER::CLASSES-IN-PACKAGE
+                                                                          (
+                                                                      CLOS-BROWSER::IN-SELECT-PACKAGE
+                                                                           )))
+                                                           
+                               "Select a package and browse all the classes defined in that package."
+                                                           ]
+                    (SETQ BackgroundMenu NIL])
+
+(Online.ActivateRooms
+  [LAMBDA NIL
+    (DECLARE (GLOBALVARS BackgroundMenuCommands))            (* ; "Edited 12-Nov-2022 14:56 by FGH")
+    (if (NULL (SASSOC "Rooms" BackgroundMenuCommands))
+        then (ROOMS:RESET])
 
 (XCL-USER::INTERLISP
   [LAMBDA NIL                                                (* ; "Edited 18-Mar-2022 18:53 by fgh")
@@ -202,6 +260,8 @@
 (BKSYSBUF " ")
 )
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (1373 8927 (Online.SftpInitInfo 1383 . 2256) (Online.SftpUpdateInfo 2258 . 2513) (
-Online.InitNotecards 2515 . 3632) (Online.DoInit 3634 . 8156) (XCL-USER::INTERLISP 8158 . 8925)))))
+  (FILEMAP (NIL (1541 12178 (Online.SftpInitInfo 1551 . 2424) (Online.SftpUpdateInfo 2426 . 2681) (
+Online.InitNotecards 2683 . 4442) (Online.DoInit 4444 . 8943) (Online.CreateButtons 8945 . 9809) (
+Online.ActivateCLOS 9811 . 11162) (Online.ActivateRooms 11164 . 11407) (XCL-USER::INTERLISP 11409 . 
+12176)))))
 STOP
