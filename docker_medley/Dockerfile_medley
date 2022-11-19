@@ -128,7 +128,7 @@ RUN echo ${NOTECARDS_RELEASE} ${NC_INSTALLDIR}/release.txt
 
 # do a loadup to create the online.sysout with Notecards, Rooms, etc installed
 ARG ONLINE_DIR=${MEDLEY_INSTALLDIR}/../online
-RUN mkdir -p ${ONLINE_DIR}/loadup \
+RUN mkdir -p ${ONLINE_DIR}/docker_medley/loadup \
     && chown root:root ${ONLINE_DIR} \
     && chown root:root ${ONLINE_DIR}/docker_medley \
     && chown root:root ${ONLINE_DIR}/docker_medley/loadup
