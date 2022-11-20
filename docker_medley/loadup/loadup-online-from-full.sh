@@ -59,6 +59,7 @@ cd ${MEDLEY_INSTALLDIR}
 
 scr="-sc 1024x768 -g 1042x790"
 
+mkdir -p tmp
 touch tmp/loadup.timestamp
 
 ./run-medley $scr -loadup "${LOADUPDIR}/LOADUP-ONLINE.CM" "${MEDLEY_INSTALLDIR}/loadups/full.sysout"
