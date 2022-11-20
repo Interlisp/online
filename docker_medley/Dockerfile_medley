@@ -136,7 +136,7 @@ COPY --chown=${USER_NAME}:${USER_NAME} loadup/* ${ONLINE_DIR}/docker_medley/load
 RUN Xvnc -geometry 1280x720 :0 \
     &  export DISPLAY=":0" \
     && PATH="$MAIKO_INSTALLDIR:$PATH" \
-    && ${ONLINE_DIR}/docker_medley/loadup/loadup-online-from-full.sh
+    && ${ONLINE_DIR}/docker_medley/loadup/loadup-online-from-full.sh \
     && cp -p ${MEDLEY_INSTALLDIR}/tmp/online.sysout ${MEDLEY_INSTALLDIR}/loadups/full.sysout \
     && rm -rf ${ONLINE_DIR}/docker_medley/loadup    
 
