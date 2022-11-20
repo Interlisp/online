@@ -133,14 +133,12 @@ RUN mkdir -p ${ONLINE_DIR}/docker_medley/loadup \
     && chown root:root ${ONLINE_DIR}/docker_medley \
     && chown root:root ${ONLINE_DIR}/docker_medley/loadup
 COPY --chown=${USER_NAME}:${USER_NAME} loadup/* ${ONLINE_DIR}/docker_medley/loadup
-RUN ls -la /usr/local/interlisp/medley
 RUN Xvnc -geometry 1280x720 :0 \
     &  export DISPLAY=":0" \
     && PATH="$MAIKO_INSTALLDIR:$PATH" \
     && ${ONLINE_DIR}/docker_medley/loadup/loadup-online-from-full.sh
-
-#    && cp -p ${MEDLEY_INSTALLDIR}/tmp/online.sysout ${MEDLEY_INSTALLDIR}/loadups/full.sysout \
-#    && rm -rf ${ONLINE_DIR}/docker_medley/loadup    
+    && cp -p ${MEDLEY_INSTALLDIR}/tmp/online.sysout ${MEDLEY_INSTALLDIR}/loadups/full.sysout \
+    && rm -rf ${ONLINE_DIR}/docker_medley/loadup    
 
 # clean up medley/.bashrc for use with xterm
 RUN sed -i /PS1=/s/u@.h/u@oio/ ${HOMEDIR}/.bashrc \
