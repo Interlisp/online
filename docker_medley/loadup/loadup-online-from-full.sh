@@ -47,6 +47,9 @@ export LOADUPDIR=${ONLINEDIR}/docker_medley/loadup
 export ROOMSDIR=${MEDLEY_INSTALLDIR}/rooms
 export CLOSDIR=${MEDLEY_INSTALLDIR}/clos
 
+export MEDLEYDIR="${MEDLEY_INSTALLDIR}"
+export NOTECARDSDIR="${NC_INSTALLDIR}"
+
 if [ -z "${SYSOUTDIR}" ]; then
     export SYSOUTDIR=${MEDLEY_INSTALLDIR}/tmp
 fi
