@@ -133,7 +133,7 @@ RUN mkdir -p ${ONLINE_DIR}/docker_medley/loadup \
     && chown root:root ${ONLINE_DIR}/docker_medley \
     && chown root:root ${ONLINE_DIR}/docker_medley/loadup
 COPY --chown=${USER_NAME}:${USER_NAME} loadup/* ${ONLINE_DIR}/docker_medley/loadup
-RUN ls -la /usr/local/interlisp/medley
+RUN ls -la /usr/local/interlisp/docker_medley/loadup
 RUN Xvnc -geometry 1280x720 :0 \
     &  export DISPLAY=":0" \
     && PATH="$MAIKO_INSTALLDIR:$PATH" \
