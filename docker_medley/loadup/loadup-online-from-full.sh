@@ -62,11 +62,6 @@ scr="-sc 1024x768 -g 1042x790"
 mkdir -p tmp
 touch tmp/loadup.timestamp
 
-echo "-------------------------------------------------------"
-cat "${LOADUPDIR}/LOADUP-ONLINE.CM"
-echo "-------------------------------------------------------"
-
-
 ./run-medley $scr -loadup "${LOADUPDIR}/LOADUP-ONLINE.CM" "${MEDLEY_INSTALLDIR}/loadups/full.sysout"
 
 if [ tmp/online.sysout -nt tmp/loadup.timestamp ]; then
