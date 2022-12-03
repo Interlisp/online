@@ -98,6 +98,13 @@ jobs:
         if: steps.cache-lfs.outputs.cache-hit != 'true'
         run: git lfs checkout
 
+      #debug
+      - name: debug2
+        run: |
+            ls -l docker_medley
+            ls -l docker_medley/filebrowser
+            ls -l docker_medley/gh
+
       # Setup release tag
       - name: Setup Release Tag
         id: tag
