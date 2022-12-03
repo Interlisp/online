@@ -36,7 +36,9 @@ fi
 
 
 if [ ! -x ${MEDLEY_INSTALLDIR}/run-medley ] ; then
-    echo "MEDLEY_INSTALLDIR is set but ${MEDLEY_INSTALLDIR}/run-medley doesn't exist or is not executable. Exiting."
+    echo "MEDLEY_INSTALLDIR is set but \${MEDLEY_INSTALLDIR}/run-medley doesn't exist or is not executable."
+    echo "MEDLEY_INSTALLDIR is ${MEDLEY_INSTALLDIR}."
+    echo "Exiting."
     exit 1
 fi
 
