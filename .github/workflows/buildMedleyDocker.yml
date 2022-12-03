@@ -81,6 +81,13 @@ jobs:
                 docker_medley/gh/gh_2.14.7_linux_arm64.deb
             key: ${{ runner.os }}-lfs-v1
 
+      #debug
+      - name: debug
+        run: |
+            ls -l docker_medley
+            ls -l docker_medley/filebrowser
+            ls -l docker_medley/gh
+
       # Checkout latest commit
       - name: Checkout Online code
         uses: actions/checkout@v2
