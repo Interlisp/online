@@ -74,9 +74,9 @@ jobs:
       - name: Checkout Online code
         uses: actions/checkout@v2
         with:
-          lfs: true
-      - name: Checkout lfs files
-        run: git lfs checkout
+          lfs: false
+      #- name: Checkout lfs files
+      #  run: git lfs checkout
 
       # Setup release tag
       - name: Setup Release Tag
