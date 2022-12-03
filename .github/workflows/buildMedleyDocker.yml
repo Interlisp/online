@@ -70,14 +70,12 @@ jobs:
           path: ./Actions_${{ github.sha }}
       - run: mv ./Actions_${{ github.sha }}/actions ../actions && rm -rf ./Actions_${{ github.sha }}
 
-      # Fetch cached LFS files
+      # Fetch cached LFS files                 'docker_medley/gh/*.deb'
       - name: Cache LFS files
         id: cache-lfs
         uses: actions/cache@v3
         with:
-            path: |
-                'docker_medley/filebrowser/filebrowser'
-                'docker_medley/gh/*.deb'
+            path: docker_medley/filebrowser/filebrowser
             key: ${{ runner.os }}-lfs-v1
 
       # Checkout latest commit
@@ -89,6 +87,13 @@ jobs:
       - name: Checkout lfs files
         if: steps.cache-lfs.outputs.cache-hit != 'true'
         run: git lfs checkout
+
+      #debug
+      - name: debug
+        run: ls -l docker_medley/filebrowser
+
+      - name: debug2
+        run: ls -l docker_medley/gh/*.deb
 
       # Setup release tag
       - name: Setup Release Tag
