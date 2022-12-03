@@ -75,7 +75,9 @@ jobs:
         id: cache-lfs
         uses: actions/cache@v3
         with:
-            path: docker_medley/filebrowser/filebrowser,docker_medley/gh/*.deb
+            path: |
+                'docker_medley/filebrowser/filebrowser'
+                'docker_medley/gh/*.deb'
             key: ${{ runner.os }}-lfs-v1
 
       # Checkout latest commit
@@ -87,10 +89,6 @@ jobs:
       - name: Checkout lfs files
         if: steps.cache-lfs.outputs.cache-hit != 'true'
         run: git lfs checkout
-
-      # debug
-      - name: debug
-        run: ls -l
 
       # Setup release tag
       - name: Setup Release Tag
