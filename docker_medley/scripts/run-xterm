@@ -53,7 +53,7 @@ for i in {1..10}
                 sleep 1
         fi
     done
-#xmodmap -e "keycode 12 = Alt_L" -e "keycode 13 = Alt_R" -e "keycode 14 = Meta_L" -e "keycode 15 = Meta_R"
+xmodmap -e "keysym Alt_R = Alt_L" -e "keysym Meta_R = Meta_L"
 /usr/bin/autocutsel -s CLIPBOARD &
 sleep 1
 if [ -z "${MEDLEY_UNAME}" ]; then
