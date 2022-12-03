@@ -88,6 +88,10 @@ jobs:
         if: steps.cache-lfs.outputs.cache-hit != 'true'
         run: git lfs checkout
 
+      # debug
+      - name: debug
+        run: ls -l
+
       # Setup release tag
       - name: Setup Release Tag
         id: tag
