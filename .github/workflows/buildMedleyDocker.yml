@@ -50,8 +50,8 @@ jobs:
       - id: platform
         run: >
           if [ '${{ toJSON(inputs) }}' = 'null'  ];
-          then echo "platform='${{ github.event.inputs.platform }}'" >> ${GITHUB_OUTPUT};
-          else echo "platform='${{ inputs.platform }}'" >> ${GITHUB_OUTPUT};
+          then echo "platform=${{ github.event.inputs.platform }}" >> ${GITHUB_OUTPUT};
+          else echo "platform=${{ inputs.platform }}" >> ${GITHUB_OUTPUT};
           fi
 
 
@@ -210,7 +210,7 @@ jobs:
       # checked out and the release tars just downloaded.
       # Push the result to Docker Hub
       - name: Build Docker Image for Push to Docker Hub
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
           builder: ${{ steps.buildx.outputs.name }}
           build-args: |
