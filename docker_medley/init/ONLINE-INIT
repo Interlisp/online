@@ -1,12 +1,12 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED "12-Nov-2022 14:56:51" {DSK}<home>frank>il>online>docker_medley>init>ONLINE-INIT.;5 12258  
+(FILECREATED " 3-Dec-2022 19:21:06" {DSK}<home>frank>il>online>docker_medley>init>ONLINE-INIT.;7 13106  
 
-      :CHANGES-TO (FNS Online.CreateButtons Online.ActivateRooms)
-                  (VARS ONLINE-INITCOMS)
+      :CHANGES-TO (VARS ONLINE-INITCOMS)
+                  (FNS Online.CreateButtons Online.ShowDoc)
 
-      :PREVIOUS-DATE "12-Nov-2022 14:41:58" 
-{DSK}<home>frank>il>online>docker_medley>init>ONLINE-INIT.;4)
+      :PREVIOUS-DATE "12-Nov-2022 14:56:51" 
+{DSK}<home>frank>il>online>docker_medley>init>ONLINE-INIT.;6)
 
 
 (PRETTYCOMPRINT ONLINE-INITCOMS)
@@ -20,7 +20,8 @@
                ONLINEP)
         (ADVISE (SAVEVM :IN \IDLER))
         (FNS Online.SftpInitInfo Online.SftpUpdateInfo Online.InitNotecards Online.DoInit 
-             Online.CreateButtons Online.ActivateCLOS Online.ActivateRooms XCL-USER::INTERLISP)
+             Online.CreateButtons Online.ActivateCLOS Online.ActivateRooms XCL-USER::INTERLISP 
+             Online.ShowDoc)
         (P (Online.DoInit))
         (DECLARE%: FIRST (P (BKSYSBUF " "])
 
@@ -211,7 +212,17 @@
            "CLOS"
            (create POSITION
                   XCOORD _ (IDIFFERENCE SCREENWIDTH 200)
-                  YCOORD _ (IDIFFERENCE SCREENHEIGHT 550])
+                  YCOORD _ (IDIFFERENCE SCREENHEIGHT 550)))
+    (CREATE-BUTTON '(Online.ShowDoc T)
+           "MANUAL"
+           (create POSITION
+                  XCOORD _ (IDIFFERENCE SCREENWIDTH 200)
+                  YCOORD _ (IDIFFERENCE SCREENHEIGHT 625)))
+    (CREATE-BUTTON '(Online.ShowDoc NIL)
+           "PRIMER"
+           (create POSITION
+                  XCOORD _ (IDIFFERENCE SCREENWIDTH 200)
+                  YCOORD _ (IDIFFERENCE SCREENHEIGHT 700])
 
 (Online.ActivateCLOS
   [LAMBDA NIL
@@ -252,6 +263,14 @@
                                                         YCOORD _ (IDIFFERENCE SCREENHEIGHT 460]
            (XCL:SET-DEFAULT-EXEC-TYPE 'INTERLISP)
            (XCL:SET-EXEC-TYPE 'INTERLISP])
+
+(Online.ShowDoc
+  [LAMBDA (IRMP)
+    (ShellCommand (CONCAT "/usr/local/interlisp/online/bin/request_new_tab" " "
+                         (if IRMP
+                             then "https://interlisp.org/documentation/IRM.PDF"
+                           else "https://interlisp.org/documentation/Medley-Primer.PDF")
+                         " > /tmp/showdoc-warnings-$$.txt 2>&1"])
 )
 
 (Online.DoInit)
@@ -260,8 +279,8 @@
 (BKSYSBUF " ")
 )
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (1541 12178 (Online.SftpInitInfo 1551 . 2424) (Online.SftpUpdateInfo 2426 . 2681) (
-Online.InitNotecards 2683 . 4442) (Online.DoInit 4444 . 8943) (Online.CreateButtons 8945 . 9809) (
-Online.ActivateCLOS 9811 . 11162) (Online.ActivateRooms 11164 . 11407) (XCL-USER::INTERLISP 11409 . 
-12176)))))
+  (FILEMAP (NIL (1564 13026 (Online.SftpInitInfo 1574 . 2447) (Online.SftpUpdateInfo 2449 . 2704) (
+Online.InitNotecards 2706 . 4465) (Online.DoInit 4467 . 8966) (Online.CreateButtons 8968 . 10258) (
+Online.ActivateCLOS 10260 . 11611) (Online.ActivateRooms 11613 . 11856) (XCL-USER::INTERLISP 11858 . 
+12625) (Online.ShowDoc 12627 . 13024)))))
 STOP
