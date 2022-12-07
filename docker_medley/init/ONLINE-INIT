@@ -1,12 +1,15 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED " 3-Dec-2022 19:21:06" {DSK}<home>frank>il>online>docker_medley>init>ONLINE-INIT.;7 13106  
+(FILECREATED " 5-Dec-2022 17:34:33" {DSK}<home>frank>il>online>docker_medley>init>ONLINE-INIT.;11 17711  
 
       :CHANGES-TO (VARS ONLINE-INITCOMS)
-                  (FNS Online.CreateButtons Online.ShowDoc)
+                  (FNS Online.CreateButtons Online.CreateLabel Online.SftpInitInfo 
+                       Online.SftpUpdateInfo Online.InitNotecards Online.DoInit Online.ActivateCLOS 
+                       Online.ActivateRooms Online.ShowDoc)
+                  (ADVICE (SAVEVM :IN \IDLER))
 
-      :PREVIOUS-DATE "12-Nov-2022 14:56:51" 
-{DSK}<home>frank>il>online>docker_medley>init>ONLINE-INIT.;6)
+      :PREVIOUS-DATE " 3-Dec-2022 19:43:52" 
+{DSK}<home>frank>il>online>docker_medley>init>ONLINE-INIT.;9)
 
 
 (PRETTYCOMPRINT ONLINE-INITCOMS)
@@ -20,8 +23,8 @@
                ONLINEP)
         (ADVISE (SAVEVM :IN \IDLER))
         (FNS Online.SftpInitInfo Online.SftpUpdateInfo Online.InitNotecards Online.DoInit 
-             Online.CreateButtons Online.ActivateCLOS Online.ActivateRooms XCL-USER::INTERLISP 
-             Online.ShowDoc)
+             Online.CreateButtons Online.CreateLabel Online.ActivateCLOS Online.ActivateRooms 
+             XCL-USER::INTERLISP Online.ShowDoc)
         (P (Online.DoInit))
         (DECLARE%: FIRST (P (BKSYSBUF " "])
 
@@ -193,36 +196,87 @@
            (Online.CreateButtons])
 
 (Online.CreateButtons
-  [LAMBDA NIL                                                (* ; "Edited 12-Nov-2022 14:52 by FGH")
-    NIL
+  [LAMBDA NIL                                                (* ; "Edited  5-Dec-2022 17:31 by FGH")
+                                                             (* ; "Edited 12-Nov-2022 14:52 by FGH")
 
     (* ;; " Create activation buttons for Rooms, Notecards and CLOS")
 
-    (CREATE-BUTTON '(Online.InitNotecards)
-           "NOTECARDS"
-           (create POSITION
-                  XCOORD _ (IDIFFERENCE SCREENWIDTH 200)
-                  YCOORD _ (IDIFFERENCE SCREENHEIGHT 400)))
-    (CREATE-BUTTON '(Online.ActivateRooms)
-           "ROOMS"
-           (create POSITION
-                  XCOORD _ (IDIFFERENCE SCREENWIDTH 200)
-                  YCOORD _ (IDIFFERENCE SCREENHEIGHT 475)))
-    (CREATE-BUTTON '(Online.ActivateCLOS)
-           "CLOS"
-           (create POSITION
-                  XCOORD _ (IDIFFERENCE SCREENWIDTH 200)
-                  YCOORD _ (IDIFFERENCE SCREENHEIGHT 550)))
-    (CREATE-BUTTON '(Online.ShowDoc T)
-           "MANUAL"
-           (create POSITION
-                  XCOORD _ (IDIFFERENCE SCREENWIDTH 200)
-                  YCOORD _ (IDIFFERENCE SCREENHEIGHT 625)))
-    (CREATE-BUTTON '(Online.ShowDoc NIL)
-           "PRIMER"
-           (create POSITION
-                  XCOORD _ (IDIFFERENCE SCREENWIDTH 200)
-                  YCOORD _ (IDIFFERENCE SCREENHEIGHT 700])
+    (LET* [(RIGHTMARGINISH 140)
+           (SECTION1YPOS 250)
+           (YPOSDELTA 65)
+           (SECTION2YPOS (IPLUS SECTION1YPOS (ITIMES YPOSDELTA 3)))
+           [IWS (LIST (Online.CreateLabel "DOCUMENTATION" (IDIFFERENCE SCREENWIDTH (IDIFFERENCE
+                                                                                    RIGHTMARGINISH 50
+                                                                                    ))
+                             (IDIFFERENCE SCREENHEIGHT SECTION1YPOS))
+                      (Online.CreateLabel "ACTIVATE" (IDIFFERENCE SCREENWIDTH (IDIFFERENCE 
+                                                                                     RIGHTMARGINISH 
+                                                                                     50))
+                             (IDIFFERENCE SCREENHEIGHT (IDIFFERENCE SECTION2YPOS 20)))
+                      (Online.CreateLabel "FEATURES" (IDIFFERENCE SCREENWIDTH (IDIFFERENCE 
+                                                                                     RIGHTMARGINISH 
+                                                                                     50))
+                             (IDIFFERENCE SCREENHEIGHT SECTION2YPOS]
+           (BUTTONS (LIST [CREATE-BUTTON '(Online.ShowDoc T)
+                                 "MANUAL"
+                                 (create POSITION
+                                        XCOORD _ (IDIFFERENCE SCREENWIDTH RIGHTMARGINISH)
+                                        YCOORD _ (IDIFFERENCE SCREENHEIGHT (IPLUS SECTION1YPOS
+                                                                                  (ITIMES 1 YPOSDELTA
+                                                                                         ]
+                          [CREATE-BUTTON '(Online.ShowDoc NIL)
+                                 "PRIMER"
+                                 (create POSITION
+                                        XCOORD _ (IDIFFERENCE SCREENWIDTH RIGHTMARGINISH)
+                                        YCOORD _ (IDIFFERENCE SCREENHEIGHT (IPLUS SECTION1YPOS
+                                                                                  (ITIMES 2 YPOSDELTA
+                                                                                         ]
+                          [CREATE-BUTTON '(Online.InitNotecards)
+                                 "NOTECARDS"
+                                 (create POSITION
+                                        XCOORD _ (IDIFFERENCE SCREENWIDTH RIGHTMARGINISH)
+                                        YCOORD _ (IDIFFERENCE SCREENHEIGHT (IPLUS SECTION2YPOS
+                                                                                  (ITIMES 1 YPOSDELTA
+                                                                                         ]
+                          [CREATE-BUTTON '(Online.ActivateRooms)
+                                 "ROOMS"
+                                 (create POSITION
+                                        XCOORD _ (IDIFFERENCE SCREENWIDTH RIGHTMARGINISH)
+                                        YCOORD _ (IDIFFERENCE SCREENHEIGHT (IPLUS SECTION2YPOS
+                                                                                  (ITIMES 2 YPOSDELTA
+                                                                                         ]
+                          (CREATE-BUTTON '(Online.ActivateCLOS)
+                                 "CLOS"
+                                 (create POSITION
+                                        XCOORD _ (IDIFFERENCE SCREENWIDTH RIGHTMARGINISH)
+                                        YCOORD _ (IDIFFERENCE SCREENHEIGHT (IPLUS SECTION2YPOS
+                                                                                  (ITIMES 3 YPOSDELTA
+                                                                                         ]
+          [for B in BUTTONS do (WINDOWPROP B 'RIGHTBUTTONFN 'NILL)
+                               (WINDOWPROP B 'BUTTONEVENTFN (FUNCTION (LAMBDA (BUTTON)
+                                                                        (if (LASTMOUSESTATE
+                                                                             (ONLY LEFT))
+                                                                            then (EXECUTE-BUTTON
+                                                                                  BUTTON]
+          (for IW in IWS do (WINDOWPROP IW 'RIGHTBUTTONFN 'NILL))
+          IWS])
+
+(Online.CreateLabel
+  [LAMBDA (Text CenterX BottomY)                             (* ; "Edited  5-Dec-2022 16:49 by FGH")
+    (LET* ((DS (DSPCREATE))
+           (FONT (DSPFONT '(HELVETICA 18 BOLD)
+                        DS))
+           (SR (STRINGREGION Text DS))
+           (BMW (fetch (REGION WIDTH) of SR))
+           (BMH (IPLUS (fetch (REGION HEIGHT) of SR)
+                       (fetch (REGION BOTTOM) of SR)))
+           (BM (BITMAPCREATE BMW BMH))
+           (POS (create POSITION
+                       XCOORD _ (IDIFFERENCE CenterX (IQUOTIENT BMW 2))
+                       YCOORD _ BottomY)))
+          (DSPDESTINATION BM DS)
+          (PRIN1 Text DS)
+          (ICONW BM BM POS])
 
 (Online.ActivateCLOS
   [LAMBDA NIL
@@ -268,8 +322,8 @@
   [LAMBDA (IRMP)
     (ShellCommand (CONCAT "/usr/local/interlisp/online/bin/request_new_tab" " "
                          (if IRMP
-                             then "https://interlisp.org/documentation/IRM.PDF"
-                           else "https://interlisp.org/documentation/Medley-Primer.PDF")
+                             then "https://interlisp.org/documentation/IRM.pdf"
+                           else "https://interlisp.org/documentation/Medley-Primer.pdf")
                          " > /tmp/showdoc-warnings-$$.txt 2>&1"])
 )
 
@@ -279,8 +333,8 @@
 (BKSYSBUF " ")
 )
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (1564 13026 (Online.SftpInitInfo 1574 . 2447) (Online.SftpUpdateInfo 2449 . 2704) (
-Online.InitNotecards 2706 . 4465) (Online.DoInit 4467 . 8966) (Online.CreateButtons 8968 . 10258) (
-Online.ActivateCLOS 10260 . 11611) (Online.ActivateRooms 11613 . 11856) (XCL-USER::INTERLISP 11858 . 
-12625) (Online.ShowDoc 12627 . 13024)))))
+  (FILEMAP (NIL (1816 17631 (Online.SftpInitInfo 1826 . 2699) (Online.SftpUpdateInfo 2701 . 2956) (
+Online.InitNotecards 2958 . 4717) (Online.DoInit 4719 . 9218) (Online.CreateButtons 9220 . 14129) (
+Online.CreateLabel 14131 . 14863) (Online.ActivateCLOS 14865 . 16216) (Online.ActivateRooms 16218 . 
+16461) (XCL-USER::INTERLISP 16463 . 17230) (Online.ShowDoc 17232 . 17629)))))
 STOP
