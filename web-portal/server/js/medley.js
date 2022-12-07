@@ -263,7 +263,7 @@ function setupTarget(target, runCmd, req, res, next) {
 }
 
 function goToVnc(req, res, next) {
-    var url = `/client/go?target=${req.oioTarget}&port=${req.oioPort}&autoconnect=1`;
+    var url = `/client/go?target=${req.oioTarget}&port=${req.oioPort}&autoconnect=1&view_only=0`;
     url = `${url}${config.supportHttps ? "&encrypt=1" : ""}&u=${req.user.uname}&p=${req.sftpPwd}`;
     if(config.isNCO(req)) url = `${url}&nco=1`;
     res.redirect(url);
