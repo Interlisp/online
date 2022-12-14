@@ -123,10 +123,6 @@ if [ "${MEDLEY_UNAME}" != "medley" ]; then
 fi
 
 if [ "${NCO}" == "true" ]; then RUN_NOTECARDS="true"; fi
-
-if [ "${RUN_NOTECARDS}" = "true" ]; then
-    export NOTEFILESDIR=${MEDLEY_USERDIR}/notefiles
-fi
 #
 #
 export FILEBROWSER_DATABASE=/usr/local/filebrowser/filebrowser.db
@@ -148,14 +144,6 @@ fi
 #
 su ${MEDLEY_UNAME} <<EOF
 #set -x
-if [ "${RUN_NOTECARDS}" = "true" ]; then
-    if [ ! -e ${NOTEFILESDIR} ];
-    then
-        mkdir -p ${NOTEFILESDIR}
-        cp -rpP ${NC_INSTALLDIR}/notefiles/* ${NOTEFILESDIR}
-    fi
-fi
-#
 xrdb -merge /home/medley/.Xresources
 cd ${MEDLEY_INSTALLDIR}
 export MEDLEY_ONLINE="true"

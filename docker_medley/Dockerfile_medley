@@ -55,6 +55,8 @@ ENV MAIKO_INSTALLDIR=${MAIKO_INSTALLDIR}
 
 ARG NC_INSTALLDIR=/usr/local/interlisp/notecards
 ENV NC_INSTALLDIR=${NC_INSTALLDIR}
+ENV NOTEFILESDIR=${MEDLEY_USERDIR}/notefiles
+ENV NOTEFILESSRC=${NC_INSTALLDIR}/notefiles
 
 # install apt-utils, curl, git 
 RUN apt-get update \

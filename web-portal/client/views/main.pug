@@ -80,6 +80,15 @@ block content
               td
                 span.in-circle(onclick='helpOnClick("run_notecards");') ?
             <tr id="run_notecards_rule"><td></td><td><hr></td><td></td></tr>
+            tr#run_rooms_row
+              //- Run Rooms
+              td
+              td              
+                label.run-option.
+                  <input type="checkbox" id="run_rooms_cb" class="checkbox-input">&nbsp;Run Rooms
+              td
+                span.in-circle(onclick='helpOnClick("run_rooms");') ?
+            <tr id="run_rooms_rule"><td></td><td><hr></td><td></td></tr>
             tr
               //- Screen Width and Height
               td
