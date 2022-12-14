@@ -1399,7 +1399,7 @@ const UI = {
         setTimeout(() => {
             if(!w || w.closed || w.closed == "undefined"){
                 w && !w.closed && w.close();
-                document.getElementById('OIO_popup_identifier').innerHTML = "Common Lisp Hyperspec";
+                document.getElementById('OIO_popup_identifier').innerHTML = "Documentation";
                 document.getElementById('OIO_popup_dlg').showModal();
             }
         }, 1750);
