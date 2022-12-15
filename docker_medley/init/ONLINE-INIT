@@ -1,11 +1,11 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED "13-Dec-2022 17:59:25" {DSK}<home>frank>il>online>docker_medley>init>ONLINE-INIT.;37 22857  
+(FILECREATED "15-Dec-2022 14:44:14" {DSK}<home>frank>il>online>docker_medley>init>ONLINE-INIT.;45 24031  
 
-      :CHANGES-TO (FNS Online.CreateButtons)
+      :CHANGES-TO (FNS Online.ActivateRooms)
 
-      :PREVIOUS-DATE "13-Dec-2022 16:27:47" 
-{DSK}<home>frank>il>online>docker_medley>init>ONLINE-INIT.;36)
+      :PREVIOUS-DATE "15-Dec-2022 13:05:07" 
+{DSK}<home>frank>il>online>docker_medley>init>ONLINE-INIT.;44)
 
 
 (PRETTYCOMPRINT ONLINE-INITCOMS)
@@ -88,19 +88,20 @@
                                        "/notefiles"]
           [if (AND (NOT (DIRECTORYNAME DESTDIR))
                    (DIRECTORYNAME SRCDIR))
-              then (for NF in (DIRECTORY SRCDIR) do (COPYFILE NF (PACKFILENAME 'HOST "DSK" DIRECTORY
-                                                                        DESTDIR 'NAME
-                                                                        (FILENAMEFIELD NF
-                                                                               'NAME)
-                                                                        'EXTENSION
-                                                                        (FILENAMEFIELD NF
-                                                                               'EXTENSION)
-                                                                        'VERSION
-                                                                        (FILENAMEFIELD NF
-                                                                               'VERSION]
-          (NC.BringUpNoteCardsIcon (create POSITION
-                                          XCOORD _ 750
-                                          YCOORD _ (IDIFFERENCE SCREENHEIGHT 228)))
+              then (for NF in (DIRECTORY (CONCAT SRCDIR "/*"))
+                      do (COPYFILE NF (PACKFILENAME 'HOST "DSK" 'DIRECTORY DESTDIR 'NAME
+                                             (FILENAMEFIELD NF 'NAME)
+                                             'EXTENSION
+                                             (FILENAMEFIELD NF 'EXTENSION)
+                                             'VERSION
+                                             (FILENAMEFIELD NF 'VERSION]
+          (LET* ((PW-REGION (WINDOWPROP PROMPTWINDOW 'REGION))
+                 (LEFT (IPLUS (fetch (REGION RIGHT) of PW-REGION)
+                              20))
+                 (BOTTOM (fetch (REGION BOTTOM) of PW-REGION)))
+                (NC.BringUpNoteCardsIcon (create POSITION
+                                                XCOORD _ LEFT
+                                                YCOORD _ BOTTOM)))
           (NC.FileBrowserMenu NC.NoteCardsIconWindow (PACKFILENAME 'HOST "DSK" 'DIRECTORY DESTDIR
                                                             'NAME "*" 'EXTENSION "notefile")
                  (CREATEREGION 50 (IDIFFERENCE SCREENHEIGHT 700)
@@ -239,85 +240,106 @@
                                                              (* ; "Edited  5-Dec-2022 17:31 by FGH")
                                                              (* ; "Edited 12-Nov-2022 14:52 by FGH")
 
-    (* ;; "Clear out old buttons/labels")
-
-    (if DoDocsToo
-        then (for W in (OPENWINDOWS) when (MEMBER (WINDOWPROP W 'ICONLABEL)
-                                                 (LIST "DOCUMENTATION")) do (CLOSEW W))
-             (for B in *ALL-BUTTONS* when (MEMBER (BUTTON-LABEL B)
-                                                 (LIST "MANUAL" "PRIMER")) do (DELETE-BUTTON B)))
-    (for W in (OPENWINDOWS) when (MEMBER (WINDOWPROP W 'ICONLABEL)
-                                        (LIST "ACTIVATE" "FEATURES")) do (CLOSEW W))
-    (for B in *ALL-BUTTONS* when (MEMBER (BUTTON-LABEL B)
-                                        (LIST "NOTECARDS" "ROOMS")) do (DELETE-BUTTON B))
-
     (* ;; " Create  buttons for Documentation and to activate Rooms, Notecards ")
 
     (* ;; "Note: due to bug in DELETE-BUTTON need to create Doc buttons last.  This will make sure that  the NoteCards/Rooms buttons get properl deleted when they are activated.  But the Doc buttons will not necessariy get deleted properly (but then there is never a need for them to be deleted).")
 
-    (LET* [(FEATURES (LIST (LIST Online.NotecardsActivated '(Online.InitNotecards)
+    (LET* ((FEATURES (LIST (LIST Online.NotecardsActivated '(Online.InitNotecards)
                                  "NOTECARDS")
                            (LIST Online.RoomsActivated '(Online.ActivateRooms)
                                  "ROOMS")))
+           (FEATURES-LABELS (for FEATURE in FEATURES collect (CADDR FEATURE)))
            (DOCS (LIST (LIST "https://interlisp.org/docs/medley/orientation.pdf" "BASICS")
                        (LIST "https://interlisp.org/documentation/Medley-Primer.pdf" "PRIMER")
                        (LIST "https://interlisp.org/documentation/IRM.pdf" "MANUAL")
                        (LIST "https://interlisp.org/documentation/notecards_user_guide_v1.2.pdf" 
                              "NOTECARDS")
                        (LIST "https://interlisp.org/documentation/ROOMSTECHDESC.pdf" "ROOMS")))
+           (DOCS-LABELS (for DOC in DOCS collect (CADR DOC)))
            (RIGHTMARGINISH 140)
            (SECTION1YPOS 225)
            (YPOSDELTA 55)
            (SECTION2YPOS (IPLUS SECTION1YPOS (ITIMES (IPLUS (LENGTH DOCS)
                                                             1)
                                                     YPOSDELTA)))
-           (FEATURES-REQUIREDP (OR (NOT Online.RoomsActivated)
-                                   (NOT Online.NotecardsActivated)))
-           [IWS (LIST (AND DoDocsToo (Online.CreateLabel "DOCUMENTATION" (IDIFFERENCE SCREENWIDTH
-                                                                                (IDIFFERENCE 
-                                                                                       RIGHTMARGINISH
-                                                                                       50))
-                                            (IDIFFERENCE SCREENHEIGHT SECTION1YPOS)))
-                      [AND FEATURES-REQUIREDP (Online.CreateLabel "ACTIVATE" (IDIFFERENCE
-                                                                              SCREENWIDTH
-                                                                              (IDIFFERENCE 
-                                                                                     RIGHTMARGINISH 
-                                                                                     50))
-                                                     (IDIFFERENCE SCREENHEIGHT (IDIFFERENCE 
-                                                                                      SECTION2YPOS 20
-                                                                                      ]
-                      (AND FEATURES-REQUIREDP (Online.CreateLabel "FEATURES" (IDIFFERENCE
-                                                                              SCREENWIDTH
-                                                                              (IDIFFERENCE 
-                                                                                     RIGHTMARGINISH 
-                                                                                     50))
-                                                     (IDIFFERENCE SCREENHEIGHT SECTION2YPOS]
            (BUTTONY-FEATURES SECTION2YPOS)
            (BUTTONY-DOCS SECTION1YPOS)
-           (BUTTONS (APPEND [for FEATURE in FEATURES
-                               collect (OR (CAR FEATURE)
-                                           (PROGN (SETQ BUTTONY-FEATURES (IPLUS BUTTONY-FEATURES 
-                                                                                YPOSDELTA))
-                                                  (CREATE-BUTTON (CADR FEATURE)
-                                                         (CADDR FEATURE)
-                                                         (create POSITION
-                                                                XCOORD _ (IDIFFERENCE SCREENWIDTH 
-                                                                                RIGHTMARGINISH)
-                                                                YCOORD _ (IDIFFERENCE SCREENHEIGHT 
-                                                                                BUTTONY-FEATURES]
-                           (AND DoDocsToo (for DOC in DOCS
-                                             collect (PROGN (SETQ BUTTONY-DOCS (IPLUS BUTTONY-DOCS 
-                                                                                      YPOSDELTA))
-                                                            (CREATE-BUTTON (LIST 'Online.ShowDoc
-                                                                                 (CAR DOC))
-                                                                   (CADR DOC)
-                                                                   (create POSITION
-                                                                          XCOORD _ (IDIFFERENCE
-                                                                                    SCREENWIDTH 
-                                                                                    RIGHTMARGINISH)
-                                                                          YCOORD _ (IDIFFERENCE
-                                                                                    SCREENHEIGHT 
-                                                                                    BUTTONY-DOCS]
+           (FEATURES-REQUIREDP (OR (NOT Online.RoomsActivated)
+                                   (NOT Online.NotecardsActivated)))
+           (IWS NIL)
+           (BUTTONS NIL))
+
+          (* ;; "First remove/re-create feature buttons")
+
+          (for W in (OPENWINDOWS) when (MEMBER (WINDOWPROP W 'ICONLABEL)
+                                              (LIST "ACTIVATE" "FEATURES")) do (CLOSEW W))
+          (for B in *ALL-BUTTONS* when (AND (EQ (WINDOWPROP B 'ONLINE.BUTTON)
+                                                'FEATURE)
+                                            (MEMBER (BUTTON-LABEL B)
+                                                   FEATURES-LABELS)) do (DELETE-BUTTON B))
+          [if FEATURES-REQUIREDP
+              then [SETQ IWS (LIST (Online.CreateLabel "ACTIVATE" (IDIFFERENCE SCREENWIDTH
+                                                                         (IDIFFERENCE RIGHTMARGINISH
+                                                                                50))
+                                          (IDIFFERENCE SCREENHEIGHT (IDIFFERENCE SECTION2YPOS 20)))
+                                   (Online.CreateLabel "FEATURES" (IDIFFERENCE SCREENWIDTH
+                                                                         (IDIFFERENCE RIGHTMARGINISH
+                                                                                50))
+                                          (IDIFFERENCE SCREENHEIGHT SECTION2YPOS]
+                   (SETQ BUTTONS (for FEATURE in FEATURES
+                                    collect (OR (CAR FEATURE)
+                                                (LET (B)
+                                                     (SETQ BUTTONY-FEATURES (IPLUS BUTTONY-FEATURES 
+                                                                                   YPOSDELTA))
+                                                     [SETQ B (CREATE-BUTTON (CADR FEATURE)
+                                                                    (CADDR FEATURE)
+                                                                    (create POSITION
+                                                                           XCOORD _ (IDIFFERENCE
+                                                                                     SCREENWIDTH 
+                                                                                     RIGHTMARGINISH)
+                                                                           YCOORD _ (IDIFFERENCE
+                                                                                     SCREENHEIGHT 
+                                                                                     BUTTONY-FEATURES
+                                                                                     ]
+                                                     (WINDOWPROP B 'ONLINE.BUTTON 'FEATURE)
+                                                     B]
+
+          (* ;; "Then if needed, remove/recreate documentation buttons")
+
+          (if DoDocsToo
+              then (for W in (OPENWINDOWS) when (MEMBER (WINDOWPROP W 'ICONLABEL)
+                                                       (LIST "DOCUMENTATION"))
+                      do (CLOSEW W))
+                   (for B in *ALL-BUTTONS* when (AND (EQ (WINDOWPROP B 'ONLINE.BUTTON)
+                                                         'DOC)
+                                                     (MEMBER (BUTTON-LABEL B)
+                                                            DOCS-LABELS)) do (DELETE-BUTTON B))
+                   (SETQ IWS (CONS (Online.CreateLabel "DOCUMENTATION" (IDIFFERENCE SCREENWIDTH
+                                                                              (IDIFFERENCE 
+                                                                                     RIGHTMARGINISH 
+                                                                                     50))
+                                          (IDIFFERENCE SCREENHEIGHT SECTION1YPOS))
+                                   IWS))
+                   (SETQ BUTTONS (APPEND (for DOC in DOCS
+                                            collect (LET (B)
+                                                         (SETQ BUTTONY-DOCS (IPLUS BUTTONY-DOCS 
+                                                                                   YPOSDELTA))
+                                                         [SETQ B (CREATE-BUTTON (LIST 
+                                                                                      'Online.ShowDoc
+                                                                                      (CAR DOC))
+                                                                        (CADR DOC)
+                                                                        (create POSITION
+                                                                               XCOORD _
+                                                                               (IDIFFERENCE 
+                                                                                      SCREENWIDTH 
+                                                                                      RIGHTMARGINISH)
+                                                                               YCOORD _
+                                                                               (IDIFFERENCE 
+                                                                                      SCREENHEIGHT 
+                                                                                      BUTTONY-DOCS]
+                                                         (WINDOWPROP B 'ONLINE.BUTTON 'DOC)
+                                                         B))
+                                        BUTTONS)))
           [for B in BUTTONS do (COND
                                   ((WINDOWP B)
                                    (WINDOWPROP B 'RIGHTBUTTONFN 'NILL)
@@ -382,6 +404,8 @@
                                                  "/suites")
                                           ROOMS:*SUITE-DIRECTORIES*))
     (SETQ Online.RoomsActivated T)
+    (PROMPTPRINT "
+  ROOMS functionality is now available via the Background Menu")
     (if (NOT DoNotRefreshButtons)
         then (Online.CreateButtons])
 
@@ -413,8 +437,8 @@
 (BKSYSBUF " ")
 )
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (1875 22721 (Online.SftpInitInfo 1885 . 2758) (Online.SftpUpdateInfo 2760 . 3015) (
-Online.InitNotecards 3017 . 6262) (Online.DoInit 6264 . 11112) (Online.CreateButtons 11114 . 18820) (
-Online.CreateLabel 18822 . 19634) (Online.ActivateCLOS 19636 . 20987) (Online.ActivateRooms 20989 . 
-21762) (XCL-USER::INTERLISP 21764 . 22531) (Online.ShowDoc 22533 . 22719)))))
+  (FILEMAP (NIL (1875 23895 (Online.SftpInitInfo 1885 . 2758) (Online.SftpUpdateInfo 2760 . 3015) (
+Online.InitNotecards 3017 . 6095) (Online.DoInit 6097 . 10945) (Online.CreateButtons 10947 . 19910) (
+Online.CreateLabel 19912 . 20724) (Online.ActivateCLOS 20726 . 22077) (Online.ActivateRooms 22079 . 
+22936) (XCL-USER::INTERLISP 22938 . 23705) (Online.ShowDoc 23707 . 23893)))))
 STOP
