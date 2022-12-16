@@ -1,11 +1,11 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED "15-Dec-2022 14:44:14" {DSK}<home>frank>il>online>docker_medley>init>ONLINE-INIT.;45 24031  
+(FILECREATED "15-Dec-2022 17:34:44" {DSK}<home>frank>il>online>docker_medley>init>ONLINE-INIT.;46 24028  
 
-      :CHANGES-TO (FNS Online.ActivateRooms)
+      :CHANGES-TO (FNS Online.CreateButtons)
 
-      :PREVIOUS-DATE "15-Dec-2022 13:05:07" 
-{DSK}<home>frank>il>online>docker_medley>init>ONLINE-INIT.;44)
+      :PREVIOUS-DATE "15-Dec-2022 14:44:14" 
+{DSK}<home>frank>il>online>docker_medley>init>ONLINE-INIT.;45)
 
 
 (PRETTYCOMPRINT ONLINE-INITCOMS)
@@ -249,7 +249,7 @@
                            (LIST Online.RoomsActivated '(Online.ActivateRooms)
                                  "ROOMS")))
            (FEATURES-LABELS (for FEATURE in FEATURES collect (CADDR FEATURE)))
-           (DOCS (LIST (LIST "https://interlisp.org/docs/medley/orientation.pdf" "BASICS")
+           (DOCS (LIST (LIST "https://interlisp.org/docs/medley/orientation/" "BASICS")
                        (LIST "https://interlisp.org/documentation/Medley-Primer.pdf" "PRIMER")
                        (LIST "https://interlisp.org/documentation/IRM.pdf" "MANUAL")
                        (LIST "https://interlisp.org/documentation/notecards_user_guide_v1.2.pdf" 
@@ -437,8 +437,8 @@
 (BKSYSBUF " ")
 )
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (1875 23895 (Online.SftpInitInfo 1885 . 2758) (Online.SftpUpdateInfo 2760 . 3015) (
-Online.InitNotecards 3017 . 6095) (Online.DoInit 6097 . 10945) (Online.CreateButtons 10947 . 19910) (
-Online.CreateLabel 19912 . 20724) (Online.ActivateCLOS 20726 . 22077) (Online.ActivateRooms 22079 . 
-22936) (XCL-USER::INTERLISP 22938 . 23705) (Online.ShowDoc 23707 . 23893)))))
+  (FILEMAP (NIL (1875 23892 (Online.SftpInitInfo 1885 . 2758) (Online.SftpUpdateInfo 2760 . 3015) (
+Online.InitNotecards 3017 . 6095) (Online.DoInit 6097 . 10945) (Online.CreateButtons 10947 . 19907) (
+Online.CreateLabel 19909 . 20721) (Online.ActivateCLOS 20723 . 22074) (Online.ActivateRooms 22076 . 
+22933) (XCL-USER::INTERLISP 22935 . 23702) (Online.ShowDoc 23704 . 23890)))))
 STOP
