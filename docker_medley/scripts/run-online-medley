@@ -72,12 +72,14 @@ if [ $# -gt 2 ]; then
 else
 	width=1024
 fi
+sc_width=$(( $width - 20 ))
 #
 if [ $# -gt 3 ]; then
 	height=$4
 else
 	height=808
 fi
+sc_height=$(( $height - 20 ))
 #
 export SFTP_PORT=2${PORT}
 if [ -z "${SFTP_SERVER}" ]; then
@@ -151,5 +153,5 @@ export MEDLEYDIR=${MEDLEY_INSTALLDIR}
 export LOGINDIR=${MEDLEY_USERDIR}
 export LDEINIT=${MEDLEY_INIT_PATH}
 export MAIKODIR="/usr/local/interlisp/maiko"
-./run-medley -noscroll ${medley_memory_arg} -g ${width}x${height} -sc ${width}x${height} -vmem ${VMEM_PATH} ${sysout}
+./run-medley -noscroll ${medley_memory_arg} -g ${width}x${height} -sc ${sc_width}x${sc_height} -vmem ${VMEM_PATH} ${sysout}
 EOF
