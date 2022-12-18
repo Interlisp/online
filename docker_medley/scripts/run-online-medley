@@ -72,14 +72,14 @@ if [ $# -gt 2 ]; then
 else
 	width=1024
 fi
-sc_width=$(( $width - 20 ))
+sc_width=$(( $width - 10 ))
 #
 if [ $# -gt 3 ]; then
 	height=$4
 else
 	height=808
 fi
-sc_height=$(( $height - 20 ))
+sc_height=$(( $height - 10 ))
 #
 export SFTP_PORT=2${PORT}
 if [ -z "${SFTP_SERVER}" ]; then
