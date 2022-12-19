@@ -50,9 +50,13 @@ ARG HOMEDIR=/home/${USER_NAME}
 ARG MEDLEY_INSTALLDIR=/usr/local/interlisp/medley
 ENV MEDLEY_INSTALLDIR=${MEDLEY_INSTALLDIR}
 ENV MEDLEY_USERDIR=${HOMEDIR}/il
+ARG MAIKO_INSTALLDIR=/usr/local/interlisp/maiko
+ENV MAIKO_INSTALLDIR=${MAIKO_INSTALLDIR}
 
 ARG NC_INSTALLDIR=/usr/local/interlisp/notecards
 ENV NC_INSTALLDIR=${NC_INSTALLDIR}
+ENV NOTEFILESDIR=${MEDLEY_USERDIR}/notefiles
+ENV NOTEFILESSRC=${NC_INSTALLDIR}/notefiles
 
 # install apt-utils, curl, git 
 RUN apt-get update \
@@ -96,15 +100,15 @@ RUN mkdir -p /usr/local/filebrowser \
 #  install nano & vim for ease of maintenance
 RUN apt-get install -y nano vim
 
+# create a sysout subdir
+RUN mkdir -p ${MEDLEY_USERDIR}/sysout \
+    && chown ${USER_NAME}:${USER_NAME} ${MEDLEY_USERDIR}/sysout
+
 # keep lisp.virtualmem out of medley home dir
 RUN mkdir -p ${MEDLEY_USERDIR} \
     && chown ${USER_NAME}:${USER_NAME} ${MEDLEY_USERDIR} \
     && mkdir ${MEDLEY_USERDIR}/vmem \
     && chown ${USER_NAME}:${USER_NAME} ${MEDLEY_USERDIR}/vmem
-
-# create a sysout subdir and copy full.sysout into it as online.sysout
-RUN mkdir -p ${MEDLEY_USERDIR}/sysout \
-    && chown ${USER_NAME}:${USER_NAME} ${MEDLEY_USERDIR}/sysout
 
 # copy the run-XXX and other scripts into ${MEDLEY_INSTALLDIR}/../online/bin
 ARG ONLINE_BINDIR=${MEDLEY_INSTALLDIR}/../online/bin
@@ -123,6 +127,21 @@ COPY --chown=${USER_NAME}:${USER_NAME} init/ONLINE-INIT.LCOM ${MEDLEY_INSTALLDIR
 # copy Notecards into place
 COPY notecards ${NC_INSTALLDIR}
 RUN echo ${NOTECARDS_RELEASE} ${NC_INSTALLDIR}/release.txt
+
+# do a loadup to create the online.sysout with Notecards, Rooms, etc installed
+ARG ONLINE_DIR=${MEDLEY_INSTALLDIR}/../online
+RUN mkdir -p ${ONLINE_DIR}/docker_medley/loadup \
+    && chown root:root ${ONLINE_DIR} \
+    && chown root:root ${ONLINE_DIR}/docker_medley \
+    && chown root:root ${ONLINE_DIR}/docker_medley/loadup
+COPY --chown=${USER_NAME}:${USER_NAME} loadup/* ${ONLINE_DIR}/docker_medley/loadup
+#
+RUN Xvnc -geometry 1280x720 :0 \
+    &  export DISPLAY=":0" \
+    && PATH="$MAIKO_INSTALLDIR:$PATH" \
+    && ${ONLINE_DIR}/docker_medley/loadup/loadup-online-from-full.sh \
+    && cp -p ${MEDLEY_INSTALLDIR}/tmp/online.sysout ${MEDLEY_INSTALLDIR}/loadups/full.sysout \
+    && rm -rf ${ONLINE_DIR}/docker_medley/loadup    
 
 # clean up medley/.bashrc for use with xterm
 RUN sed -i /PS1=/s/u@.h/u@oio/ ${HOMEDIR}/.bashrc \
@@ -149,3 +168,5 @@ ENTRYPOINT USER=${USER_NAME} /bin/bash
 # COPY HELPSYS fixes into lispusers
 COPY --chown=${USER_NAME}:${USER_NAME} misc/HELPSYS ${MEDLEY_INSTALLDIR}/lispusers/HELPSYS
 COPY --chown=${USER_NAME}:${USER_NAME} misc/HELPSYS.LCOM ${MEDLEY_INSTALLDIR}/lispusers/HELPSYS.LCOM
+
+

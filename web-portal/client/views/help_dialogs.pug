@@ -75,6 +75,15 @@ dialog(id="help-dialog-run_notecards").help-dialog
     .single-button-div
         button(type="button" onclick='helpDialogClose("run_notecards");').main-button OK
 
+dialog(id="help-dialog-run_rooms").help-dialog
+    h2  Help
+    p.
+        If this option is checked, the Rooms app will be loaded and started up when Interlisp is started.
+    p.
+        This option is disabled if "Resume previous session" is checked.
+    .single-button-div
+        button(type="button" onclick='helpDialogClose("run_rooms");').main-button OK
+
 dialog(id="help-dialog-sftp").help-dialog
     h2  Help
     p.

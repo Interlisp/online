@@ -66,6 +66,7 @@ function sftpEnvs(req) {
 function medleyEnvs(req) {
     const u = req.user;
     const nc = (req.query.notecards && (req.query.notecards.toLowerCase() == "true")) ? "true" : "false";
+    const rooms = (req.query.rooms && (req.query.rooms.toLowerCase() == "true")) ? "true" : "false";
     const exec = (req.query.exec && (req.query.exec.toLowerCase() == "common")) ? "common" : "inter";
     return    ` --env MEDLEY_EMAIL='${u.username}'`
             + ` --env MEDLEY_UNAME='${u.uname || "medley" }'`
@@ -73,6 +74,7 @@ function medleyEnvs(req) {
             + ` --env MEDLEY_LASTNAME='${u.lastname || "User"}'`
             + ` --env MEDLEY_INITIALS='${u.initials || "medley"}'`
             + ` --env RUN_NOTECARDS=${nc}`
+            + ` --env RUN_ROOMS=${rooms}`
             + ` --env MEDLEY_EXEC=${exec}`
             + ` --env MEDLEY_MEMORY=${config.medleyMemoryArg}`
     ;
@@ -263,7 +265,7 @@ function setupTarget(target, runCmd, req, res, next) {
 }
 
 function goToVnc(req, res, next) {
-    var url = `/client/go?target=${req.oioTarget}&port=${req.oioPort}&autoconnect=1`;
+    var url = `/client/go?target=${req.oioTarget}&port=${req.oioPort}&autoconnect=1&view_only=0`;
     url = `${url}${config.supportHttps ? "&encrypt=1" : ""}&u=${req.user.uname}&p=${req.sftpPwd}`;
     if(config.isNCO(req)) url = `${url}&nco=1`;
     res.redirect(url);

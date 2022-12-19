@@ -29,7 +29,7 @@ window.addEventListener('load', (event) => {
     const urlParams = new URLSearchParams(window.location.search);
     const rr = urlParams.get('rr') || false;
     const fromvnc = urlParams.get('fromvnc') || false;
-    
+
     if (targetSystem == "Notecards") {
         document.getElementById("fill_window_cb").checked = true;
         document.getElementById("dev-div").style.display = "none";
@@ -42,8 +42,10 @@ window.addEventListener('load', (event) => {
             document.getElementById("do_not_checkbox_div").style.display = "inline-block";
         }
         hideRow("run_notecards");
+        hideRow("run_rooms");
         hideRow("initial_exec");
         document.getElementById("run_notecards_cb").checked = true;
+        document.getElementById("run_rooms_cb").checked = false;
         document.getElementById("custom_sysout_cb").checked = false;
         document.getElementById("custom_init_cb").checked = false;
         document.getElementById("sftp_checkbox").checked = false;
@@ -55,7 +57,9 @@ window.addEventListener('load', (event) => {
         hideRow("resume");
         showRow("initial_exec");
         showRow("run_notecards");
+        showRow("run_rooms");
         document.getElementById("run_notecards_cb").checked = false;
+        document.getElementById("run_rooms_cb").checked = false;
         document.getElementById("sftp_checkbox").checked = false;
         document.getElementById("interlisp_rb").checked = true;
     } else {
@@ -64,12 +68,14 @@ window.addEventListener('load', (event) => {
         document.getElementById("custom_init_cb").checked = (localStore.getItem("custom_init") == "true");
         document.getElementById("sftp_checkbox").checked = (localStore.getItem("sftp") == "true");
         document.getElementById("run_notecards_cb").checked = (localStore.getItem("run_notecards") == "true");
+        document.getElementById("run_rooms_cb").checked = (localStore.getItem("run_rooms") == "true");
         document.getElementById("fill_window_cb").checked = ((localStore.getItem("fill-window") || 'true') == 'true');
         document.getElementById("dev-div").style.display = "inline-block";
         document.getElementById("do_not_checkbox_div").style.display = "inline-block";
         showRow("resume");
         showRow("initial_exec");
         showRow("run_notecards");
+        showRow("run_rooms");
         resumeOnClick();
         if (localStore.getItem("medley_exec") == "common")
             document.getElementById("commonlisp_rb").checked = true;
@@ -101,6 +107,7 @@ function startSession (interlispOrXterm) {
     const custom = document.getElementById("custom_sysout_cb").checked ? "true" : "false";
     const customInit = document.getElementById("custom_init_cb").checked ? "true" : "false";
     const runNotecards = document.getElementById("run_notecards_cb").checked ? "true": "false";
+    const runRooms = document.getElementById("run_rooms_cb").checked ? "true": "false";
     const startSftp = document.getElementById("sftp_checkbox").checked ? "true": "false";
     const medleyExec = document.getElementById("interlisp_rb").checked ? "inter" : "common";
     if(!isGuest) {
@@ -115,6 +122,7 @@ function startSession (interlispOrXterm) {
             localStore.setItem("custom_init", customInit);
             localStore.setItem("sftp", startSftp);
             localStore.setItem("run_notecards", runNotecards);
+            localStore.setItem("run_rooms", runRooms);
             localStore.setItem("medley_exec", medleyExec);
         }
     }
@@ -154,6 +162,7 @@ function startSession (interlispOrXterm) {
                                     + `&custom=${custom || "false"}`
                                     + `&custom_init=${customInit || "false"}`
                                     + `&notecards=${runNotecards || "false"}`
+                                    + `&rooms=${runRooms || "false"}`
                                     + `&sftp=${startSftp || "false"}`
                                     + `&exec=${medleyExec || "inter"}`
                                 );
@@ -169,6 +178,7 @@ function startSession (interlispOrXterm) {
                             + `&custom=${custom || "false"}`
                             + `&custom_init=${customInit || "false"}`
                             + `&notecards=${runNotecards || "false"}`
+                            + `&rooms=${runRooms || "false"}`
                             + `&sftp=${startSftp || "false"}`
                             + `&exec=${medleyExec || "inter"}`
                             );
@@ -220,6 +230,7 @@ function resumeOnClick() {
         disableRow("custom_sysout");
         disableRow("custom_init");
         disableRow("run_notecards");
+        disableRow("run_rooms");
         disableRow("initial_exec");
         document.getElementById("interlisp_rb").disabled = true;
         document.getElementById("commonlisp_rb").disabled = true;
@@ -227,6 +238,7 @@ function resumeOnClick() {
         enableRow("custom_sysout");
         enableRow("custom_init");
         enableRow("run_notecards");
+        enableRow("run_rooms");
         enableRow("initial_exec");
         document.getElementById("interlisp_rb").disabled = false;
         document.getElementById("commonlisp_rb").disabled = false;

@@ -72,12 +72,14 @@ if [ $# -gt 2 ]; then
 else
 	width=1024
 fi
+width=$(( ( $width / 32 ) * 32 ))
 #
 if [ $# -gt 3 ]; then
 	height=$4
 else
 	height=808
 fi
+height=$(( ( $height / 32 ) * 32 ))
 #
 export SFTP_PORT=2${PORT}
 if [ -z "${SFTP_SERVER}" ]; then
@@ -111,7 +113,8 @@ for i in {1..10}
                 sleep 1
         fi
     done
-xmodmap -e "keycode 12 = Alt_L" -e "keycode 13 = Alt_R" -e "keycode 14 = Meta_L" -e "keycode 15 = Meta_R"
+xmodmap -e "keysym Alt_R = Alt_L" -e "keysym Meta_R = Meta_L"
+#xmodmap -e "keycode 12 = Alt_L" -e "keycode 13 = Alt_R" -e "keycode 14 = Meta_L" -e "keycode 15 = Meta_R"
 /usr/bin/autocutsel -s CLIPBOARD &
 sleep 1
 if [ -z "${MEDLEY_UNAME}" ]; then
@@ -122,10 +125,6 @@ if [ "${MEDLEY_UNAME}" != "medley" ]; then
 fi
 
 if [ "${NCO}" == "true" ]; then RUN_NOTECARDS="true"; fi
-
-if [ "${RUN_NOTECARDS}" = "true" ]; then
-    export NOTEFILESDIR=${MEDLEY_USERDIR}/notefiles
-fi
 #
 #
 export FILEBROWSER_DATABASE=/usr/local/filebrowser/filebrowser.db
@@ -147,14 +146,6 @@ fi
 #
 su ${MEDLEY_UNAME} <<EOF
 #set -x
-if [ "${RUN_NOTECARDS}" = "true" ]; then
-    if [ ! -e ${NOTEFILESDIR} ];
-    then
-        mkdir -p ${NOTEFILESDIR}
-        cp -rpP ${NC_INSTALLDIR}/notefiles/* ${NOTEFILESDIR}
-    fi
-fi
-#
 xrdb -merge /home/medley/.Xresources
 cd ${MEDLEY_INSTALLDIR}
 export MEDLEY_ONLINE="true"
