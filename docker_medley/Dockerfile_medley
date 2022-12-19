@@ -69,8 +69,8 @@ RUN apt-get purge -y tightvncserver \
     && apt-get install -y tigervnc-standalone-server
 
 # install gh (github cli)
-#COPY gh/gh_2.14.7_linux_*.deb /tmp
-#RUN dpkg -i /tmp/gh_2.14.7_linux_${PLATFORM}.deb; rm /tmp/gh_2.14.7_linux_*.deb
+COPY gh/gh_2.14.7_linux_*.deb /tmp
+RUN dpkg -i /tmp/gh_2.14.7_linux_${PLATFORM}.deb; rm /tmp/gh_2.14.7_linux_*.deb
 
 #  install websockify for use with noVNC
 RUN apt-get install -y websockify
@@ -89,13 +89,13 @@ RUN  chmod 600 /etc/ssh/ssh_host_*_key
 
 #     Install FileBrowser
 
-#COPY filebrowser/filebrowser /usr/local/bin/filebrowser
-#RUN mkdir -p /usr/local/filebrowser \
-#    && /usr/local/bin/filebrowser config init -d /usr/local/filebrowser/filebrowser.db \
-#       --address "0.0.0.0" \
-#       --perm.execute=false \
-#       --perm.share=false \
-#       --root "/home/medley"
+COPY filebrowser/filebrowser /usr/local/bin/filebrowser
+RUN mkdir -p /usr/local/filebrowser \
+    && /usr/local/bin/filebrowser config init -d /usr/local/filebrowser/filebrowser.db \
+       --address "0.0.0.0" \
+       --perm.execute=false \
+       --perm.share=false \
+       --root "/home/medley"
 
 #  install nano & vim for ease of maintenance
 RUN apt-get install -y nano vim
