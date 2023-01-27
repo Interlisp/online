@@ -39,22 +39,26 @@ systemctl enable containerd.service
 #     Create oio directories
 #
 for sub in development production;
-  do
-    mkdir -p /srv/oio
-    chown ubuntu:ubuntu /srv/oio
-    mkdir -p /srv/oio/${sub}
-    chown ubuntu:ubuntu /srv/oio/${sub}
-    mkdir -p /srv/oio/${sub}/log
-    chown ubuntu:ubuntu /srv/oio/${sub}/log
-    mkdir -p /srv/oio/${sub}/mongodb
-    chown ubuntu:ubuntu /srv/oio/${sub}/mongodb
-    mkdir -p /srv/oio/${sub}/mongodb/log
-    chown ubuntu:ubuntu /srv/oio/${sub}/mongodb/log
-    mkdir -p /srv/oio/${sub}/mongodb/db
-    chown ubuntu:ubuntu /srv/oio/${sub}/mongodb/db
-  done
+do
+  mkdir -p /srv/oio
+  chown ubuntu:ubuntu /srv/oio
+  mkdir -p /srv/oio/${sub}
+  chown ubuntu:ubuntu /srv/oio/${sub}
+  mkdir -p /srv/oio/${sub}/log
+  chown ubuntu:ubuntu /srv/oio/${sub}/log
+  mkdir -p /srv/oio/${sub}/mongodb
+  chown ubuntu:ubuntu /srv/oio/${sub}/mongodb
+  mkdir -p /srv/oio/${sub}/mongodb/log
+  chown ubuntu:ubuntu /srv/oio/${sub}/mongodb/log
+  mkdir -p /srv/oio/${sub}/mongodb/db
+  chown ubuntu:ubuntu /srv/oio/${sub}/mongodb/db
+done
 #
-#  
+#  Create directory for static page hosting
+#
+mkdir -p /srv/oio/static
+#
+#
 #
 if [ ! -e "/etc/letsencrypt" ]; then mkdir -p /etc/letsencrypt; fi
 #

@@ -154,3 +154,6 @@ exports.medleyMemoryArg = medleyMemoryArg;
 var medleyNetworkHostMode = false;
 exports.medleyNetworkHostMode = medleyNetworkHostMode;
 
+var staticHostingPath = "/srv/static";
+exports.staticHostingPath = staticHostingPath;
+
