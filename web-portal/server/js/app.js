@@ -1,14 +1,14 @@
 /*******************************************************************************
- * 
+ *
  *   app.js:  Express app for online.interlisp.org web portal. Sets up and does
- *            routing of htpp(s) requests. 
- * 
- * 
+ *            routing of htpp(s) requests.
+ *
+ *
  *   2021-11-18 Frank Halasz
- * 
- * 
- *   Copyright: 2021-2022 by Interlisp.org 
- * 
+ *
+ *
+ *   Copyright: 2021-2023 by Interlisp.org
+ *
  *
  ******************************************************************************/
 
@@ -76,12 +76,12 @@ app.get('/', (req, res) => { res.redirect('/main'); });
 app.use('/stylesheets', express.static(config.stylesheetsPath));
 app.use('/polyfills', express.static(config.polyfillsPath));
 app.use('/js', express.static(config.clientJsPath));
-app.get('/main', 
+app.get('/main',
          ensureLoggedIn(),
-         async (req, res, next) => 
-             { res.render('main', 
+         async (req, res, next) =>
+             { res.render('main',
                            {
-                             login: req.user.username, 
+                             login: req.user.username,
                              isGuest: (req.user.username == config.guestUsername),
                              isVerified: (await userRouter.getIsVerified(req) ? 'true' : 'false'),
                              nodisclaimer: (await userRouter.getNoDisclaimer(req) ? 'true' : 'false'),
@@ -94,6 +94,9 @@ app.use('/user', userRouter);
 app.use('/medley', ensureLoggedIn(), medleyRouter);
 app.use('/client', ensureLoggedIn(), clientRouter);
 app.use('/admin', ensureLoggedIn(), adminRouter);
+app.use('/downloads', express.static(config.staticHostingPath));
+app.use('/statics', express.static(config.staticHostingPath));
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

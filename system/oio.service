@@ -17,6 +17,7 @@ ExecStart=/usr/bin/docker run \
                -p 443:443 \
                -v /var/run/docker.sock:/var/run/docker.sock \
                -v /srv/oio/production:/srv/oio \
+               -v /srv/oio/static:/srv/static \
                -v /etc/letsencrypt:/etc/letsencrypt \
                -e DEV_OR_PROD \
                -e NODE_ENV \
