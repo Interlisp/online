@@ -115,7 +115,7 @@ exports.gmailFrom = gmailFrom;
 var imagesDir = path.join(__dirname, clientDirRelativeTo_dirname, 'images');
 exports.imagesDir = imagesDir;
 
-var noDockerRm = isDev && true;
+var noDockerRm = isDev && fs.existsSync("/srv/oio/noDockerRm");
 exports.noDockerRm = noDockerRm;
 
 var mongodbURI = `mongodb://%2Fsrv%2Foio-nomount%2Fmongodb%2Fmongodb-27017.sock/${userdbName}`;
