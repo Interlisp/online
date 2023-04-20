@@ -257,7 +257,22 @@ case $1 in
         esac
      ;;
 
-    help)
+     noRm | norm)
+         if [ "${oio}" = "oio-dev" ]; then
+             if [ "I$2I" = "IonI" ]; then
+                 touch /srv/oio/development/noDockerRm
+             elif [ "I$2I" = "IoffI" ]; then
+                 rm -f /srv/oio/development/noDockerRm
+             else
+                 echo "Unknown command: ${oio} noRm $2"
+                 echo "Use '${oio} help' for usage."
+                 echo "Exiting"
+                 exit 1
+             fi
+         fi
+     ;;
+
+     help)
         echo "Usage:"
         echo
         echo "${oio} status:  lists status of oio and oio-dev docker containers"
@@ -288,6 +303,11 @@ case $1 in
 	echo "${oio} portal pulldev:  pull latest development portal (online-development) docker image from GHCR"
         echo "${oio} portal pullprod:  pull latest production portal (online-production) docker image from GHCR"
         echo
+        if [ "${oio}" = "oio-dev" ]; then
+            echo "${oio} noRm on: turn noDockerRm on"
+            echo "${oio} noRm off: turn noDockerRm off"
+            echo
+        fi
 	;;
 
     *)
