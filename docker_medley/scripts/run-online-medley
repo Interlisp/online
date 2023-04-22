@@ -14,7 +14,7 @@
 if [ -z "${NCO}" ]; then export NCO="false"; fi
 if [ -z "${MEDLEY_EXEC}" ]; then export MEDLEY_EXEC="common"; fi
 
-RELEASE_SYSOUT_PATH="${MEDLEY_INSTALLDIR}/loadups/online.sysout"
+RELEASE_SYSOUT_PATH="${MEDLEY_INSTALLDIR}/loadups/full.sysout"
 CUSTOM_SYSOUT_PATH="${MEDLEY_USERDIR}/sysout/online.sysout"
 RELEASE_INIT_PATH="${MEDLEY_INSTALLDIR}/greetfiles/ONLINE-INIT.LCOM"
 CUSTOM_INIT_PATH="${MEDLEY_USERDIR}/initdir/ONLINE-INIT"
@@ -153,6 +153,5 @@ export MEDLEYDIR=${MEDLEY_INSTALLDIR}
 export LOGINDIR=${MEDLEY_USERDIR}
 export LDEINIT=${MEDLEY_INIT_PATH}
 export MAIKODIR="/usr/local/interlisp/maiko"
-./run-medley -noscroll ${medley_memory_arg} -g ${width}x${height} -sc ${width}x${height} \
-             -vmem ${VMEM_PATH} ${sysout}
+./run-medley -noscroll ${medley_memory_arg} -g ${width}x${height} -sc ${width}x${height} -vmem ${VMEM_PATH} ${sysout}
 EOF
