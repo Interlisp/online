@@ -1,48 +1,45 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED "15-Dec-2022 17:34:44" {DSK}<home>frank>il>online>docker_medley>init>ONLINE-INIT.;46 24028  
+(FILECREATED "20-Apr-2023 22:47:45" {DSK}<home>frank>il>online>docker_medley>init>ONLINE-INIT.;49 5729   
 
-      :CHANGES-TO (FNS Online.CreateButtons)
+      :CHANGES-TO (VARS ONLINE-INITCOMS)
+                  (FNS Online.DoInit)
 
-      :PREVIOUS-DATE "15-Dec-2022 14:44:14" 
-{DSK}<home>frank>il>online>docker_medley>init>ONLINE-INIT.;45)
+      :PREVIOUS-DATE "15-Dec-2022 17:34:44" 
+{DSK}<home>frank>il>online>docker_medley>init>ONLINE-INIT.;47)
 
 
 (PRETTYCOMPRINT ONLINE-INITCOMS)
 
 (RPAQQ ONLINE-INITCOMS
        [(FILES (SYSLOAD)
-               MEDLEYDIR-INIT)
+               APPS-INIT)
         (GLOBALVARS Online.LogoutTimeout Online.SftpPort Online.SftpPassword Online.SftpDisplay 
-               IDLE.PROFILE IDLE.BOUNCING.BOX Online.SftpDisplayMenu ONLINEP 
-               Online.NotecardsActivated Online.RoomsActivated)
-        (INITVARS (Online.LogoutTimeout 30)
-               ONLINEP
-               (Online.NotecardsActivated NIL)
-               (Online.RoomsActivated NIL))
+               IDLE.PROFILE IDLE.BOUNCING.BOX Online.SftpDisplayMenu ONLINEP ShellBrowser CLHS.OPENER
+               )
+        (INITVARS ONLINEP (Online.LogoutTimeout 30))
+        (VARS (ShellBrowser "/usr/local/interlisp/online/bin/request_new_tab")
+              (CLHS.OPENER ShellBrowser))
         (ADVISE (SAVEVM :IN \IDLER))
-        (FNS Online.SftpInitInfo Online.SftpUpdateInfo Online.InitNotecards Online.DoInit 
-             Online.CreateButtons Online.CreateLabel Online.ActivateCLOS Online.ActivateRooms 
-             XCL-USER::INTERLISP Online.ShowDoc)
+        (FNS Online.SftpInitInfo Online.SftpUpdateInfo Online.DoInit XCL-USER::INTERLISP)
         (DECLARE%: DONTEVAL@LOAD DOCOPY (P (Online.DoInit)))
         (DECLARE%: FIRST DONTEVAL@LOAD DOCOPY (P (BKSYSBUF " "])
 
 (FILESLOAD (SYSLOAD)
-       MEDLEYDIR-INIT)
+       APPS-INIT)
 (DECLARE%: DOEVAL@COMPILE DONTCOPY
 
 (GLOBALVARS Online.LogoutTimeout Online.SftpPort Online.SftpPassword Online.SftpDisplay IDLE.PROFILE
-       IDLE.BOUNCING.BOX Online.SftpDisplayMenu ONLINEP Online.NotecardsActivated 
-       Online.RoomsActivated)
+       IDLE.BOUNCING.BOX Online.SftpDisplayMenu ONLINEP ShellBrowser CLHS.OPENER)
 )
-
-(RPAQ? Online.LogoutTimeout 30)
 
 (RPAQ? ONLINEP NIL)
 
-(RPAQ? Online.NotecardsActivated NIL)
+(RPAQ? Online.LogoutTimeout 30)
 
-(RPAQ? Online.RoomsActivated NIL)
+(RPAQ ShellBrowser "/usr/local/interlisp/online/bin/request_new_tab")
+
+(RPAQ CLHS.OPENER ShellBrowser)
 
 [XCL:REINSTALL-ADVICE '(SAVEVM :IN \IDLER)
        :AROUND
@@ -72,52 +69,6 @@
        ((OR (EQ WHEN 'AFTERLOGOUT)
             (EQ WHEN 'AFTERSAVEVM))
         (Online.SftpInitInfo])
-
-(Online.InitNotecards
-  [LAMBDA (DoNotRefreshButtons)
-    (DECLARE (GLOBALVARS BackgroundMenuCommands BackgroundMenu))
-                                                             (* ; "Edited  7-Dec-2022 11:14 by FGH")
-                                                             (* ; "Edited 12-Nov-2022 14:41 by FGH")
-                                                             (* ; "Edited 11-Sep-2022 01:09 by fgh")
-                                                             (* ; "Edited  7-Feb-2022 20:22 by tp7")
-    (LET* [(SRCDIR (OR (UNIX-GETENV 'NOTEFILESSRC)
-                       (CONCAT (UNIX-GETENV 'NC_INSTALLDIR)
-                              "/notefiles")))
-           (DESTDIR (OR (UNIX-GETENV 'NOTEFILESDIR)
-                        (CONCAT (UNIX-GETENV 'MEDLEY_USERDIR
-                                       "/notefiles"]
-          [if (AND (NOT (DIRECTORYNAME DESTDIR))
-                   (DIRECTORYNAME SRCDIR))
-              then (for NF in (DIRECTORY (CONCAT SRCDIR "/*"))
-                      do (COPYFILE NF (PACKFILENAME 'HOST "DSK" 'DIRECTORY DESTDIR 'NAME
-                                             (FILENAMEFIELD NF 'NAME)
-                                             'EXTENSION
-                                             (FILENAMEFIELD NF 'EXTENSION)
-                                             'VERSION
-                                             (FILENAMEFIELD NF 'VERSION]
-          (LET* ((PW-REGION (WINDOWPROP PROMPTWINDOW 'REGION))
-                 (LEFT (IPLUS (fetch (REGION RIGHT) of PW-REGION)
-                              20))
-                 (BOTTOM (fetch (REGION BOTTOM) of PW-REGION)))
-                (NC.BringUpNoteCardsIcon (create POSITION
-                                                XCOORD _ LEFT
-                                                YCOORD _ BOTTOM)))
-          (NC.FileBrowserMenu NC.NoteCardsIconWindow (PACKFILENAME 'HOST "DSK" 'DIRECTORY DESTDIR
-                                                            'NAME "*" 'EXTENSION "notefile")
-                 (CREATEREGION 50 (IDIFFERENCE SCREENHEIGHT 700)
-                        550 220))
-          (if (NULL (SASSOC 'NoteCards BackgroundMenuCommands))
-              then (PROGN [SETQ BackgroundMenuCommands (APPEND BackgroundMenuCommands
-                                                              (LIST '(NoteCards (
-                                                                              NC.BringUpNoteCardsIcon
-                                                                                 )
-                                                                            
-                                                               "Bring up the NoteCards control icon."
-                                                                            ]
-                          (SETQ BackgroundMenu NIL)))
-          (SETQ Online.NotecardsActivated T)
-          (if (NOT DoNotRefreshButtons)
-              then (Online.CreateButtons])
 
 (Online.DoInit
   [LAMBDA NIL
@@ -160,254 +111,12 @@
            (LISTPUT IDLE.PROFILE 'TIMEOUT Online.LogoutTimeout)
            (SETQ IDLE.BOUNCING.BOX "Press any key to continue")
 
-           (* ;; " Adjust windows so that the exec window and the prompt window don't overlap")
-
-           [MAPC (OPENWINDOWS)
-                 (FUNCTION (LAMBDA (W)
-                             (COND
-                                ((EQ (WINDOWPROP W 'BUTTONEVENTFN)
-                                     'WHEN-WHO-LINE-SELECTED-FN)
-                                 (MOVEW W (CAR (WINDOWPROP W 'REGION))
-                                        (IDIFFERENCE SCREENHEIGHT 18)))
-                                ((STREQUAL (WINDOWPROP W 'TITLE)
-                                        "Prompt Window")
-                                 (PROGN (MOVEW W (create POSITION
-                                                        XCOORD _ 50
-                                                        YCOORD _ (IDIFFERENCE SCREENHEIGHT 120)))
-                                        (CLEARW W)))
-                                ((STREQUAL (WINDOWPROP W 'TITLE)
-                                        "Exec  (XCL)")
-                                 (PROGN (WINDOWPROP W 'TITLE "Exec  (INTERLISP)")
-                                        (MOVEW W (create POSITION
-                                                        XCOORD _ 50
-                                                        YCOORD _ (IDIFFERENCE SCREENHEIGHT 460]
-
-           (* ;; " Set up INITIALSLST based on information passed in from the Linux environment")
-
-           [SETQ INITIALSLST (LIST (LIST USERNAME (UNIX-GETENV 'MEDLEY_FIRSTNAME)
-                                         (UNIX-GETENV 'MEDLEY_INITIALS]
-
            (* ;; "set ONLINEP as a definitive flag that this is an online session")
 
            (COND
               ((STRING-EQUAL (UNIX-GETENV 'MEDLEY_ONLINE)
                       "true")
-               (SETTOPVAL 'ONLINEP T)))
-
-           (* ;; 
-     "set the opener for accesssing the Common Lisp Hyperspec - for use in HELPSYS LispUsers package")
-
-           (SETQ CLHS.OPENER "/usr/local/interlisp/online/bin/request_new_tab")
-
-           (* ;; "Temp 2022-10-12 to get latest HELPSYS into online without a release")
-
-           (LOAD '{DSK}/usr/local/interlisp/medley/lispusers/HELPSYS.LCOM T)
-
-           (* ;; "change to interlisp exec if required")
-
-           (COND
-              ((OR (STRING-EQUAL (UNIX-GETENV 'MEDLEY_EXEC)
-                          "inter")
-                   (STRING-EQUAL (UNIX-GETENV 'NCO)
-                          "true"))
-               (BKSYSBUF "(INTERLISP)")))
-
-           (* ;; "Always Activate CLOS")
-
-           (Online.ActivateCLOS)
-
-           (* ;; " activate Notecards if requested")
-
-           (COND
-              ((STRING-EQUAL (UNIX-GETENV 'RUN_NOTECARDS)
-                      "true")
-               (Online.InitNotecards T)))
-
-           (* ;; " activate Rooms if requested")
-
-           (COND
-              ((STRING-EQUAL (UNIX-GETENV 'RUN_ROOMS)
-                      "true")
-               (Online.ActivateRooms T)))
-
-           (* ;; " create the Documentation and ROOMS, Notecards Activation Buttons, if needed")
-
-           (Online.CreateButtons T])
-
-(Online.CreateButtons
-  [LAMBDA (DoDocsToo)                                      (* ; "Edited 13-Dec-2022 12:51 by frank")
-                                                             (* ; "Edited  7-Dec-2022 11:28 by FGH")
-                                                             (* ; "Edited  5-Dec-2022 17:31 by FGH")
-                                                             (* ; "Edited 12-Nov-2022 14:52 by FGH")
-
-    (* ;; " Create  buttons for Documentation and to activate Rooms, Notecards ")
-
-    (* ;; "Note: due to bug in DELETE-BUTTON need to create Doc buttons last.  This will make sure that  the NoteCards/Rooms buttons get properl deleted when they are activated.  But the Doc buttons will not necessariy get deleted properly (but then there is never a need for them to be deleted).")
-
-    (LET* ((FEATURES (LIST (LIST Online.NotecardsActivated '(Online.InitNotecards)
-                                 "NOTECARDS")
-                           (LIST Online.RoomsActivated '(Online.ActivateRooms)
-                                 "ROOMS")))
-           (FEATURES-LABELS (for FEATURE in FEATURES collect (CADDR FEATURE)))
-           (DOCS (LIST (LIST "https://interlisp.org/docs/medley/orientation/" "BASICS")
-                       (LIST "https://interlisp.org/documentation/Medley-Primer.pdf" "PRIMER")
-                       (LIST "https://interlisp.org/documentation/IRM.pdf" "MANUAL")
-                       (LIST "https://interlisp.org/documentation/notecards_user_guide_v1.2.pdf" 
-                             "NOTECARDS")
-                       (LIST "https://interlisp.org/documentation/ROOMSTECHDESC.pdf" "ROOMS")))
-           (DOCS-LABELS (for DOC in DOCS collect (CADR DOC)))
-           (RIGHTMARGINISH 140)
-           (SECTION1YPOS 225)
-           (YPOSDELTA 55)
-           (SECTION2YPOS (IPLUS SECTION1YPOS (ITIMES (IPLUS (LENGTH DOCS)
-                                                            1)
-                                                    YPOSDELTA)))
-           (BUTTONY-FEATURES SECTION2YPOS)
-           (BUTTONY-DOCS SECTION1YPOS)
-           (FEATURES-REQUIREDP (OR (NOT Online.RoomsActivated)
-                                   (NOT Online.NotecardsActivated)))
-           (IWS NIL)
-           (BUTTONS NIL))
-
-          (* ;; "First remove/re-create feature buttons")
-
-          (for W in (OPENWINDOWS) when (MEMBER (WINDOWPROP W 'ICONLABEL)
-                                              (LIST "ACTIVATE" "FEATURES")) do (CLOSEW W))
-          (for B in *ALL-BUTTONS* when (AND (EQ (WINDOWPROP B 'ONLINE.BUTTON)
-                                                'FEATURE)
-                                            (MEMBER (BUTTON-LABEL B)
-                                                   FEATURES-LABELS)) do (DELETE-BUTTON B))
-          [if FEATURES-REQUIREDP
-              then [SETQ IWS (LIST (Online.CreateLabel "ACTIVATE" (IDIFFERENCE SCREENWIDTH
-                                                                         (IDIFFERENCE RIGHTMARGINISH
-                                                                                50))
-                                          (IDIFFERENCE SCREENHEIGHT (IDIFFERENCE SECTION2YPOS 20)))
-                                   (Online.CreateLabel "FEATURES" (IDIFFERENCE SCREENWIDTH
-                                                                         (IDIFFERENCE RIGHTMARGINISH
-                                                                                50))
-                                          (IDIFFERENCE SCREENHEIGHT SECTION2YPOS]
-                   (SETQ BUTTONS (for FEATURE in FEATURES
-                                    collect (OR (CAR FEATURE)
-                                                (LET (B)
-                                                     (SETQ BUTTONY-FEATURES (IPLUS BUTTONY-FEATURES 
-                                                                                   YPOSDELTA))
-                                                     [SETQ B (CREATE-BUTTON (CADR FEATURE)
-                                                                    (CADDR FEATURE)
-                                                                    (create POSITION
-                                                                           XCOORD _ (IDIFFERENCE
-                                                                                     SCREENWIDTH 
-                                                                                     RIGHTMARGINISH)
-                                                                           YCOORD _ (IDIFFERENCE
-                                                                                     SCREENHEIGHT 
-                                                                                     BUTTONY-FEATURES
-                                                                                     ]
-                                                     (WINDOWPROP B 'ONLINE.BUTTON 'FEATURE)
-                                                     B]
-
-          (* ;; "Then if needed, remove/recreate documentation buttons")
-
-          (if DoDocsToo
-              then (for W in (OPENWINDOWS) when (MEMBER (WINDOWPROP W 'ICONLABEL)
-                                                       (LIST "DOCUMENTATION"))
-                      do (CLOSEW W))
-                   (for B in *ALL-BUTTONS* when (AND (EQ (WINDOWPROP B 'ONLINE.BUTTON)
-                                                         'DOC)
-                                                     (MEMBER (BUTTON-LABEL B)
-                                                            DOCS-LABELS)) do (DELETE-BUTTON B))
-                   (SETQ IWS (CONS (Online.CreateLabel "DOCUMENTATION" (IDIFFERENCE SCREENWIDTH
-                                                                              (IDIFFERENCE 
-                                                                                     RIGHTMARGINISH 
-                                                                                     50))
-                                          (IDIFFERENCE SCREENHEIGHT SECTION1YPOS))
-                                   IWS))
-                   (SETQ BUTTONS (APPEND (for DOC in DOCS
-                                            collect (LET (B)
-                                                         (SETQ BUTTONY-DOCS (IPLUS BUTTONY-DOCS 
-                                                                                   YPOSDELTA))
-                                                         [SETQ B (CREATE-BUTTON (LIST 
-                                                                                      'Online.ShowDoc
-                                                                                      (CAR DOC))
-                                                                        (CADR DOC)
-                                                                        (create POSITION
-                                                                               XCOORD _
-                                                                               (IDIFFERENCE 
-                                                                                      SCREENWIDTH 
-                                                                                      RIGHTMARGINISH)
-                                                                               YCOORD _
-                                                                               (IDIFFERENCE 
-                                                                                      SCREENHEIGHT 
-                                                                                      BUTTONY-DOCS]
-                                                         (WINDOWPROP B 'ONLINE.BUTTON 'DOC)
-                                                         B))
-                                        BUTTONS)))
-          [for B in BUTTONS do (COND
-                                  ((WINDOWP B)
-                                   (WINDOWPROP B 'RIGHTBUTTONFN 'NILL)
-                                   (WINDOWPROP B 'BUTTONEVENTFN (FUNCTION (LAMBDA (BUTTON)
-                                                                            (if (LASTMOUSESTATE
-                                                                                 (ONLY LEFT))
-                                                                                then (EXECUTE-BUTTON
-                                                                                      BUTTON]
-          [for IW in IWS do (COND
-                               ((WINDOWP IW)
-                                (WINDOWPROP IW 'RIGHTBUTTONFN 'NILL]
-          (for B in BUTTONS when (WINDOWP B) collect B])
-
-(Online.CreateLabel
-  [LAMBDA (Text CenterX BottomY)                             (* ; "Edited  5-Dec-2022 16:49 by FGH")
-    (LET* ((DS (DSPCREATE))
-           (FONT (DSPFONT '(HELVETICA 18 BOLD)
-                        DS))
-           (SR (STRINGREGION Text DS))
-           (BMW (fetch (REGION WIDTH) of SR))
-           (BMH (IPLUS (fetch (REGION HEIGHT) of SR)
-                       (fetch (REGION BOTTOM) of SR)))
-           (BM (BITMAPCREATE BMW BMH))
-           (POS (create POSITION
-                       XCOORD _ (IDIFFERENCE CenterX (IQUOTIENT BMW 2))
-                       YCOORD _ BottomY))
-           IW)
-          (DSPDESTINATION BM DS)
-          (PRIN1 Text DS)
-          (SETQ IW (ICONW BM BM POS))
-          (WINDOWPROP IW 'ICONLABEL Text)
-          IW])
-
-(Online.ActivateCLOS
-  [LAMBDA NIL
-    (DECLARE (GLOBALVARS BackgroundMenuCommands BackgroundMenu))
-                                                             (* ; "Edited 12-Nov-2022 14:41 by FGH")
-    (if (NULL (SASSOC "CLOS Browse Class" BackgroundMenuCommands))
-        then (PROGN [SETQ BackgroundMenuCommands
-                     (APPEND BackgroundMenuCommands
-                            (LIST '("CLOS Browse Class" (CLOS-BROWSER::BROWSE-CLASS)
-                                          "Bring up a class browser."
-                                          (SUBITEMS (|all in a package| (CLOS-BROWSER::BROWSE-CLASS
-                                                                         (
-                                                                     CLOS-BROWSER::CLASSES-IN-PACKAGE
-                                                                          (
-                                                                      CLOS-BROWSER::IN-SELECT-PACKAGE
-                                                                           )))
-                                                           
-                               "Select a package and browse all the classes defined in that package."
-                                                           ]
-                    (SETQ BackgroundMenu NIL])
-
-(Online.ActivateRooms
-  [LAMBDA (DoNotRefreshButtons)
-    (DECLARE (GLOBALVARS BackgroundMenuCommands ROOMS:*SUITE-DIRECTORIES*))
-                                                             (* ; "Edited  7-Dec-2022 11:13 by FGH")
-                                                             (* ; "Edited 12-Nov-2022 14:56 by FGH")
-    (if (NULL (SASSOC "Rooms" BackgroundMenuCommands))
-        then (ROOMS:RESET))
-    (SETQ ROOMS:*SUITE-DIRECTORIES* (CONS (CONCAT (UNIX-GETENV 'MEDLE_USERDIR)
-                                                 "/suites")
-                                          ROOMS:*SUITE-DIRECTORIES*))
-    (SETQ Online.RoomsActivated T)
-    (PROMPTPRINT "
-  ROOMS functionality is now available via the Background Menu")
-    (if (NOT DoNotRefreshButtons)
-        then (Online.CreateButtons])
+               (SETTOPVAL 'ONLINEP T])
 
 (XCL-USER::INTERLISP
   [LAMBDA NIL                                                (* ; "Edited 18-Mar-2022 18:53 by fgh")
@@ -422,11 +131,6 @@
                                                         YCOORD _ (IDIFFERENCE SCREENHEIGHT 460]
            (XCL:SET-DEFAULT-EXEC-TYPE 'INTERLISP)
            (XCL:SET-EXEC-TYPE 'INTERLISP])
-
-(Online.ShowDoc
-  [LAMBDA (URL)
-    (ShellCommand (CONCAT "/usr/local/interlisp/online/bin/request_new_tab" " " URL 
-                         " > /tmp/showdoc-warnings-$$.txt 2>&1"])
 )
 (DECLARE%: DONTEVAL@LOAD DOCOPY 
 
@@ -437,8 +141,6 @@
 (BKSYSBUF " ")
 )
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (1875 23892 (Online.SftpInitInfo 1885 . 2758) (Online.SftpUpdateInfo 2760 . 3015) (
-Online.InitNotecards 3017 . 6095) (Online.DoInit 6097 . 10945) (Online.CreateButtons 10947 . 19907) (
-Online.CreateLabel 19909 . 20721) (Online.ActivateCLOS 20723 . 22074) (Online.ActivateRooms 22076 . 
-22933) (XCL-USER::INTERLISP 22935 . 23702) (Online.ShowDoc 23704 . 23890)))))
+  (FILEMAP (NIL (1746 5593 (Online.SftpInitInfo 1756 . 2629) (Online.SftpUpdateInfo 2631 . 2886) (
+Online.DoInit 2888 . 4822) (XCL-USER::INTERLISP 4824 . 5591)))))
 STOP
