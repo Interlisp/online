@@ -101,7 +101,7 @@ if [ ${SUPPORT_HTTPS} = "yes" ];
 fi
 /usr/bin/Xvnc -geometry ${width}x${height} -rfbport 1${PORT} -SecurityTypes None \
               -nolisten tcp -localhost -NeverShared -DisconnectClients=0 \
-              -MaxIdleTime 60 \
+              -MaxIdleTime ${IDLE_SECS:=3600} \
               :${PORT} &
 export DISPLAY=:${PORT}
 for i in {1..10}
