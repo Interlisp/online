@@ -108,7 +108,7 @@ function interlispRunCmd(req) {
             `run -d ${config.noDockerRm ? "" : "--rm"}`
             + networkParams(port)
             + (config.noDockerRm ? ` --name ${emailish}-${Math.floor(Math.random() * 9999)}` : ` --name ${emailish}`)
-            + isGuest ? "" : ` --mount type=volume,source=${config.homeVolume(req.user.username)},target=/home/medley`)
+            + (isGuest ? "" : ` --mount type=volume,source=${config.homeVolume(req.user.username)},target=/home/medley`)
             + dockerTlsMounts
             + ` --env PORT=${port}`
             + ` --env NCO=${config.isNCO(req) ? "true" : "false"}`
