@@ -157,3 +157,7 @@ exports.medleyNetworkHostMode = medleyNetworkHostMode;
 var staticHostingPath = "/srv/static";
 exports.staticHostingPath = staticHostingPath;
 
+var idleTimeoutSecs = 7200;
+var idleTimeoutSecsGuest = 3600;
+exports.idleTimeoutSecs = idleTimeoutSecs;
+exports.idleTimeoutSecsGuest = idleTimeoutSecsGuest;

@@ -103,15 +103,17 @@ function interlispRunCmd(req) {
     const customInit = (req.query.custom_init && (req.query.custom_init.toLowerCase() == "true"));
     const screen_width = req.query.screen_width || 1024;
     const screen_height = req.query.screen_height || 808;
+    const isGuest = config.isGuestUser(req.user.username);
     const cmd =
             `run -d ${config.noDockerRm ? "" : "--rm"}`
             + networkParams(port)
             + (config.noDockerRm ? ` --name ${emailish}-${Math.floor(Math.random() * 9999)}` : ` --name ${emailish}`)
-            + (config.isGuestUser(req.user.username) ? "" : ` --mount type=volume,source=${config.homeVolume(req.user.username)},target=/home/medley`)
+            + (isGuest ? "" : ` --mount type=volume,source=${config.homeVolume(req.user.username)},target=/home/medley`)
             + dockerTlsMounts
             + ` --env PORT=${port}`
             + ` --env NCO=${config.isNCO(req) ? "true" : "false"}`
             + medleyEnvs(req)
+            + ` --env IDLE_SECS=${isGuest ? config.idleTimeoutSecsGuest : config.idleTimeoutSecs}`
             + sftpEnvs(req)
             + ` --label "OIO_PORT=${port}"`
             + ` --label "OIO_TARGET=${req.oioTarget}"`
@@ -130,6 +132,7 @@ function interlispRunCmd(req) {
 function xtermRunCmd(req) {
     const emailish = req.emailish;
     const port = req.oioPort;
+    const isGuest = config.isGuestUser(req.user.username);
     const cmd =
         `run -d ${config.noDockerRm ? "" : "--rm"}`
         + networkParams(port)
@@ -139,6 +142,7 @@ function xtermRunCmd(req) {
         + ` --env PORT=${port}`
         + ` --env NCO=${config.isNCO(req) ? "true" : "false"}`
         + medleyEnvs(req)
+        + ` --env IDLE_SECS=${isGuest ? config.idleTimeoutSecsGuest : config.idleTimeoutSecs}`
         + sftpEnvs(req)
         + ` --label "OIO_PORT=${port}"`
         + ` --label "OIO_TARGET=${req.oioTarget}"`
