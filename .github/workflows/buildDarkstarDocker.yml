@@ -1,0 +1,231 @@
+# buildDocker.yml
+#
+# Workflow to build and push a multiplatform Docker image for the Medley that runs
+# on online.interlisp.org.
+#
+# This workflow uses the latest Medley docker image and the latest Interlisp/online
+# release on github.
+#
+#    2022-01-19 by Frank Halasz based on Medley buildDocker.yml
+#
+#
+#    Copyright: 2022 by Interlisp.org 
+#
+#set -x
+#
+
+name: 'Build/Push Online-Darkstar Docker Image'
+
+# Run this workflow on ...
+on:
+  workflow_dispatch:
+    inputs:
+      platform:
+        type: choice
+        options:
+        - linux/amd64
+        - linux/arm64
+  
+  workflow_call:
+    secrets:
+      CCRYPT_KEY:
+        required: true
+    inputs:
+      platform:
+          description: "linux/amd64 or linux/arm64"
+          type: string
+          default: 'linux/amd64'
+          required: false
+
+jobs:
+
+  # Regularize the inputs so they can be referenced the same way whether they are
+  # the result of a workflow_dispatch or a workflow_call
+
+  inputs:
+    runs-on: ubuntu-latest
+    outputs:
+      platform: ${{ steps.platform.outputs.platform }}
+    steps:
+      - id: platform
+        run: >
+          if [ '${{ toJSON(inputs) }}' = 'null'  ];
+          then echo "platform=${{ github.event.inputs.platform }}" >> ${GITHUB_OUTPUT};
+          else echo "platform=${{ inputs.platform }}" >> ${GITHUB_OUTPUT};
+          fi
+
+
+  # Build and push the docker image
+
+  build_and-push:
+    needs: inputs
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the actions for this repo_owner
+      - name: Checkout Actions
+        uses: actions/checkout@v3
+        with:
+          repository: ${{ github.repository_owner }}/.github
+          path: ./Actions_${{ github.sha }}
+      - run: mv ./Actions_${{ github.sha }}/actions ../actions && rm -rf ./Actions_${{ github.sha }}
+
+      # Fetch cached LFS files
+      - name: Cache LFS files
+        id: cache-lfs
+        uses: actions/cache@v3
+        with:
+            path: |
+                docker_medley/filebrowser/filebrowser
+                docker_medley/gh/gh_2.14.7_linux_amd64.deb
+                docker_medley/gh/gh_2.14.7_linux_arm64.deb
+            key: ${{ runner.os }}-lfs-v1
+      
+      # Save cached files away - if any
+      - name: Save LFS files
+        if: steps.cache-lfs.outputs.cache-hit == 'true'
+        run: mv docker_medley ../save_docker_medley 
+
+      # Checkout latest commit
+      - name: Checkout Online code
+        uses: actions/checkout@v3
+        with:
+          lfs: ${{ steps.cache-lfs.outputs.cache-hit != 'true' }}
+
+      - name: Checkout lfs files
+        if: steps.cache-lfs.outputs.cache-hit != 'true'
+        run: git lfs checkout
+
+      # Restore cached files from save
+      - name: Restore LFS files
+        if: steps.cache-lfs.outputs.cache-hit == 'true'
+        run: |
+            mv ../save_docker_medley/filebrowser/filebrowser docker_medley/filebrowser/filebrowser
+            mv ../save_docker_medley/gh/gh_2.14.7_linux_amd64.deb docker_medley/gh/gh_2.14.7_linux_amd64.deb
+            mv ../save_docker_medley/gh/gh_2.14.7_linux_arm64.deb docker_medley/gh/gh_2.14.7_linux_arm64.deb
+            rm -rf ../save_docker_medley
+
+      # Setup release tag
+      - name: Setup Release Tag
+        id: tag
+        uses: ./../actions/release-tag-action
+
+      # Decrypt the sftp keys
+      - name: Decrypt sftp keys
+        run: |
+          sudo apt-get install -y ccrypt
+          pushd docker_medley/sftp >/dev/null
+          cat <sftp_keys.tar.cpt | ccdecrypt -K ${{ secrets.CCRYPT_KEY }} | /usr/bin/tar x
+          popd >/dev/null
+
+      # Get release information about latest Medley Docker Image
+      - name: Get info from latest Medley image
+        id: release_info
+        run: |
+          DOCKER_NAMESPACE=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          echo "docker_namespace=${DOCKER_NAMESPACE}" >> $GITHUB_OUTPUT
+          docker pull ${DOCKER_NAMESPACE}/medley:latest
+          RELEASE_INFO=$(docker run --entrypoint /bin/bash ${DOCKER_NAMESPACE}/medley:latest -c "echo \${MAIKO_RELEASE}::::\${MEDLEY_RELEASE}")
+          MAIKO_RELEASE=${RELEASE_INFO%::::*}
+          MEDLEY_RELEASE=${RELEASE_INFO#*::::}
+          echo "MAIKO_RELEASE=${MAIKO_RELEASE}" >> ${GITHUB_ENV}
+          echo "maiko_release=${MAIKO_RELEASE}" >> ${GITHUB_OUTPUT}
+          echo "MEDLEY_RELEASE=${MEDLEY_RELEASE}" >> ${GITHUB_ENV}
+          echo "medley_release=${MEDLEY_RELEASE}" >> ${GITHUB_OUTPUT}
+
+      # Checkout the latest Notecards commit
+      - name: Checkout Notecards
+        uses: actions/checkout@v3
+        with:
+          repository: "${{ github.repository_owner }}/notecards"
+          path: "./docker_medley/notecards"
+
+      # Compute release tag for notecards
+      - name: Notecards Release Tag
+        id: nc_release_info
+        run: |
+          cd ./docker_medley/notecards
+          COMMIT_SHORTREF=$(git rev-parse --short=8 HEAD)
+          COMMIT_DATE=$(git show -s --date=format:'%y%m%d' --format=%cd ${COMMIT_SHORTREF})
+          NC_RELEASE_TAG=notecards-${COMMIT_DATE}-${COMMIT_SHORTREF}
+          #
+          echo "NC_RELEASE_TAG=${NC_RELEASE_TAG}" >> ${GITHUB_ENV} 
+          echo "nc_release_tag=${NC_RELEASE_TAG}" >> ${GITHUB_OUTPUT}
+
+      # Setup docker environment variables
+      - name: Setup Docker Environment Variables
+        id: docker_env
+        run: |
+          DOCKER_REGISTRY="ghcr.io/"
+          DOCKER_NAMESPACE=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          echo "docker_namespace=${DOCKER_NAMESPACE}" >> ${GITHUB_OUTPUT}
+          DOCKER_REPO=${DOCKER_REGISTRY}${DOCKER_NAMESPACE}/${{ steps.tag.outputs.repo_name }}-medley
+          DOCKER_TAGS="${DOCKER_REPO}:development,${DOCKER_REPO}:${RELEASE_TAG#*-}_${MEDLEY_RELEASE#*-}_${MAIKO_RELEASE#*-}"
+          echo "build_time=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> ${GITHUB_OUTPUT}
+          echo "docker_tags=${DOCKER_TAGS}" >> ${GITHUB_OUTPUT}
+
+      # Setup the Docker Machine Emulation environment.  
+      - name: Set up QEMU
+        if: ${{ needs.inputs.outputs.platform == 'linux/arm64' }}
+        uses: docker/setup-qemu-action@master
+        with:
+          platforms: linux/arm64
+
+      # Setup the Docker Buildx funtion
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@master
+
+      # Online now uses github container registry instead of dockerhub
+      # Login into DockerHub - required to store the created image
+      #- name: Login to DockerHub
+      #  uses: docker/login-action@v1
+      #  with:
+      #    username: ${{ secrets.DOCKER_USERNAME }}
+      #    password: ${{ secrets.DOCKER_PASSWORD }}
+      #
+      #    workflow_call: secrets:
+      #      DOCKER_USERNAME:
+      #        required: true
+      #      DOCKER_PASSWORD:
+      #       required: true
+      #
+
+
+      # Login to ghcr.io
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2 
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Set up platform variable so it can be used by Docker build
+      - name: Strip the linux/ from the platform input 
+        id: platform_var
+        run: |
+          echo "platform=$(echo "${{ needs.inputs.outputs.platform }}" | sed s-linux/--)"  >> ${GITHUB_OUTPUT}
+
+      # Do the Docker Build using the Dockerfile in the repository
+      # checked out and the release tars just downloaded.
+      # Push the result to Docker Hub
+      - name: Build Docker Image for Push to Docker Hub
+        uses: docker/build-push-action@v3
+        with:
+          builder: ${{ steps.buildx.outputs.name }}
+          build-args: |
+            BUILD_DATE=${{ steps.docker_env.outputs.build_time }}
+            RELEASE_TAG=${{ steps.tag.outputs.release_tag }}
+            MAIKO_RELEASE=${{ steps.release_info.outputs.maiko_release }}
+            MEDLEY_RELEASE=${{ steps.release_info.outputs.medley_release }}
+            DOCKER_NAMESPACE=${{ steps.release_info.outputs.docker_namespace }}
+            REPO_OWNER=${{ github.repository_owner }}
+            NOTECARDS_RELEASE=${{ steps.nc_release_info.outputs.nc_release_tag }}
+            PLATFORM=${{ steps.platform_var.outputs.platform }}
+          context: ./docker_medley
+          file: ./docker_medley/Dockerfile_medley
+          platforms: ${{ needs.inputs.outputs.platform }}
+          push: true
+          tags: ${{ steps.docker_env.outputs.docker_tags }}
+          
+          
