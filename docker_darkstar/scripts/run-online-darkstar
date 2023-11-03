@@ -1,0 +1,74 @@
+#!/bin/bash
+#
+#    Start darkstar within an online.interlisp.org docker container.  But startup XVnc, websockify and sftpd first.
+#    Expects $PORT to be set to the port to be used.  In actuality, ${PORT} will be used as websocket interface to XVnc,
+#    1${PORT} will be used as the TCP interface to XVnc, and 2${PORT} will be used as the address of the sftp deamon.
+#
+#    2023-11-03 Frank Halasz
+#
+#    Copyright: 2023 by Interlisp.org
+#
+#
+#set -x
+
+#
+if [ $# -gt 2 ]; then
+	width=$3
+else
+	width=1024
+fi
+width=$(( ( $width / 32 ) * 32 ))
+#
+if [ $# -gt 3 ]; then
+	height=$4
+else
+	height=808
+fi
+height=$(( ( $height / 32 ) * 32 ))
+#
+export SFTP_PORT=2${PORT}
+if [ -z "${SFTP_SERVER}" ]; then
+    export SFTP_SERVER="false";
+fi
+if [ "${SFTP_SERVER}" == "true" ]; then
+    /usr/sbin/sshd -e -p ${SFTP_PORT}
+fi
+#
+if [ -z "${SFTP_PWD}" ]; then
+    export SFTP_PWD=$(date +%s | sha256sum | base64 | head -c 8);
+fi
+echo ${USERNAME}:${SFTP_PWD} | chpasswd
+#
+
+if [ ${SUPPORT_HTTPS} = "yes" ];
+  then /usr/bin/websockify --daemon --key ${TLS_KEYFILE} --cert ${TLS_CERTFILE} --ssl-only ${PORT} localhost:1${PORT}
+  else /usr/bin/websockify --daemon  ${PORT} localhost:1${PORT}
+fi
+/usr/bin/Xvnc -geometry ${width}x${height} -rfbport 1${PORT} -SecurityTypes None \
+              -nolisten tcp -localhost -NeverShared -DisconnectClients=0 \
+              -MaxIdleTime ${IDLE_SECS:=3600} \
+              :${PORT} &
+export DISPLAY=:${PORT}
+for i in {1..10}
+    do
+        xdpyinfo > /dev/null
+        if [ $? -eq 0 ];
+            then
+                break
+            else
+                sleep 1
+        fi
+    done
+xmodmap -e "keysym Alt_R = Alt_L" -e "keysym Meta_R = Meta_L"
+#xmodmap -e "keycode 12 = Alt_L" -e "keycode 13 = Alt_R" -e "keycode 14 = Meta_L" -e "keycode 15 = Meta_R"
+/usr/bin/autocutsel -s CLIPBOARD &
+sleep 1
+#
+#
+#
+su ${USERNAME} <<EOF
+#set -x
+xrdb -merge ${HOMEDIR}/.Xresources
+cd ${HOMEDIR}
+mono Darkstar.exe
+EOF

@@ -1,0 +1,101 @@
+#!/bin/bash
+#
+#    Run xterm and sftp server within an online.interlisp.org docker container.  But startup XVnc, websockify and sftpd first.
+#    Expects $PORT to be set to the port to be used.  In actuality, ${PORT} will be used as websocket interface to XVnc,
+#    1${PORT} will be used as the TCP interface to XVnc, and 2${PORT} will be used as the address of the sftp deamon.
+#
+#    2021-11-11 Frank Halasz
+#
+#    Copyright: 2022 by Interlisp.org 
+#
+#
+#set -x
+if [ $# -gt 0 ]; then
+	width=$1
+else
+	width=1024
+fi
+
+if [ $# -gt 1 ]; then
+	height=$2
+else
+	height=808
+fi
+#
+export SFTP_PORT=2${PORT}
+if [ -z "${SFTP_SERVER}" ]; then 
+    export SFTP_SERVER="false";
+fi
+if [ "$SFTP_SERVER" == "true" ]; then 
+    /usr/sbin/sshd -e -p ${SFTP_PORT}
+fi
+#
+if [ -z "${SFTP_PWD}" ]; then 
+    export SFTP_PWD=$(date +%s | sha256sum | base64 | head -c 8);
+fi
+echo medley:${SFTP_PWD} | chpasswd
+
+if [ ${SUPPORT_HTTPS} = "yes" ];
+  then /usr/bin/websockify --daemon --key ${TLS_KEYFILE} --cert ${TLS_CERTFILE} --ssl-only ${PORT} localhost:1${PORT}
+  else /usr/bin/websockify --daemon  ${PORT} localhost:1${PORT}
+fi
+/usr/bin/Xvnc -geometry ${width}x${height} -rfbport 1${PORT} -SecurityTypes None \
+              -nolisten tcp -localhost -NeverShared -DisconnectClients=0 \
+              -MaxIdleTime ${IDLE_SECS:=3600} \
+              :${PORT} &
+export DISPLAY=:${PORT}
+for i in {1..10}
+    do
+        xdpyinfo > /dev/null
+        if [ $? -eq 0 ]; 
+            then
+                break
+            else
+                sleep 1
+        fi
+    done
+xmodmap -e "keysym Alt_R = Alt_L" -e "keysym Meta_R = Meta_L"
+/usr/bin/autocutsel -s CLIPBOARD &
+sleep 1
+if [ -z "${MEDLEY_UNAME}" ]; then
+	export MEDLEY_UNAME=medley
+fi
+if [ "${MEDLEY_UNAME}" != "medley" ]; then
+    usermod --login ${MEDLEY_UNAME} medley
+fi
+#
+#
+export FILEBROWSER_DATABASE=/usr/local/filebrowser/filebrowser.db
+export FILEBROWSER_PORT=3${PORT}
+if [ ${SUPPORT_HTTPS} = "yes" ];
+then 
+  export FILEBROWSER_CERT="--cert /etc/letsencrypt/live/online.interlisp.org/fullchain.pem"
+  export FILEBROWSER_KEY="--key /etc/letsencrypt/live/online.interlisp.org/privkey.pem"
+else
+  export FILEBROWSER_CERT=""
+  export FILEBROWSER_KEY=""
+fi
+/usr/local/bin/filebrowser users add "${MEDLEY_UNAME}" "${SFTP_PWD}" \
+          -d ${FILEBROWSER_DATABASE} --lockPassword --perm.share=false --perm.execute=false
+/usr/local/bin/filebrowser -d ${FILEBROWSER_DATABASE} --port ${FILEBROWSER_PORT} \
+          ${FILEBROWSER_CERT} ${FILEBROWSER_KEY} &
+#
+if [ "${NCO}" == "true" ];
+then
+    sitename="notecards.online"
+else
+    sitename="online.interlisp.org"
+fi
+#
+#
+su ${MEDLEY_UNAME} <<EOF
+set -x
+xrdb -merge /home/medley/.Xresources
+(echo ".         Files are now available by SFTP to ${sitename} using port 2${PORT}.  Username is '${MEDLEY_UNAME}'.  Password is ${SFTP_PWD}" | xmessage -file - -geometry ${width}x66+5+0)  &
+twm &
+sleep 1
+export TMOUT=1800
+cd ${MEDLEY_USERDIR}
+/usr/bin/xterm -geometry 168x55+5+60
+EOF
+

@@ -1,0 +1,129 @@
+#*******************************************************************************
+# 
+#   Dockerfile_arkstar:  dockerfile used to build the image that runs Darkstar,
+#        Xvnc, websockify, etc. within the online.interlisp.org web portal.
+#        One container using this image is run for each user that is logged
+#        into the portal and asks to run a darkstar-based image.
+#        This container is started up by the web-portal express app.
+#          
+# 
+#   2023-11-02 Frank Halasz
+# 
+# 
+#   Copyright: 2023 by Interlisp.org 
+# 
+#
+# *****************************************************************************/
+
+FROM ubuntu:22.04
+
+SHELL ["/bin/bash", "-c"]
+USER root:root
+
+
+ARG BUILD_DATE=unknown
+ARG PLATFORM=amd64
+
+LABEL name="online.interlisp.org"
+LABEL description="Interlisp running on Darkstar - used by online.interlisp.org"
+LABEL url="https://github.com/${REPO_OWNER}/online"
+LABEL build-time=$BUILD_DATE
+
+ARG DEBIAN_FRONTEND=noninteractive
+ARG USER_NAME=darkstar
+ARG HOMEDIR=/home/${USER_NAME}
+
+# Get tzdata setup ahead of time
+RUN apt-get update; \
+    ln -fs /usr/share/zoneinfo/America/Los_Angeles /etc/localtime; \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y tzdata; \
+    dpkg-reconfigure --frontend noninteractive tzdata
+
+# install some basics: apt-utils, sudo, curl, git, gh, nano, xclip, man-db
+# And unminimize the ubuntu image if necessary. 
+RUN apt-get install -y apt-utils                                 \ 
+    && apt-get install -y sudo                                   \
+    && apt-get install -y curl wget                              \
+    && apt-get install -y git gh                                 \
+    && apt-get install -y zip                                    \
+    && apt-get install -y nano                                   \
+    && apt-get install -y xclip                                  \
+    && apt-get install -y man-db                                 \
+    && (if [ -n "$(which unminimize)" ]; then (yes | unminimize); fi)
+
+# install tigervnc and websockify (for use with noVnc)
+RUN apt-get install -y websockify                                \
+    && apt-get install -y tigervnc-standalone-server
+
+#  install xterm plus twm for minimal window manager function on xterm/sftp "page"
+RUN apt-get install -y xterm twm autocutsel
+
+# install mono, sdl2, pcap for darkstar
+RUN apt install ca-certificates gnupg                                                \
+    && gpg --homedir /tmp                                                            \
+           --no-default-keyring                                                      \
+           --keyring /usr/share/keyrings/mono-official-archive-keyring.gpg           \
+           --keyserver hkp://keyserver.ubuntu.com:80                                 \
+           --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF                      \
+    && (                                                                             \
+         echo "deb [signed-by=/usr/share/keyrings/mono-official-archive-keyring.gpg] \
+               https://download.mono-project.com/repo/ubuntu stable-focal main"      \ 
+         | tee /etc/apt/sources.list.d/mono-official-stable.list                     \
+       )                                                                             \
+    && apt update                                                                    \
+    && apt-get install -y mono-complete                                              \
+    && apt-get install -y libsdl2-2.0-0                                              \
+    && apt-get install -y libpcap0.8
+
+# Create user ${USER_NAME} and setup ${HOMEDIR}
+RUN adduser --gecos "" ${USER_NAME}                                    \
+    && adduser ${USER_NAME} sudo                                       \
+    && ( echo ${USER_NAME}:3333CoyoteHill | chpasswd )                 \
+    && echo "${USER_NAME}     ALL=(ALL) NOPASSWD:ALL" >>/etc/sudoers   \
+    && mkdir -p ${HOMEDIR}/scripts                                     \
+    && chown "${USER_NAME}:${USER_NAME}" ${HOMEDIR}/scripts            \
+    && sed -i /PS1=/s/u@.h/u@oio/ ${HOMEDIR}/.bashrc                   \
+    && chown ${USER_NAME}:${USER_NAME} ${HOMEDIR}/.bashrc              \
+
+# install darkstar
+RUN cd /tmp 
+    && wget https://github.com/livingcomputermuseum/Darkstar/releases/download/v1.1/DarkstarMono.zip \
+    && wget http://bitsavers.org/bits/Xerox/8010/8010_hd_images.zip                                  \
+    && unzip -d ${HOMEDIR} /tmp/DarkstarMono.zip                                                     \
+    && rm /tmp/DarkstarMono.zip                                                                      \
+    && IMAGESDIR=${HOMEDIR}/images                                                                   \
+    && mkdir -p ${IMAGESDIR}                                                                         \
+    && unzip /tmp/8010_hd_images.zip                                                                 \
+    && rm /tmp/8010_hd_images.zip                                                                    \
+    && mv /tmp/Interlisp-D-Harmony.img ${IMAGESDIR}                                                  \
+    && rm /tmp/*.img                                                                                 \
+    && cp -p ${IMAGESDIR}/Interlisp-D-Harmony.img ${IMAGESDIR}/My-Interlisp-D-Harmony.img            \
+    && sed -e "s~# HardDriveImage =~HardDriveImage = ${IMAGESDIR}/My-Interlisp-D-Harmony.img~"       \
+           -i ${HOMEDIR}Darkstar.cfg                                                                 \
+    && true
+
+# install sshd
+RUN apt-get -y install openssh-server && \
+    mkdir -p /var/run/sshd && \
+    rm -f /etc/ssh/ssh_host_*key*
+COPY docker_medley/sftp/sshd_config /etc/ssh/sshd_config
+COPY --chmod=600 docker_medley/sftp/ssh_host_*_key /etc/ssh/
+COPY --chmod=600 docker_medley/sftp/ssh_host_*_key.pub /etc/ssh/
+
+# Create the dir to mount the TLS certificates
+RUN mkdir -p /etc/letsencrypt/live/online.interlisp.org/ \
+    && chmod go-rwx /etc/letsencrypt/live \
+    && mkdir -p /etc/letsencrypt/archive/online.interlisp.org/ \
+    && chmod go-rwx /etc/letsencrypt/archive
+
+# copy over .Xresources
+COPY --chown=${USER_NAME}:${USER_NAME} docker_medley/misc/.Xresources ${HOMEDIR}
+
+# copy the run-XXX and other scripts into ${HOMEDIR}/scripts
+ARG SCRIPTS_DIR=${HOMEDIR}/scripts
+COPY --chown=${USER_NAME}:${USER_NAME} --chmod=ugo+x docker_darkstar/scripts/* ${SCRIPTS_DIR}
+
+# In actual use, USER and ENTRYPOINT will be set by the docker run command
+WORKDIR ${HOMEDIR}
+USER root:root
+ENTRYPOINT USER=${USER_NAME} /bin/bash
