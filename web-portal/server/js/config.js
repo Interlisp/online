@@ -46,7 +46,7 @@ var dockerRegistry = process.env.DOCKER_REGISTRY || "ghcr.io";
 exports.dockerRegistry=dockerRegistry;
 var dockerNamespace = process.env.DOCKER_NAMESPACE || "interlisp";
 exports.dockerNamespace = dockerNamespace;
-var dockerImage = `${dockerRegistry}/${dockerNamespace}/online-darkstar:development'}`;
+var dockerImage = `${dockerRegistry}/${dockerNamespace}/online-darkstar:development`;
 exports.dockerImage = dockerImage;
 
 var medleyInstallDir = "/usr/local/interlisp/medley";

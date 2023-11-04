@@ -12,7 +12,6 @@
 #set -x
 export USERNAME=darkstar
 export HOMEDIR=/home/${USERNAME}
-export PORT=5900
 #
 if [ $# -gt 2 ]; then
 	width=$3
