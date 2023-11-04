@@ -53,7 +53,7 @@ var medleyInstallDir = "/usr/local/interlisp/medley";
 exports.medleyInstallDir = medleyInstallDir;
 var medleyUserDir = "/home/medley";
 exports.medleyUserDir = medleyUserDir;
-var dockerScriptsDir = path.join("home/darkstar/scripts");
+var dockerScriptsDir = path.join("/home/darkstar/scripts");
 exports.dockerScriptsDir = dockerScriptsDir;
 
 var tlsCertDir = "/etc/letsencrypt/live/online.interlisp.org/";
