@@ -59,7 +59,7 @@ RUN apt-get install -y websockify                                \
 RUN apt-get install -y xterm twm autocutsel
 
 # install mono, sdl2, pcap for darkstar
-RUN apt install ca-certificates gnupg                                                \
+RUN apt-get install -y ca-certificates gnupg                                         \
     && gpg --homedir /tmp                                                            \
            --no-default-keyring                                                      \
            --keyring /usr/share/keyrings/mono-official-archive-keyring.gpg           \
@@ -84,9 +84,10 @@ RUN adduser --gecos "" ${USER_NAME}                                    \
     && chown "${USER_NAME}:${USER_NAME}" ${HOMEDIR}/scripts            \
     && sed -i /PS1=/s/u@.h/u@oio/ ${HOMEDIR}/.bashrc                   \
     && chown ${USER_NAME}:${USER_NAME} ${HOMEDIR}/.bashrc              \
+    && true
 
 # install darkstar
-RUN cd /tmp 
+RUN cd /tmp                                                                                          \ 
     && wget https://github.com/livingcomputermuseum/Darkstar/releases/download/v1.1/DarkstarMono.zip \
     && wget http://bitsavers.org/bits/Xerox/8010/8010_hd_images.zip                                  \
     && unzip -d ${HOMEDIR} /tmp/DarkstarMono.zip                                                     \
@@ -99,7 +100,7 @@ RUN cd /tmp
     && rm /tmp/*.img                                                                                 \
     && cp -p ${IMAGESDIR}/Interlisp-D-Harmony.img ${IMAGESDIR}/My-Interlisp-D-Harmony.img            \
     && sed -e "s~# HardDriveImage =~HardDriveImage = ${IMAGESDIR}/My-Interlisp-D-Harmony.img~"       \
-           -i ${HOMEDIR}Darkstar.cfg                                                                 \
+           -i ${HOMEDIR}/Darkstar.cfg                                                                 \
     && true
 
 # install sshd

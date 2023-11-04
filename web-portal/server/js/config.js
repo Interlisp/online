@@ -46,14 +46,14 @@ var dockerRegistry = process.env.DOCKER_REGISTRY || "ghcr.io";
 exports.dockerRegistry=dockerRegistry;
 var dockerNamespace = process.env.DOCKER_NAMESPACE || "interlisp";
 exports.dockerNamespace = dockerNamespace;
-var dockerImage = `${dockerRegistry}/${dockerNamespace}/online-medley:${isDev ? 'development' : 'production'}`;
+var dockerImage = `${dockerRegistry}/${dockerNamespace}/online-darkstar:development'}`;
 exports.dockerImage = dockerImage;
 
 var medleyInstallDir = "/usr/local/interlisp/medley";
 exports.medleyInstallDir = medleyInstallDir;
 var medleyUserDir = "/home/medley";
 exports.medleyUserDir = medleyUserDir;
-var dockerScriptsDir = path.join(medleyInstallDir, "..", "/online/bin");
+var dockerScriptsDir = path.join("home/darkstar/scripts");
 exports.dockerScriptsDir = dockerScriptsDir;
 
 var tlsCertDir = "/etc/letsencrypt/live/online.interlisp.org/";
