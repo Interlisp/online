@@ -1,6 +1,6 @@
 # Online.Interlisp.Org: Operations Guide
 ## Overview
-Online.interlisp.org runs on an AWS EC2 instance (currently a t3.medium instance with 50GB attached EBS storage) controlled by the Interlisp.org AWS account.  This instance runs Ubuntu (currently 20.04) with Docker CE installed.  An AWS Elastic IP (3.19.8.9) is assigned to the instance, which in turn is pointed to by an DNS A record for online.interlisp.org managed via the Interlisp.org GoDaddy account.
+Online.interlisp.org runs on an AWS EC2 instance (currently a t3.medium instance with 50GB attached EBS storage) controlled by the Interlisp.org AWS account.  This instance runs Ubuntu (currently 20.04) with Docker CE installed.  An AWS Elastic IP (3.19.8.9) is assigned to the instance, which in turn is pointed to by a DNS A record for online.interlisp.org managed via the Interlisp.org GoDaddy account.
 
 
 Build, operation and maintenance of online.interlisp.org centers around two Docker images:  the Portal image and the Medley (Online) image.  These two images are available from the Github Container Registry at ghcr.io/interlisp/online-production and ghcr.io/interlisp/online-medley, respectively.  (There is also a third image ghcr.io/interlisp/online-development that is a version of the Portal image with additional tools/features for test and development work.)
@@ -153,11 +153,11 @@ sudo systemctl start oio.service
 1. Make sure that the Docker image corresponding to the new Medley release has been created and uploaded to 
 Docker Hub under interlisp/medley.  When listing the Tags (sorted by Newest) under interlisp/medley, there should be
 a tag whose first "part" (up to the first underscore) corresponds to the release tag for the new Medley release.
-This will ususally be the second tag listed immediately after the "latest" tag.  If no matching tag can be found,
+This will usually be the second tag listed immediately after the "latest" tag.  If no matching tag can be found,
 then you will have to back and run the `Build/Push Docker Image` action in the Medley repo on Github.
 
 2.  In the interlisp/online Github repo, run the `Build/Push Online-Medley Docker Image` action.  This will create an
-online Docker image for the new Medley release and store it in the Github Conatiner Repository tagged as 
+online Docker image for the new Medley release and store it in the Github Container Repository tagged as 
 `ghcr.io/interlisp/online-medley:development`.
 
 3.  Test this new online-Medley image as follows:
@@ -185,7 +185,7 @@ new Docker images containing the online Portal code (online-development and onli
 store them in the Github Container Registry tagged as `ghcr.io/interlisp/online-development:latest` and
 `ghcr.io/interlisp/online-production:latest`.  The portal code in these two Docker images is the same, but the
 online-development image includes many additional tools to help in developing and testing the portal code.
-The online-production image includes just what is necessay to run the portal in production.
+The online-production image includes just what is necessary to run the portal in production.
 
 2.  Test the updated Portal as follows:
 
@@ -213,7 +213,7 @@ The online-production image includes just what is necessay to run the portal in 
           image.
 
      3.4  From a web browser go to `https://online.interlisp.org` to connect to the newly updated production
-          version of Interlisp Online and make sure evything is working as expected.
+          version of Interlisp Online and make sure everything is working as expected.
 
 
   
