@@ -1,0 +1,81 @@
+#*******************************************************************************
+# 
+#   Dockerfile_dodo:  dockerfile used to build the image that runs a instance
+#        of a Dodo-based XNS file server on the online.interlisp.org server.  
+#        One container using this image is run on online.interlisp.org.  It is
+#        started by a systemd service.
+#
+#   2023-11-24 Frank Halasz
+# 
+# 
+#   Copyright: 2023 by Interlisp.org 
+# 
+#
+# *****************************************************************************/
+FROM Ubuntu:22.04
+
+SHELL ["/bin/bash", "-c"]
+USER root:root
+
+ARG BUILD_DATE=unknown
+ARG MEDLEY_RELEASE_TAG=unknown
+ARG REPO_OWNER=Interlisp
+ARG PLATFORM=amd64
+
+LABEL name="online.interlisp.org"
+LABEL description="A Dodo-based XNS file server for online.interlisp.org"
+LABEL url="https://github.com/${REPO_OWNER}/online/dodo"
+LABEL build-time=$BUILD_DATE
+LABEL medley_release_tag=$RELEASE_TAG
+
+ENV ONLINE_DODO_BUILD_DATE=$BUILD_DATE
+
+ARG DEBIAN_FRONTEND=noninteractive
+ARG USER_NAME=dodo
+ARG HOMEDIR=/dodo
+
+# install apt-utils, curl, git, gh, nano, vim 
+RUN apt-get update \
+    && apt-get install -y apt-utils \
+    && apt-get install -y curl \
+    && apt-get install -y git \
+    && apt-get install -y gh \
+    && apt-get install -y nano \
+    && apt-get install -y vim
+
+# install sshd
+RUN apt-get -y install openssh-server && \
+    mkdir -p /var/run/sshd && \
+    rm -f /etc/ssh/ssh_host_*key*
+COPY sftp/sshd_config /etc/ssh/sshd_config
+COPY sftp/ssh_host_*_key.pub /etc/ssh/
+COPY --chmod=600 sftp/ssh_host_*_key /etc/ssh/
+
+#  install java runtime for Dodo and websockify for use with Emscripten-based Maiko
+RUN apt-get install -y default-jre \
+    && apt-get install -y websockify
+
+# Give user dodo a password that can be used with sftp
+RUN echo ${USER_NAME}:3333CoyoteHill | chpasswd
+
+# Create the dir to mount the TLS certificates
+RUN mkdir -p /etc/letsencrypt/live/online.interlisp.org/ \
+    && chmod go-rwx /etc/letsencrypt/live \
+    && mkdir -p /etc/letsencrypt/archive/online.interlisp.org/ \
+    && chmod go-rwx /etc/letsencrypt/archive
+
+# In actual use, USER and ENTRYPOINT will be set by the docker run command
+WORKDIR ${HOMEDIR}
+ENTRYPOINT USER=${USER_NAME} /bin/bash
+
+# copy Dodo jar file and scripts into ../bin
+COPY --chmod 755 --chown ${USER_NAME}:${USER_NAME} dodoserver-and-nethub.jar scripts/* ${HOMEDIR}/bin/
+COPY --chown ${USER_NAME}:${USER_NAME} config/chs-database config/dodo.properties config/machines.cfg ${HOMEDIR}/config/
+COPY --chown ${USER_NAME}:${USER_NAME} vols/vol-dunlin vols/vol-installation vols/vol-mailservice ${HOMEDIR}/vols/
+
+# Copy the Medley release into the dunlin:/medley directory
+COPY medley-*-runtime.tgz ${HOMEDIR}
+RUN cd ${HOMEDIR} \
+    && tar xzf medley-*-runtime.tgz \
+    && java -cp bin/dodoserver-and-nethub.jar dev.hawala.xns.FsUtil vols/vol-dunlin medley import medley/* \
+    && rm -rf medley

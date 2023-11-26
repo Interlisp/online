@@ -1,0 +1,77 @@
+#
+# configuration for Dodo server on online.interlisp.org
+#
+
+# network number
+# e.g.: networkNo = 1234
+networkNo = 2032
+
+# machine id
+# e.g.: machineId = 12-34-56-78-9A-BC
+machineId = dodo-online
+
+# verify and generate checksums at IDP level?
+# e.g.: useChecksums = false
+
+# (tcp/ip) hostname for the NetHub
+# netHubHost = online.interlisp.org
+
+# (tcp/ip) port at "hostname" for the NetHub
+# netHubPort = <port>
+
+# time zone parameter for the time service
+# e.g. for local time = CEST (+1hr with DST)
+localTimeOffsetMinutes = 120
+
+# shift date if required, e.g. back 28 years (2018 => 1990)
+# daysBackInTime = 10227
+
+# clearinghouse service and database
+# default: organizationName = hawala
+# default: domainName = dev
+startChsAndAuthServices = true
+organizationName = interlisp.org
+domainName = online
+chsDatabaseRoot = ./chs-database
+
+# print service
+#printService.name = poseidon:dev:hawala
+#printService.outputDirectory = ./prt-poseidon
+#printService.paperSizes = a4, usLetter
+#printService.disassembleIp = true
+#
+# if IPPROC.PS is available:
+# printService.ip2PsProcFilename = ./prt-poseidon/res/IPPROC.PS
+#
+# postprocessing of generated PostScript files:
+# e.g. for Linux: printService.psPostprocessor = ./prt-poseidon/res/postprocess-ps.sh
+# or for Windows: printService.psPostprocessor = ./prt-poseidon/res/postprocess-ps.cmd
+# attention: both scripts assume GhostScript to be on the PATH (both bin and lib subdirectories!)
+
+# how to generate strong keys
+# (XDE does not rejected neither 'true' nor 'false', so it is unclear which is right) 
+strongKeysAsSpecified = true
+
+# optional for supporting DarkStar
+# authSkipTimestampChecks = true
+
+# file services
+fileService.0.name = dunlin:online:interlisp.org
+fileService.0.volumePath = ${HOMEDIR}/vols/vol-dunlin
+fileService.1.name = installation:online:interlisp.org
+fileService.1.volumePath = ${HOMEDIR}/vols/vol-installation
+
+# mail service	
+mailService.volumePath = ${HOMEDIR}/vols/vol-mailservice
+
+# make Dodo be a pure time server?
+## startRipService = false
+## startChsAndAuthServices = false
+
+# begin boot service
+#
+startBootService = false
+# bootService.verbose = true
+#
+# end boot service
+
