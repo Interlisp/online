@@ -5,6 +5,7 @@
 #
 #   2023-11-25 FGH
 #
+# --no-cache 
 export BUILD_DATE=$(date --iso-8601=minutes)
 docker build -t dodo_online:latest --build-arg BUILD_DATE=${BUILD_DATE} -f ./Dockerfile_dodo .
 

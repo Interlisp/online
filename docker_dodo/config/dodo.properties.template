@@ -32,7 +32,7 @@ localTimeOffsetMinutes = 120
 startChsAndAuthServices = true
 organizationName = interlisp.org
 domainName = online
-chsDatabaseRoot = ./chs-database
+chsDatabaseRoot = ${HOMEDIR}/config/chs-database
 
 # print service
 #printService.name = poseidon:dev:hawala
