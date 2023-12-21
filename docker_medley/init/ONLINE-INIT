@@ -1,11 +1,13 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED "15-Dec-2022 17:34:44" {DSK}<home>frank>il>online>docker_medley>init>ONLINE-INIT.;46 24028  
+(FILECREATED "21-Dec-2023 04:08:20" {DSK}<home>larry>il>online>docker_medley>init>ONLINE-INIT.;2 24155  
+
+      :EDIT-BY "lmm"
 
       :CHANGES-TO (FNS Online.CreateButtons)
 
-      :PREVIOUS-DATE "15-Dec-2022 14:44:14" 
-{DSK}<home>frank>il>online>docker_medley>init>ONLINE-INIT.;45)
+      :PREVIOUS-DATE "15-Dec-2022 17:34:44" 
+{DSK}<home>larry>il>online>docker_medley>init>ONLINE-INIT.;1)
 
 
 (PRETTYCOMPRINT ONLINE-INITCOMS)
@@ -235,7 +237,8 @@
            (Online.CreateButtons T])
 
 (Online.CreateButtons
-  [LAMBDA (DoDocsToo)                                      (* ; "Edited 13-Dec-2022 12:51 by frank")
+  [LAMBDA (DoDocsToo)                                        (* ; "Edited 21-Dec-2023 04:07 by lmm")
+                                                           (* ; "Edited 13-Dec-2022 12:51 by frank")
                                                              (* ; "Edited  7-Dec-2022 11:28 by FGH")
                                                              (* ; "Edited  5-Dec-2022 17:31 by FGH")
                                                              (* ; "Edited 12-Nov-2022 14:52 by FGH")
@@ -249,7 +252,7 @@
                            (LIST Online.RoomsActivated '(Online.ActivateRooms)
                                  "ROOMS")))
            (FEATURES-LABELS (for FEATURE in FEATURES collect (CADDR FEATURE)))
-           (DOCS (LIST (LIST "https://interlisp.org/docs/medley/orientation/" "BASICS")
+           (DOCS (LIST (LIST "https://interlisp.org/software/using-medley/" "BASICS")
                        (LIST "https://interlisp.org/documentation/Medley-Primer.pdf" "PRIMER")
                        (LIST "https://interlisp.org/documentation/IRM.pdf" "MANUAL")
                        (LIST "https://interlisp.org/documentation/notecards_user_guide_v1.2.pdf" 
@@ -437,8 +440,8 @@
 (BKSYSBUF " ")
 )
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (1875 23892 (Online.SftpInitInfo 1885 . 2758) (Online.SftpUpdateInfo 2760 . 3015) (
-Online.InitNotecards 3017 . 6095) (Online.DoInit 6097 . 10945) (Online.CreateButtons 10947 . 19907) (
-Online.CreateLabel 19909 . 20721) (Online.ActivateCLOS 20723 . 22074) (Online.ActivateRooms 22076 . 
-22933) (XCL-USER::INTERLISP 22935 . 23702) (Online.ShowDoc 23704 . 23890)))))
+  (FILEMAP (NIL (1895 24019 (Online.SftpInitInfo 1905 . 2778) (Online.SftpUpdateInfo 2780 . 3035) (
+Online.InitNotecards 3037 . 6115) (Online.DoInit 6117 . 10965) (Online.CreateButtons 10967 . 20034) (
+Online.CreateLabel 20036 . 20848) (Online.ActivateCLOS 20850 . 22201) (Online.ActivateRooms 22203 . 
+23060) (XCL-USER::INTERLISP 23062 . 23829) (Online.ShowDoc 23831 . 24017)))))
 STOP
