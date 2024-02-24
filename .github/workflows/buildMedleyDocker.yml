@@ -64,7 +64,7 @@ jobs:
     steps:
       # Checkout the actions for this repo_owner
       - name: Checkout Actions
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: ${{ github.repository_owner }}/.github
           path: ./Actions_${{ github.sha }}
@@ -73,7 +73,7 @@ jobs:
       # Fetch cached LFS files
       - name: Cache LFS files
         id: cache-lfs
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
             path: |
                 docker_medley/filebrowser/filebrowser
@@ -88,7 +88,7 @@ jobs:
 
       # Checkout latest commit
       - name: Checkout Online code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           lfs: ${{ steps.cache-lfs.outputs.cache-hit != 'true' }}
 
@@ -135,7 +135,7 @@ jobs:
 
       # Checkout the latest Notecards commit
       - name: Checkout Notecards
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: "${{ github.repository_owner }}/notecards"
           path: "./docker_medley/notecards"
@@ -194,7 +194,7 @@ jobs:
 
       # Login to ghcr.io
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v2 
+        uses: docker/login-action@v3 
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
@@ -210,7 +210,7 @@ jobs:
       # checked out and the release tars just downloaded.
       # Push the result to Docker Hub
       - name: Build Docker Image for Push to Docker Hub
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v5
         with:
           builder: ${{ steps.buildx.outputs.name }}
           build-args: |
