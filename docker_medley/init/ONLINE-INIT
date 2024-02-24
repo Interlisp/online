@@ -1,21 +1,21 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED "24-Feb-2024 00:30:23" {DSK}<home>medley>il>ONLINE-INIT.;6 21490  
+(FILECREATED "24-Feb-2024 14:18:47" {DSK}<home>medley>il>ONLINE-INIT.;7 21499  
 
       :EDIT-BY "runner"
 
       :CHANGES-TO (VARS ONLINE-INITCOMS)
-                  (FNS Online.DoInit)
 
-      :PREVIOUS-DATE "21-Dec-2023 04:08:20" {DSK}<usr>local>interlisp>medley>greetfiles>ONLINE-INIT.;1
-)
+      :PREVIOUS-DATE "24-Feb-2024 00:30:23" {DSK}<home>medley>il>ONLINE-INIT.;6)
 
 
 (PRETTYCOMPRINT ONLINE-INITCOMS)
 
 (RPAQQ ONLINE-INITCOMS
        [(FILES (SYSLOAD)
-               APPS-INIT VTCHAT)
+               APPS-INIT)
+        (FILES (SYSLOAD)
+               VTCHAT)
         (GLOBALVARS Online.LogoutTimeout Online.SftpPort Online.SftpPassword Online.SftpDisplay 
                IDLE.PROFILE IDLE.BOUNCING.BOX Online.SftpDisplayMenu ONLINEP)
         (INITVARS (Online.LogoutTimeout 30)
@@ -28,7 +28,10 @@
         (DECLARE%: FIRST DONTEVAL@LOAD DOCOPY (P (BKSYSBUF " "])
 
 (FILESLOAD (SYSLOAD)
-       APPS-INIT VTCHAT)
+       APPS-INIT)
+
+(FILESLOAD (SYSLOAD)
+       VTCHAT)
 (DECLARE%: DOEVAL@COMPILE DONTCOPY
 
 (GLOBALVARS Online.LogoutTimeout Online.SftpPort Online.SftpPassword Online.SftpDisplay IDLE.PROFILE
@@ -382,8 +385,8 @@
 (BKSYSBUF " ")
 )
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (1617 21354 (Online.SftpInitInfo 1627 . 2500) (Online.SftpUpdateInfo 2502 . 2757) (
-Online.InitNotecards 2759 . 5837) (Online.DoInit 5839 . 8300) (Online.CreateButtons 8302 . 17369) (
-Online.CreateLabel 17371 . 18183) (Online.ActivateCLOS 18185 . 19536) (Online.ActivateRooms 19538 . 
-20395) (XCL-USER::INTERLISP 20397 . 21164) (Online.ShowDoc 21166 . 21352)))))
+  (FILEMAP (NIL (1626 21363 (Online.SftpInitInfo 1636 . 2509) (Online.SftpUpdateInfo 2511 . 2766) (
+Online.InitNotecards 2768 . 5846) (Online.DoInit 5848 . 8309) (Online.CreateButtons 8311 . 17378) (
+Online.CreateLabel 17380 . 18192) (Online.ActivateCLOS 18194 . 19545) (Online.ActivateRooms 19547 . 
+20404) (XCL-USER::INTERLISP 20406 . 21173) (Online.ShowDoc 21175 . 21361)))))
 STOP
