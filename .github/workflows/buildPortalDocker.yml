@@ -54,10 +54,9 @@ jobs:
       - id: platform
         run: >
           if [ '${{ toJSON(inputs) }}' = 'null'  ];
-          then echo ::set-output name=platform::'${{ github.event.inputs.platform }}';
-          else echo ::set-output name=platform::'${{ inputs.platform }}';
+          then echo "platform=${{ github.event.inputs.platform }}" >> ${GITHUB_OUTPUT};
+          else echo "platform=${{ inputs.platform }}"  >> ${GITHUB_OUTPUT};
           fi
-
 
   # Build and push the docker image
 
@@ -74,7 +73,7 @@ jobs:
 
       # Checkout the actions for this repo_owner
       - name: Checkout Actions
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           repository: ${{ github.repository_owner }}/.github
           path: ./Actions_${{ github.sha }}
@@ -82,7 +81,7 @@ jobs:
 
       # Checkout latest commit to depth 1 for production
       - name: Checkout Web-portal code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 1
 
@@ -96,30 +95,30 @@ jobs:
         id: docker_env
         run: |
           DOCKER_REGISTRY="ghcr.io/"
-          echo ::set-output name=docker_registry::${DOCKER_REGISTRY}
+          echo "docker_registry=${DOCKER_REGISTRY}" >> ${GITHUB_OUTPUT}
           DOCKER_NAMESPACE=$(echo ${GITHUB_REPOSITORY_OWNER} | tr '[:upper:]' '[:lower:]')
           echo "DOCKER_NAMESPACE=${DOCKER_NAMESPACE}" >> ${GITHUB_ENV}
-          echo ::set-output name=docker_namespace::${DOCKER_NAMESPACE}
+          echo "docker_namespace=${DOCKER_NAMESPACE}" >> ${GITHUB_OUTPUT}
           #
           DOCKER_REPO_PROD=${DOCKER_REGISTRY}${DOCKER_NAMESPACE}/${{ steps.tag.outputs.repo_name }}-production
           DOCKER_TAGS_PROD="${DOCKER_REPO_PROD}:latest,${DOCKER_REPO_PROD}:${RELEASE_TAG#*-}"
           DOCKER_REPO_DEV=${DOCKER_REGISTRY}${DOCKER_NAMESPACE}/${{ steps.tag.outputs.repo_name }}-development
           DOCKER_TAGS_DEV="${DOCKER_REPO_DEV}:latest,${DOCKER_REPO_DEV}:${RELEASE_TAG#*-}"
-          echo ::set-output name=build_time::$(date -u +'%Y-%m-%dT%H:%M:%SZ')
-          echo ::set-output name=docker_tags_prod::${DOCKER_TAGS_PROD}
-          echo ::set-output name=docker_tags_dev::${DOCKER_TAGS_DEV}
+          echo "build_time=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> ${GITHUB_OUTPUT}
+          echo "docker_tags_prod=${DOCKER_TAGS_PROD}" >> ${GITHUB_OUTPUT}
+          echo "docker_tags_dev=${DOCKER_TAGS_DEV}" >> ${GITHUB_OUTPUT}
 
       # Setup the Docker Machine Emulation environment.  
       - name: Set up QEMU
         if: ${{ needs.inputs.outputs.platform == 'linux/arm64' }}
-        uses: docker/setup-qemu-action@master
+        uses: docker/setup-qemu-action@v3
         with:
           platforms: linux/arm64
 
       # Setup the Docker Buildx funtion
       - name: Set up Docker Buildx
         id: buildx
-        uses: docker/setup-buildx-action@master
+        uses: docker/setup-buildx-action@v3
 
       # Online now uses github container registry instead of dockerhub
       # Login into DockerHub - required to store the created image
@@ -131,7 +130,7 @@ jobs:
 
       # Login to ghcr.io
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v1 
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
@@ -144,7 +143,7 @@ jobs:
 
       # Get novnc
       - name: Checkout novnc code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           repository: 'novnc/noVNC.git'
           ref: 'v1.3.0'
@@ -153,7 +152,7 @@ jobs:
       # Do the Production Docker Build using the Dockerfile_production
       # Push the result to Docker Hub
       - name: Build Docker Image for Push to Docker Hub
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v5
         with:
           builder: ${{ steps.buildx.outputs.name }}
           build-args: |
@@ -167,7 +166,7 @@ jobs:
 
       # Recheckout latest commit with fetch_depth of 0 for development image
       - name: Checkout Web-portal code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -178,7 +177,7 @@ jobs:
 
       # Get novnc
       - name: Checkout novnc code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           repository: 'novnc/noVNC.git'
           ref: 'v1.3.0'
@@ -187,7 +186,7 @@ jobs:
       # Do the Development Docker Build using the Dockerfile_development
       # Push the result to Docker Hub
       - name: Build Docker Image for Push to Docker Hub
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v5
         with:
           builder: ${{ steps.buildx.outputs.name }}
           build-args: |
