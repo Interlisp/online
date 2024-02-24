@@ -1,27 +1,25 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED "21-Dec-2023 04:08:20" {DSK}<home>larry>il>online>docker_medley>init>ONLINE-INIT.;2 24155  
+(FILECREATED "24-Feb-2024 00:30:23" {DSK}<home>medley>il>ONLINE-INIT.;6 21490  
 
-      :EDIT-BY "lmm"
+      :EDIT-BY "runner"
 
-      :CHANGES-TO (FNS Online.CreateButtons)
+      :CHANGES-TO (VARS ONLINE-INITCOMS)
+                  (FNS Online.DoInit)
 
-      :PREVIOUS-DATE "15-Dec-2022 17:34:44" 
-{DSK}<home>larry>il>online>docker_medley>init>ONLINE-INIT.;1)
+      :PREVIOUS-DATE "21-Dec-2023 04:08:20" {DSK}<usr>local>interlisp>medley>greetfiles>ONLINE-INIT.;1
+)
 
 
 (PRETTYCOMPRINT ONLINE-INITCOMS)
 
 (RPAQQ ONLINE-INITCOMS
        [(FILES (SYSLOAD)
-               MEDLEYDIR-INIT)
+               APPS-INIT VTCHAT)
         (GLOBALVARS Online.LogoutTimeout Online.SftpPort Online.SftpPassword Online.SftpDisplay 
-               IDLE.PROFILE IDLE.BOUNCING.BOX Online.SftpDisplayMenu ONLINEP 
-               Online.NotecardsActivated Online.RoomsActivated)
+               IDLE.PROFILE IDLE.BOUNCING.BOX Online.SftpDisplayMenu ONLINEP)
         (INITVARS (Online.LogoutTimeout 30)
-               ONLINEP
-               (Online.NotecardsActivated NIL)
-               (Online.RoomsActivated NIL))
+               ONLINEP)
         (ADVISE (SAVEVM :IN \IDLER))
         (FNS Online.SftpInitInfo Online.SftpUpdateInfo Online.InitNotecards Online.DoInit 
              Online.CreateButtons Online.CreateLabel Online.ActivateCLOS Online.ActivateRooms 
@@ -30,21 +28,16 @@
         (DECLARE%: FIRST DONTEVAL@LOAD DOCOPY (P (BKSYSBUF " "])
 
 (FILESLOAD (SYSLOAD)
-       MEDLEYDIR-INIT)
+       APPS-INIT VTCHAT)
 (DECLARE%: DOEVAL@COMPILE DONTCOPY
 
 (GLOBALVARS Online.LogoutTimeout Online.SftpPort Online.SftpPassword Online.SftpDisplay IDLE.PROFILE
-       IDLE.BOUNCING.BOX Online.SftpDisplayMenu ONLINEP Online.NotecardsActivated 
-       Online.RoomsActivated)
+       IDLE.BOUNCING.BOX Online.SftpDisplayMenu ONLINEP)
 )
 
 (RPAQ? Online.LogoutTimeout 30)
 
 (RPAQ? ONLINEP NIL)
-
-(RPAQ? Online.NotecardsActivated NIL)
-
-(RPAQ? Online.RoomsActivated NIL)
 
 [XCL:REINSTALL-ADVICE '(SAVEVM :IN \IDLER)
        :AROUND
@@ -124,6 +117,8 @@
 (Online.DoInit
   [LAMBDA NIL
 
+    (* ;; "Edited 24-Feb-2024 00:26 by runner")
+
     (* ;; "Edited  7-Dec-2022 11:14 by FGH")
 
     (* ;; "Edited 12-Nov-2022 13:57 by FGH")
@@ -162,33 +157,6 @@
            (LISTPUT IDLE.PROFILE 'TIMEOUT Online.LogoutTimeout)
            (SETQ IDLE.BOUNCING.BOX "Press any key to continue")
 
-           (* ;; " Adjust windows so that the exec window and the prompt window don't overlap")
-
-           [MAPC (OPENWINDOWS)
-                 (FUNCTION (LAMBDA (W)
-                             (COND
-                                ((EQ (WINDOWPROP W 'BUTTONEVENTFN)
-                                     'WHEN-WHO-LINE-SELECTED-FN)
-                                 (MOVEW W (CAR (WINDOWPROP W 'REGION))
-                                        (IDIFFERENCE SCREENHEIGHT 18)))
-                                ((STREQUAL (WINDOWPROP W 'TITLE)
-                                        "Prompt Window")
-                                 (PROGN (MOVEW W (create POSITION
-                                                        XCOORD _ 50
-                                                        YCOORD _ (IDIFFERENCE SCREENHEIGHT 120)))
-                                        (CLEARW W)))
-                                ((STREQUAL (WINDOWPROP W 'TITLE)
-                                        "Exec  (XCL)")
-                                 (PROGN (WINDOWPROP W 'TITLE "Exec  (INTERLISP)")
-                                        (MOVEW W (create POSITION
-                                                        XCOORD _ 50
-                                                        YCOORD _ (IDIFFERENCE SCREENHEIGHT 460]
-
-           (* ;; " Set up INITIALSLST based on information passed in from the Linux environment")
-
-           [SETQ INITIALSLST (LIST (LIST USERNAME (UNIX-GETENV 'MEDLEY_FIRSTNAME)
-                                         (UNIX-GETENV 'MEDLEY_INITIALS]
-
            (* ;; "set ONLINEP as a definitive flag that this is an online session")
 
            (COND
@@ -201,40 +169,14 @@
 
            (SETQ CLHS.OPENER "/usr/local/interlisp/online/bin/request_new_tab")
 
-           (* ;; "Temp 2022-10-12 to get latest HELPSYS into online without a release")
+           (* ;; " get rid of Notecards logout prevention")
 
-           (LOAD '{DSK}/usr/local/interlisp/medley/lispusers/HELPSYS.LCOM T)
+           (ADVISE 'NC.LogoutAdvice 'BEFORE 'FIRST '(RETURN T))
 
-           (* ;; "change to interlisp exec if required")
+           (* ;; "Reset Chat displaytype to enable vt100")
 
-           (COND
-              ((OR (STRING-EQUAL (UNIX-GETENV 'MEDLEY_EXEC)
-                          "inter")
-                   (STRING-EQUAL (UNIX-GETENV 'NCO)
-                          "true"))
-               (BKSYSBUF "(INTERLISP)")))
-
-           (* ;; "Always Activate CLOS")
-
-           (Online.ActivateCLOS)
-
-           (* ;; " activate Notecards if requested")
-
-           (COND
-              ((STRING-EQUAL (UNIX-GETENV 'RUN_NOTECARDS)
-                      "true")
-               (Online.InitNotecards T)))
-
-           (* ;; " activate Rooms if requested")
-
-           (COND
-              ((STRING-EQUAL (UNIX-GETENV 'RUN_ROOMS)
-                      "true")
-               (Online.ActivateRooms T)))
-
-           (* ;; " create the Documentation and ROOMS, Notecards Activation Buttons, if needed")
-
-           (Online.CreateButtons T])
+           (RPLACA (CAR CHAT.DISPLAYTYPES)
+                  NIL])
 
 (Online.CreateButtons
   [LAMBDA (DoDocsToo)                                        (* ; "Edited 21-Dec-2023 04:07 by lmm")
@@ -440,8 +382,8 @@
 (BKSYSBUF " ")
 )
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (1895 24019 (Online.SftpInitInfo 1905 . 2778) (Online.SftpUpdateInfo 2780 . 3035) (
-Online.InitNotecards 3037 . 6115) (Online.DoInit 6117 . 10965) (Online.CreateButtons 10967 . 20034) (
-Online.CreateLabel 20036 . 20848) (Online.ActivateCLOS 20850 . 22201) (Online.ActivateRooms 22203 . 
-23060) (XCL-USER::INTERLISP 23062 . 23829) (Online.ShowDoc 23831 . 24017)))))
+  (FILEMAP (NIL (1617 21354 (Online.SftpInitInfo 1627 . 2500) (Online.SftpUpdateInfo 2502 . 2757) (
+Online.InitNotecards 2759 . 5837) (Online.DoInit 5839 . 8300) (Online.CreateButtons 8302 . 17369) (
+Online.CreateLabel 17371 . 18183) (Online.ActivateCLOS 18185 . 19536) (Online.ActivateRooms 19538 . 
+20395) (XCL-USER::INTERLISP 20397 . 21164) (Online.ShowDoc 21166 . 21352)))))
 STOP
