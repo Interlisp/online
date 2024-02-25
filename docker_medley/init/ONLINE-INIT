@@ -1,13 +1,13 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED "24-Feb-2024 16:41:46" {DSK}<home>medley>il>ONLINE-INIT.;10 5562   
+(FILECREATED "24-Feb-2024 17:17:30" {DSK}<home>medley>il>ONLINE-INIT.;12 5753   
 
       :EDIT-BY "fgh"
 
       :CHANGES-TO (VARS ONLINE-INITCOMS)
                   (FNS Online.DoInit)
 
-      :PREVIOUS-DATE "24-Feb-2024 16:05:50" {DSK}<home>medley>il>ONLINE-INIT.;9)
+      :PREVIOUS-DATE "24-Feb-2024 16:41:46" {DSK}<home>medley>il>ONLINE-INIT.;10)
 
 
 (PRETTYCOMPRINT ONLINE-INITCOMS)
@@ -20,7 +20,8 @@
         (GLOBALVARS Online.LogoutTimeout Online.SftpPort Online.SftpPassword Online.SftpDisplay 
                IDLE.PROFILE IDLE.BOUNCING.BOX Online.SftpDisplayMenu ONLINEP ShellBrowser ShellOpener
                CLHS.OPENER)
-        (INITVARS (Online.LogoutTimeout 30))
+        (INITVARS (Online.LogoutTimeout 30)
+               (ONLINEP NIL))
         (ADVISE (SAVEVM :IN \IDLER))
         (FNS Online.SftpInitInfo Online.SftpUpdateInfo Online.DoInit)
         (DECLARE%: DONTEVAL@LOAD DOCOPY (P (Online.DoInit)))
@@ -38,6 +39,8 @@
 )
 
 (RPAQ? Online.LogoutTimeout 30)
+
+(RPAQ? ONLINEP NIL)
 
 [XCL:REINSTALL-ADVICE '(SAVEVM :IN \IDLER)
        :AROUND
@@ -71,7 +74,7 @@
 (Online.DoInit
   [LAMBDA NIL
 
-    (* ;; "Edited 24-Feb-2024 16:41 by fgh")
+    (* ;; "Edited 24-Feb-2024 17:13 by fgh")
 
     (* ;; "Edited 24-Feb-2024 00:26 by runner")
 
@@ -114,12 +117,10 @@
            (SETQ IDLE.BOUNCING.BOX "Press any key to continue")
 
            (* ;; "set ONLINEP as a definitive flag that this is an online session")
-
-           (SETQ ONLINEP (COND
-                            ((STRING-EQUAL (UNIX-GETENV 'MEDLEY_ONLINE)
-                                    "true")
-                             T)
-                            (T NIL)))
+                                                             (* SETQ ONLINEP (COND
+                                                             ((STRING-EQUAL (UNIX-GETENV
+                                                             (QUOTE MEDLEY_ONLINE)) "true") T)
+                                                             (T NIL)))
 
            (* ;; 
      "set the opener for accesssing the Common Lisp Hyperspec - for use in HELPSYS LispUsers package")
@@ -146,6 +147,6 @@
 (BKSYSBUF " ")
 )
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (1538 5426 (Online.SftpInitInfo 1548 . 2421) (Online.SftpUpdateInfo 2423 . 2678) (
-Online.DoInit 2680 . 5424)))))
+  (FILEMAP (NIL (1593 5617 (Online.SftpInitInfo 1603 . 2476) (Online.SftpUpdateInfo 2478 . 2733) (
+Online.DoInit 2735 . 5615)))))
 STOP
