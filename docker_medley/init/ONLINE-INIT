@@ -1,13 +1,12 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED "24-Feb-2024 15:39:17" {DSK}<home>medley>il>ONLINE-INIT.;8 5543   
+(FILECREATED "24-Feb-2024 16:05:50" {DSK}<home>medley>il>ONLINE-INIT.;9 5496   
 
       :EDIT-BY "fgh"
 
-      :CHANGES-TO (VARS ONLINE-INITCOMS)
-                  (FNS Online.DoInit)
+      :CHANGES-TO (FNS Online.DoInit)
 
-      :PREVIOUS-DATE "24-Feb-2024 14:18:47" {DSK}<home>medley>il>ONLINE-INIT.;7)
+      :PREVIOUS-DATE "24-Feb-2024 15:39:17" {DSK}<home>medley>il>ONLINE-INIT.;8)
 
 
 (PRETTYCOMPRINT ONLINE-INITCOMS)
@@ -74,7 +73,7 @@
 (Online.DoInit
   [LAMBDA NIL
 
-    (* ;; "Edited 24-Feb-2024 15:33 by fgh")
+    (* ;; "Edited 24-Feb-2024 16:05 by fgh")
 
     (* ;; "Edited 24-Feb-2024 00:26 by runner")
 
@@ -121,7 +120,7 @@
            (COND
               ((STRING-EQUAL (UNIX-GETENV 'MEDLEY_ONLINE)
                       "true")
-               (SETTOPVAL 'ONLINEP T)))
+               (SETQ ONLINEP T)))
 
            (* ;; 
      "set the opener for accesssing the Common Lisp Hyperspec - for use in HELPSYS LispUsers package")
@@ -148,6 +147,6 @@
 (BKSYSBUF " ")
 )
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (1591 5407 (Online.SftpInitInfo 1601 . 2474) (Online.SftpUpdateInfo 2476 . 2731) (
-Online.DoInit 2733 . 5405)))))
+  (FILEMAP (NIL (1550 5360 (Online.SftpInitInfo 1560 . 2433) (Online.SftpUpdateInfo 2435 . 2690) (
+Online.DoInit 2692 . 5358)))))
 STOP
