@@ -1,12 +1,13 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED "24-Feb-2024 16:05:50" {DSK}<home>medley>il>ONLINE-INIT.;9 5496   
+(FILECREATED "24-Feb-2024 16:41:46" {DSK}<home>medley>il>ONLINE-INIT.;10 5562   
 
       :EDIT-BY "fgh"
 
-      :CHANGES-TO (FNS Online.DoInit)
+      :CHANGES-TO (VARS ONLINE-INITCOMS)
+                  (FNS Online.DoInit)
 
-      :PREVIOUS-DATE "24-Feb-2024 15:39:17" {DSK}<home>medley>il>ONLINE-INIT.;8)
+      :PREVIOUS-DATE "24-Feb-2024 16:05:50" {DSK}<home>medley>il>ONLINE-INIT.;9)
 
 
 (PRETTYCOMPRINT ONLINE-INITCOMS)
@@ -19,8 +20,7 @@
         (GLOBALVARS Online.LogoutTimeout Online.SftpPort Online.SftpPassword Online.SftpDisplay 
                IDLE.PROFILE IDLE.BOUNCING.BOX Online.SftpDisplayMenu ONLINEP ShellBrowser ShellOpener
                CLHS.OPENER)
-        (INITVARS (Online.LogoutTimeout 30)
-               (ONLINEP NIL))
+        (INITVARS (Online.LogoutTimeout 30))
         (ADVISE (SAVEVM :IN \IDLER))
         (FNS Online.SftpInitInfo Online.SftpUpdateInfo Online.DoInit)
         (DECLARE%: DONTEVAL@LOAD DOCOPY (P (Online.DoInit)))
@@ -38,8 +38,6 @@
 )
 
 (RPAQ? Online.LogoutTimeout 30)
-
-(RPAQ? ONLINEP NIL)
 
 [XCL:REINSTALL-ADVICE '(SAVEVM :IN \IDLER)
        :AROUND
@@ -73,7 +71,7 @@
 (Online.DoInit
   [LAMBDA NIL
 
-    (* ;; "Edited 24-Feb-2024 16:05 by fgh")
+    (* ;; "Edited 24-Feb-2024 16:41 by fgh")
 
     (* ;; "Edited 24-Feb-2024 00:26 by runner")
 
@@ -117,10 +115,11 @@
 
            (* ;; "set ONLINEP as a definitive flag that this is an online session")
 
-           (COND
-              ((STRING-EQUAL (UNIX-GETENV 'MEDLEY_ONLINE)
-                      "true")
-               (SETQ ONLINEP T)))
+           (SETQ ONLINEP (COND
+                            ((STRING-EQUAL (UNIX-GETENV 'MEDLEY_ONLINE)
+                                    "true")
+                             T)
+                            (T NIL)))
 
            (* ;; 
      "set the opener for accesssing the Common Lisp Hyperspec - for use in HELPSYS LispUsers package")
@@ -147,6 +146,6 @@
 (BKSYSBUF " ")
 )
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (1550 5360 (Online.SftpInitInfo 1560 . 2433) (Online.SftpUpdateInfo 2435 . 2690) (
-Online.DoInit 2692 . 5358)))))
+  (FILEMAP (NIL (1538 5426 (Online.SftpInitInfo 1548 . 2421) (Online.SftpUpdateInfo 2423 . 2678) (
+Online.DoInit 2680 . 5424)))))
 STOP
