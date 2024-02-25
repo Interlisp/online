@@ -1,13 +1,12 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED "25-Feb-2024 11:21:27" {DSK}<home>medley>il>ONLINE-INIT.;14 7591   
+(FILECREATED "25-Feb-2024 11:38:10" {DSK}<home>medley>il>ONLINE-INIT.;15 7712   
 
       :EDIT-BY "fgh"
 
-      :CHANGES-TO (VARS ONLINE-INITCOMS)
-                  (FNS Online.SetUpNOTECARDSDIRECTORIES)
+      :CHANGES-TO (FNS Online.DoInit)
 
-      :PREVIOUS-DATE "24-Feb-2024 22:33:57" {DSK}<home>medley>il>ONLINE-INIT.;13)
+      :PREVIOUS-DATE "25-Feb-2024 11:21:27" {DSK}<home>medley>il>ONLINE-INIT.;14)
 
 
 (PRETTYCOMPRINT ONLINE-INITCOMS)
@@ -106,7 +105,7 @@
 (Online.DoInit
   [LAMBDA NIL
 
-    (* ;; "Edited 24-Feb-2024 22:29 by fgh")
+    (* ;; "Edited 25-Feb-2024 11:37 by fgh")
 
     (* ;; "Edited 24-Feb-2024 00:26 by runner")
 
@@ -170,7 +169,12 @@
            (* ;; "Reset Chat displaytype to enable vt100")
 
            (RPLACA (CAR CHAT.DISPLAYTYPES)
-                  NIL])
+                  NIL)
+
+           (* ;; 
+ "Setup NOTECARDSDIRECTORIES.  Should be done it APPS-INIT.  But until thats done, we'll do it here.")
+
+           (Online.SetUpNOTECARDSDIRECTORIES])
 
 (ONLINEP
   [LAMBDA NIL                                                (* ; "Edited 24-Feb-2024 22:31 by fgh")
@@ -185,6 +189,6 @@
 (BKSYSBUF " ")
 )
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (1720 7455 (Online.SftpInitInfo 1730 . 2603) (Online.SftpUpdateInfo 2605 . 2860) (
-Online.SetUpNOTECARDSDIRECTORIES 2862 . 4570) (Online.DoInit 4572 . 7316) (ONLINEP 7318 . 7453)))))
+  (FILEMAP (NIL (1660 7576 (Online.SftpInitInfo 1670 . 2543) (Online.SftpUpdateInfo 2545 . 2800) (
+Online.SetUpNOTECARDSDIRECTORIES 2802 . 4510) (Online.DoInit 4512 . 7437) (ONLINEP 7439 . 7574)))))
 STOP
