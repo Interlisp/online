@@ -1,13 +1,13 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED "24-Feb-2024 17:17:30" {DSK}<home>medley>il>ONLINE-INIT.;12 5753   
+(FILECREATED "24-Feb-2024 22:33:57" {DSK}<home>medley>il>ONLINE-INIT.;13 5796   
 
       :EDIT-BY "fgh"
 
       :CHANGES-TO (VARS ONLINE-INITCOMS)
-                  (FNS Online.DoInit)
+                  (FNS Online.DoInit ONLINEP)
 
-      :PREVIOUS-DATE "24-Feb-2024 16:41:46" {DSK}<home>medley>il>ONLINE-INIT.;10)
+      :PREVIOUS-DATE "24-Feb-2024 17:17:30" {DSK}<home>medley>il>ONLINE-INIT.;12)
 
 
 (PRETTYCOMPRINT ONLINE-INITCOMS)
@@ -23,7 +23,7 @@
         (INITVARS (Online.LogoutTimeout 30)
                (ONLINEP NIL))
         (ADVISE (SAVEVM :IN \IDLER))
-        (FNS Online.SftpInitInfo Online.SftpUpdateInfo Online.DoInit)
+        (FNS Online.SftpInitInfo Online.SftpUpdateInfo Online.DoInit ONLINEP)
         (DECLARE%: DONTEVAL@LOAD DOCOPY (P (Online.DoInit)))
         (DECLARE%: FIRST DONTEVAL@LOAD DOCOPY (P (BKSYSBUF " "])
 
@@ -45,7 +45,8 @@
 [XCL:REINSTALL-ADVICE '(SAVEVM :IN \IDLER)
        :AROUND
        '((:LAST (COND
-                   (ONLINEP (LOGOUT))
+                   ((ONLINEP)
+                    (LOGOUT))
                    (T *]
 
 (READVISE (SAVEVM :IN \IDLER))
@@ -74,7 +75,7 @@
 (Online.DoInit
   [LAMBDA NIL
 
-    (* ;; "Edited 24-Feb-2024 17:13 by fgh")
+    (* ;; "Edited 24-Feb-2024 22:29 by fgh")
 
     (* ;; "Edited 24-Feb-2024 00:26 by runner")
 
@@ -117,10 +118,12 @@
            (SETQ IDLE.BOUNCING.BOX "Press any key to continue")
 
            (* ;; "set ONLINEP as a definitive flag that this is an online session")
-                                                             (* SETQ ONLINEP (COND
-                                                             ((STRING-EQUAL (UNIX-GETENV
-                                                             (QUOTE MEDLEY_ONLINE)) "true") T)
-                                                             (T NIL)))
+
+           (SETQ ONLINEP (COND
+                            ((STRING-EQUAL (UNIX-GETENV 'MEDLEY_ONLINE)
+                                    "true")
+                             T)
+                            (T NIL)))
 
            (* ;; 
      "set the opener for accesssing the Common Lisp Hyperspec - for use in HELPSYS LispUsers package")
@@ -137,6 +140,10 @@
 
            (RPLACA (CAR CHAT.DISPLAYTYPES)
                   NIL])
+
+(ONLINEP
+  [LAMBDA NIL                                                (* ; "Edited 24-Feb-2024 22:31 by fgh")
+    ONLINEP])
 )
 (DECLARE%: DONTEVAL@LOAD DOCOPY 
 
@@ -147,6 +154,6 @@
 (BKSYSBUF " ")
 )
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (1593 5617 (Online.SftpInitInfo 1603 . 2476) (Online.SftpUpdateInfo 2478 . 2733) (
-Online.DoInit 2735 . 5615)))))
+  (FILEMAP (NIL (1635 5660 (Online.SftpInitInfo 1645 . 2518) (Online.SftpUpdateInfo 2520 . 2775) (
+Online.DoInit 2777 . 5521) (ONLINEP 5523 . 5658)))))
 STOP
