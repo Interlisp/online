@@ -1,13 +1,12 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED "24-Feb-2024 22:33:57" {DSK}<home>medley>il>ONLINE-INIT.;13 5796   
+(FILECREATED "25-Feb-2024 11:38:10" {DSK}<home>medley>il>ONLINE-INIT.;15 7712   
 
       :EDIT-BY "fgh"
 
-      :CHANGES-TO (VARS ONLINE-INITCOMS)
-                  (FNS Online.DoInit ONLINEP)
+      :CHANGES-TO (FNS Online.DoInit)
 
-      :PREVIOUS-DATE "24-Feb-2024 17:17:30" {DSK}<home>medley>il>ONLINE-INIT.;12)
+      :PREVIOUS-DATE "25-Feb-2024 11:21:27" {DSK}<home>medley>il>ONLINE-INIT.;14)
 
 
 (PRETTYCOMPRINT ONLINE-INITCOMS)
@@ -19,11 +18,12 @@
                VTCHAT)
         (GLOBALVARS Online.LogoutTimeout Online.SftpPort Online.SftpPassword Online.SftpDisplay 
                IDLE.PROFILE IDLE.BOUNCING.BOX Online.SftpDisplayMenu ONLINEP ShellBrowser ShellOpener
-               CLHS.OPENER)
+               CLHS.OPENER MEDLEYDIR)
         (INITVARS (Online.LogoutTimeout 30)
                (ONLINEP NIL))
         (ADVISE (SAVEVM :IN \IDLER))
-        (FNS Online.SftpInitInfo Online.SftpUpdateInfo Online.DoInit ONLINEP)
+        (FNS Online.SftpInitInfo Online.SftpUpdateInfo Online.SetUpNOTECARDSDIRECTORIES Online.DoInit
+             ONLINEP)
         (DECLARE%: DONTEVAL@LOAD DOCOPY (P (Online.DoInit)))
         (DECLARE%: FIRST DONTEVAL@LOAD DOCOPY (P (BKSYSBUF " "])
 
@@ -35,7 +35,8 @@
 (DECLARE%: DOEVAL@COMPILE DONTCOPY
 
 (GLOBALVARS Online.LogoutTimeout Online.SftpPort Online.SftpPassword Online.SftpDisplay IDLE.PROFILE
-       IDLE.BOUNCING.BOX Online.SftpDisplayMenu ONLINEP ShellBrowser ShellOpener CLHS.OPENER)
+       IDLE.BOUNCING.BOX Online.SftpDisplayMenu ONLINEP ShellBrowser ShellOpener CLHS.OPENER 
+       MEDLEYDIR)
 )
 
 (RPAQ? Online.LogoutTimeout 30)
@@ -72,10 +73,39 @@
             (EQ WHEN 'AFTERSAVEVM))
         (Online.SftpInitInfo])
 
+(Online.SetUpNOTECARDSDIRECTORIES
+  [LAMBDA NIL                                                (* ; "Edited 25-Feb-2024 11:20 by fgh")
+
+    (* ;; "Find the location of the Notecards directory and call NC.SetUpNOTECARDSDIRECTORIES.")
+
+    (* ;; " This is needed to make sure that lazy loading of Notecard types works.")
+
+    (* ;; " This function should actually be defined and called  in APPS-INIT.  But until it is")
+
+    (* ;; " we'll include and call it here in ONLIONE-INIT.  No harm in calling it twice when")
+
+    (* ;; " it eventually gets integrated into APPS-INIT.")
+                                                             (* ; "Edited 25-Feb-2024 11:15 by fgh")
+    (LET* [(LOC1 (CONCAT MEDLEYDIR "notecards>"))
+           (LOC2 (CONCAT MEDLEYDIR "..>notecards>"))
+           (LOC3 (CONCAT MEDLEYDIR "..>..>notecards>"))
+           (NCDIR (for LOC in (LIST LOC1 LOC2 LOC3) thereis (OR (INFILEP (CONCAT LOC 
+                                                                                "system>NOTECARDS"))
+                                                                (INFILEP (CONCAT LOC 
+                                                                              "system>NOTECARDS.LCOM"
+                                                                                ]
+          (if NCDIR
+              then (NC.SetUpNOTECARDSDIRECTORIES NCDIR)
+                   T
+            else (PRIN1 "Warning: Notecards directory could not be found." T)
+                 (PRIN1 "Hence, NOTECARDSDIRECTORIES is probably not set correctly" T)
+                 (PRIN1 "and Notecards will not work properly." T)
+                 NIL])
+
 (Online.DoInit
   [LAMBDA NIL
 
-    (* ;; "Edited 24-Feb-2024 22:29 by fgh")
+    (* ;; "Edited 25-Feb-2024 11:37 by fgh")
 
     (* ;; "Edited 24-Feb-2024 00:26 by runner")
 
@@ -139,7 +169,12 @@
            (* ;; "Reset Chat displaytype to enable vt100")
 
            (RPLACA (CAR CHAT.DISPLAYTYPES)
-                  NIL])
+                  NIL)
+
+           (* ;; 
+ "Setup NOTECARDSDIRECTORIES.  Should be done it APPS-INIT.  But until thats done, we'll do it here.")
+
+           (Online.SetUpNOTECARDSDIRECTORIES])
 
 (ONLINEP
   [LAMBDA NIL                                                (* ; "Edited 24-Feb-2024 22:31 by fgh")
@@ -154,6 +189,6 @@
 (BKSYSBUF " ")
 )
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (1635 5660 (Online.SftpInitInfo 1645 . 2518) (Online.SftpUpdateInfo 2520 . 2775) (
-Online.DoInit 2777 . 5521) (ONLINEP 5523 . 5658)))))
+  (FILEMAP (NIL (1660 7576 (Online.SftpInitInfo 1670 . 2543) (Online.SftpUpdateInfo 2545 . 2800) (
+Online.SetUpNOTECARDSDIRECTORIES 2802 . 4510) (Online.DoInit 4512 . 7437) (ONLINEP 7439 . 7574)))))
 STOP

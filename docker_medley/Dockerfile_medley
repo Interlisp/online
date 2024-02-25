@@ -65,16 +65,6 @@ RUN apt-get update \
     && apt-get install -y git \
     && apt-get install -y gh
 
-# install tigervnc server
-#RUN apt-get purge -y tightvncserver \
-#    && apt-get install -y tigervnc-standalone-server
-
-# install gh (github cli)
-#COPY gh/gh_2.14.7_linux_*.deb /tmp
-#RUN dpkg -i /tmp/gh_2.14.7_linux_${PLATFORM}.deb; rm /tmp/gh_2.14.7_linux_*.deb
-
-
-
 #  install websockify for use with noVNC
 RUN apt-get install -y websockify
 
@@ -131,21 +121,6 @@ COPY --chown=${USER_NAME}:${USER_NAME} init/ONLINE-INIT.LCOM ${MEDLEY_INSTALLDIR
 COPY notecards ${NC_INSTALLDIR}
 RUN echo ${NOTECARDS_RELEASE} ${NC_INSTALLDIR}/release.txt
 
-# do a loadup to create the online.sysout with Notecards, Rooms, etc installed
-#ARG ONLINE_DIR=${MEDLEY_INSTALLDIR}/../online
-#RUN mkdir -p ${ONLINE_DIR}/docker_medley/loadup \
-#    && chown root:root ${ONLINE_DIR} \
-#    && chown root:root ${ONLINE_DIR}/docker_medley \
-#    && chown root:root ${ONLINE_DIR}/docker_medley/loadup
-#COPY --chown=${USER_NAME}:${USER_NAME} loadup/* ${ONLINE_DIR}/docker_medley/loadup
-#
-#RUN Xvnc -geometry 1280x720 :0 \
-#    &  export DISPLAY=":0" \
-#    && PATH="$MAIKO_INSTALLDIR:$PATH" \
-#    && ${ONLINE_DIR}/docker_medley/loadup/loadup-online-from-full.sh \
-#    && cp -p ${MEDLEY_INSTALLDIR}/tmp/online.sysout ${MEDLEY_INSTALLDIR}/loadups/full.sysout \
-#    && rm -rf ${ONLINE_DIR}/docker_medley/loadup    
-
 # clean up medley/.bashrc for use with xterm
 RUN sed -i /PS1=/s/u@.h/u@oio/ ${HOMEDIR}/.bashrc \
     && chown ${USER_NAME}:${USER_NAME} ${HOMEDIR}/.bashrc
@@ -166,10 +141,5 @@ RUN mkdir -p /etc/letsencrypt/live/online.interlisp.org/ \
 WORKDIR ${HOMEDIR}
 USER root:root
 ENTRYPOINT USER=${USER_NAME} /bin/bash
-
-# temp patch 2022-10-12
-# COPY HELPSYS fixes into lispusers
-#COPY --chown=${USER_NAME}:${USER_NAME} misc/HELPSYS ${MEDLEY_INSTALLDIR}/lispusers/HELPSYS
-#COPY --chown=${USER_NAME}:${USER_NAME} misc/HELPSYS.LCOM ${MEDLEY_INSTALLDIR}/lispusers/HELPSYS.LCOM
 
 
