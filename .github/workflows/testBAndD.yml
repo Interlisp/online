@@ -14,4 +14,16 @@
 #set -x
 #
 
-name: 'Build/Push Online-Medley Docker Image'
+name: 'Test Build/Deploy Online-Medley Docker Image'
+
+on:
+  workflow_dispatch:
+
+jobs:
+  only:
+    runs-on: ubuntu-latest
+    uses: ./.github/workflows/buildAndDeployMedleyDocker.yml
+    with:
+      platform: 'linux/amd64'
+    secrets: inherit
+
