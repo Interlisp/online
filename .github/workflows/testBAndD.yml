@@ -16,7 +16,8 @@
 
 name: 'Test Build/Deploy Online-Medley Docker Image'
 
-on: workflow_dispatch:
+on:
+  workflow_dispatch:
 
 jobs:
   only:
