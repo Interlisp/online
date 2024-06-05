@@ -1,0 +1,52 @@
+#
+#    buildAndDeployMedleyDocker.yml
+#
+#    Top-level workflow to build and then deploy an Online-Medley docker image
+#
+#    2024-06-05 by Frank Halasz
+#
+#    Copyright: 2024 by Interlisp.org 
+#
+
+name: 'Build and Deploy Online-Medley Docker Image'
+
+# Run this workflow on ...
+on:
+  workflow_dispatch:
+    inputs:
+      platform:
+        type: choice
+        options:
+        - linux/amd64
+        - linux/arm64
+
+  workflow_call:
+    secrets:
+      CCRYPT_KEY:
+        required: true
+      OIO_KEY:
+        required: true
+    inputs:
+      platform:
+          description: "linux/amd64 or linux/arm64"
+          type: string
+          default: 'linux/amd64'
+          required: false
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    uses: ./.github/workflows/buildMedleyDocker.yml
+    with:
+      platform: ${{ inputs.platform }}
+    secrets: inherit
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    uses: ./.github/workflows/deployMedleyDocker.yml
+    secrets: inherit
+

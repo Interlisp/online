@@ -1,0 +1,28 @@
+# buildDocker.yml
+#
+# Workflow to build and push a multiplatform Docker image for the Medley that runs
+# on online.interlisp.org.
+#
+# This workflow uses the latest Medley docker image and the latest Interlisp/online
+# release on github.
+#
+#    2022-01-19 by Frank Halasz based on Medley buildDocker.yml
+#
+#
+#    Copyright: 2022 by Interlisp.org 
+#
+#set -x
+#
+
+name: 'Test Build/Deploy Online-Medley Docker Image'
+
+on: workflow-dispatch:
+
+jobs:
+  only:
+    runs-on: ubuntu-latest
+    uses: ./.github/workflows/buildAndDeployMedleyDocker.yml
+    with:
+      platform: 'linux/amd64'
+    secrets: inherit
+

@@ -1,6 +1,7 @@
-# releaseMedleyDocker.yml
 #
-# Workflow to deploy an Online-Medley docker image
+#    deployMedleyDocker.yml
+#
+#    Workflow to deploy an Online-Medley docker image
 #
 #    2024-06-05 by Frank Halasz
 #
@@ -11,6 +12,17 @@ name: 'Deploy Online-Medley Docker Image'
 
 on:
   workflow_dispatch:
+
+  workflow_call:
+    secrets:
+      OIO_SSH_KEY:
+        required: true
+    inputs:
+      platform:
+          description: "linux/amd64 or linux/arm64"
+          type: string
+          default: 'linux/amd64'
+          required: false
 
 jobs:
   deploy:
