@@ -24,7 +24,7 @@ on:
     secrets:
       CCRYPT_KEY:
         required: true
-      OIO_KEY:
+      OIO_SSH_KEY:
         required: true
     inputs:
       platform:
