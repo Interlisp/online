@@ -21,7 +21,6 @@ on:
 
 jobs:
   only:
-    runs-on: ubuntu-latest
     uses: ./.github/workflows/buildAndDeployMedleyDocker.yml
     with:
       platform: 'linux/amd64'
