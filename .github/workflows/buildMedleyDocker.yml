@@ -25,7 +25,7 @@ on:
         options:
         - linux/amd64
         - linux/arm64
-  
+
   workflow_call:
     secrets:
       CCRYPT_KEY:
@@ -80,11 +80,11 @@ jobs:
                 docker_medley/gh/gh_2.14.7_linux_amd64.deb
                 docker_medley/gh/gh_2.14.7_linux_arm64.deb
             key: ${{ runner.os }}-lfs-v1
-      
+
       # Save cached files away - if any
       - name: Save LFS files
         if: steps.cache-lfs.outputs.cache-hit == 'true'
-        run: mv docker_medley ../save_docker_medley 
+        run: mv docker_medley ../save_docker_medley
 
       # Checkout latest commit
       - name: Checkout Online code
@@ -147,7 +147,7 @@ jobs:
           COMMIT_DATE=$(git show -s --date=format:'%y%m%d' --format=%cd ${COMMIT_SHORTREF})
           NC_RELEASE_TAG=notecards-${COMMIT_DATE}-${COMMIT_SHORTREF}
           #
-          echo "NC_RELEASE_TAG=${NC_RELEASE_TAG}" >> ${GITHUB_ENV} 
+          echo "NC_RELEASE_TAG=${NC_RELEASE_TAG}" >> ${GITHUB_ENV}
           echo "nc_release_tag=${NC_RELEASE_TAG}" >> ${GITHUB_OUTPUT}
 
       # Setup docker environment variables
@@ -176,14 +176,14 @@ jobs:
 
       # Login to ghcr.io
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3 
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       # Set up platform variable so it can be used by Docker build
-      - name: Strip the linux/ from the platform input 
+      - name: Strip the linux/ from the platform input
         id: platform_var
         run: |
           echo "platform=$(echo "${{ needs.inputs.outputs.platform }}" | sed s-linux/--)"  >> ${GITHUB_OUTPUT}
@@ -209,5 +209,3 @@ jobs:
           platforms: ${{ needs.inputs.outputs.platform }}
           push: true
           tags: ${{ steps.docker_env.outputs.docker_tags }}
-          
-          
