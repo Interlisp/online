@@ -7,7 +7,7 @@
 #    Copyright: 2024 by Interlisp.org 
 #
 
-name: 'Deploy Medley-online Docker Image'
+name: 'Deploy Online-Medley Docker Image'
 
 on:
   workflow_dispatch:
@@ -22,8 +22,8 @@ jobs:
         run: |
           eval $(ssh-agent)
           ssh-add - <<< "${SSH_KEY}"
-          ssh -o StrictHostKeyChecking=no ubuntu@online.interlisp.org oio medley pulldev
-          ssh -o StrictHostKeyChecking=no ubuntu@online.interlisp.org oio medley dev2prod
+          ssh -o StrictHostKeyChecking=no ubuntu@online.interlisp.org /home/ubuntu/bin/oio medley pulldev
+          ssh -o StrictHostKeyChecking=no ubuntu@online.interlisp.org /home/ubuntu/bin/oio medley dev2prod
         env:
           SSH_KEY: ${{ secrets.OIO_SSH_KEY }}
 
