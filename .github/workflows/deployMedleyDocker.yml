@@ -1,16 +1,28 @@
-# releaseMedleyDocker.yml
 #
-# Workflow to deploy an Online-Medley docker image
+#    deployMedleyDocker.yml
+#
+#    Workflow to deploy an Online-Medley docker image
 #
 #    2024-06-05 by Frank Halasz
 #
 #    Copyright: 2024 by Interlisp.org 
 #
 
-name: 'Deploy Medley-online Docker Image'
+name: 'Deploy Online-Medley Docker Image'
 
 on:
   workflow_dispatch:
+
+  workflow_call:
+    secrets:
+      OIO_SSH_KEY:
+        required: true
+    inputs:
+      platform:
+          description: "linux/amd64 or linux/arm64"
+          type: string
+          default: 'linux/amd64'
+          required: false
 
 jobs:
   deploy:
@@ -22,8 +34,8 @@ jobs:
         run: |
           eval $(ssh-agent)
           ssh-add - <<< "${SSH_KEY}"
-          ssh -o StrictHostKeyChecking=no ubuntu@online.interlisp.org oio medley pulldev
-          ssh -o StrictHostKeyChecking=no ubuntu@online.interlisp.org oio medley dev2prod
+          ssh -o StrictHostKeyChecking=no ubuntu@online.interlisp.org /home/ubuntu/bin/oio medley pulldev
+          ssh -o StrictHostKeyChecking=no ubuntu@online.interlisp.org /home/ubuntu/bin/oio medley dev2prod
         env:
           SSH_KEY: ${{ secrets.OIO_SSH_KEY }}
 
