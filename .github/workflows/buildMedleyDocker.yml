@@ -42,7 +42,7 @@ jobs:
   # Build and push the docker image
 
   build_and-push:
-    needs: inputs
+
     runs-on: ubuntu-latest
 
     steps:
