@@ -215,19 +215,19 @@ case $1 in
                   echo "ERROR: docker image \"ghcr.io/interlisp/online-medley:development\" does not exist."
                   exit 1
                 fi
-		if [ -n "$(docker images -q ghcr.io/interlisp/online-medley:production-3)"
+		if [ -n "$(docker images -q ghcr.io/interlisp/online-medley:production-3)" ]
                 then
                   docker image rm ghcr.io/interlisp/online-medley:production-3
                 fi
-		if [ -n "$(docker images -q ghcr.io/interlisp/online-medley:production-2)"
+		if [ -n "$(docker images -q ghcr.io/interlisp/online-medley:production-2)" ]
                 then
                   docker tag ghcr.io/interlisp/online-medley:production-2 ghcr.io/interlisp/online-medley:production-3
                 fi
-		if [ -n "$(docker images -q ghcr.io/interlisp/online-medley:production-1)"
+		if [ -n "$(docker images -q ghcr.io/interlisp/online-medley:production-1)" ]
                 then
        		  docker tag ghcr.io/interlisp/online-medley:production-1 ghcr.io/interlisp/online-medley:production-2
                 fi
-		if [ -n "$(docker images -q ghcr.io/interlisp/online-medley:production)"
+		if [ -n "$(docker images -q ghcr.io/interlisp/online-medley:production)" ]
                 then
 		  docker tag ghcr.io/interlisp/online-medley:production ghcr.io/interlisp/online-medley:production-1
                 fi
@@ -244,16 +244,13 @@ case $1 in
                   exit 1
                 fi
                 docker tag ghcr.io/interlisp/online-medley:production-1 ghcr.io/interlisp/online-medley:production
-		if [ -n "$(docker images -q ghcr.io/interlisp/online-medley:production-2)"
+		if [ -n "$(docker images -q ghcr.io/interlisp/online-medley:production-2)" ]
                 then
                   docker tag ghcr.io/interlisp/online-medley:production-2 ghcr.io/interlisp/online-medley:production-1
                 fi
-		if [ -n "$(docker images -q ghcr.io/interlisp/online-medley:production-3)"
+		if [ -n "$(docker images -q ghcr.io/interlisp/online-medley:production-3)" ]
                 then
        		  docker tag ghcr.io/interlisp/online-medley:production-3 ghcr.io/interlisp/online-medley:production-2
-                fi
-		if [ -n "$(docker images -q ghcr.io/interlisp/online-medley:production-3)"
-                then
                   docker image rm ghcr.io/interlisp/online-medley:production-3
                 fi
 		echo "Previous Online-medley production version restored."
