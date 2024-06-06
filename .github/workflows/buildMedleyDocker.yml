@@ -1,17 +1,16 @@
-# buildDocker.yml
+#  buildDocker.yml
 #
-# Workflow to build and push a multiplatform Docker image for the Medley that runs
-# on online.interlisp.org.
+#  Workflow to build and push a multiplatform Docker image for the Medley that runs
+#  on online.interlisp.org.
 #
-# This workflow uses the latest Medley docker image and the latest Interlisp/online
-# release on github.
+#  This workflow uses the latest Medley docker image and the latest Interlisp/online
+#  release on github.
 #
 #    2022-01-19 by Frank Halasz based on Medley buildDocker.yml
 #
 #
 #    Copyright: 2022 by Interlisp.org 
 #
-#set -x
 #
 
 name: 'Build/Push Online-Medley Docker Image'
@@ -39,26 +38,10 @@ on:
 
 jobs:
 
-  # Regularize the inputs so they can be referenced the same way whether they are
-  # the result of a workflow_dispatch or a workflow_call
-
-  inputs:
-    runs-on: ubuntu-latest
-    outputs:
-      platform: ${{ steps.platform.outputs.platform }}
-    steps:
-      - id: platform
-        run: >
-          if [ '${{ toJSON(inputs) }}' = 'null'  ];
-          then echo "platform=${{ github.event.inputs.platform }}" >> ${GITHUB_OUTPUT};
-          else echo "platform=${{ inputs.platform }}" >> ${GITHUB_OUTPUT};
-          fi
-
-
   # Build and push the docker image
 
   build_and-push:
-    needs: inputs
+
     runs-on: ubuntu-latest
 
     steps:
@@ -164,7 +147,7 @@ jobs:
 
       # Setup the Docker Machine Emulation environment.  
       - name: Set up QEMU
-        if: ${{ needs.inputs.outputs.platform == 'linux/arm64' }}
+        if: ${{ inputs.platform == 'linux/arm64' }}
         uses: docker/setup-qemu-action@master
         with:
           platforms: linux/arm64
@@ -186,7 +169,7 @@ jobs:
       - name: Strip the linux/ from the platform input
         id: platform_var
         run: |
-          echo "platform=$(echo "${{ needs.inputs.outputs.platform }}" | sed s-linux/--)"  >> ${GITHUB_OUTPUT}
+          echo "platform=$(echo "${{ inputs.platform }}" | sed s-linux/--)"  >> ${GITHUB_OUTPUT}
 
       # Do the Docker Build using the Dockerfile in the repository
       # checked out and the release tars just downloaded.
@@ -206,6 +189,6 @@ jobs:
             PLATFORM=${{ steps.platform_var.outputs.platform }}
           context: ./docker_medley
           file: ./docker_medley/Dockerfile_medley
-          platforms: ${{ needs.inputs.outputs.platform }}
+          platforms: ${{ inputs.platform }}
           push: true
           tags: ${{ steps.docker_env.outputs.docker_tags }}
