@@ -1,17 +1,16 @@
-# buildDocker.yml
+#  buildDocker.yml
 #
-# Workflow to build and push a multiplatform Docker image for the Medley that runs
-# on online.interlisp.org.
+#  Workflow to build and push a multiplatform Docker image for the Medley that runs
+#  on online.interlisp.org.
 #
-# This workflow uses the latest Medley docker image and the latest Interlisp/online
-# release on github.
+#  This workflow uses the latest Medley docker image and the latest Interlisp/online
+#  release on github.
 #
 #    2022-01-19 by Frank Halasz based on Medley buildDocker.yml
 #
 #
 #    Copyright: 2022 by Interlisp.org 
 #
-#set -x
 #
 
 name: 'Build/Push Online-Medley Docker Image'
@@ -70,11 +69,10 @@ jobs:
         if: steps.cache-lfs.outputs.cache-hit == 'true'
         run: mv docker_medley ../save_docker_medley
 
-      # Checkout latest (online) commit
+      # Checkout latest commit
       - name: Checkout Online code
         uses: actions/checkout@v4
         with:
-          repository: ${{ github.repository_owner }}/online
           lfs: ${{ steps.cache-lfs.outputs.cache-hit != 'true' }}
 
       - name: Checkout lfs files
