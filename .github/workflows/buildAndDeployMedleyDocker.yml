@@ -44,11 +44,9 @@ jobs:
       platform: ${{ inputs.platform }}
     secrets:
       CCRYPT_KEY: ${{ secrets.CCRYPT_KEY }}
-      OIO_SSH_KEY: ${{ secrets.OIO_SSH_KEY }}
   deploy:
     needs: build
     uses: ./.github/workflows/deployMedleyDocker.yml
     secrets:
-      CCRYPT_KEY: ${{ secrets.CCRYPT_KEY }}
       OIO_SSH_KEY: ${{ secrets.OIO_SSH_KEY }}
 
