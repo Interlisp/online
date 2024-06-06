@@ -49,9 +49,9 @@ jobs:
     steps:
       - id: platform
         run: >
-          if [ '${{ toJSON(inputs) }}' = 'null'  ];
-          then echo "platform=${{ github.event.inputs.platform }}" >> ${GITHUB_OUTPUT};
-          else echo "platform=${{ inputs.platform }}" >> ${GITHUB_OUTPUT};
+          if [ '${{ toJSON(inputs) }}' = '{}'  ];
+          then echo "platform=${{ inputs.platform }}" >> ${GITHUB_OUTPUT};
+          else echo "platform=linux/amd64" >> ${GITHUB_OUTPUT};
           fi
 
 
