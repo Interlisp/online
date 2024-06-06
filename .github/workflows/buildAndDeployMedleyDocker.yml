@@ -42,9 +42,13 @@ jobs:
     uses: ./.github/workflows/buildMedleyDocker.yml
     with:
       platform: ${{ inputs.platform }}
-    secrets: inherit
+    secrets:
+      CCRYPT_KEY: ${{ secrets.CCRYPT_KEY }}
+      OIO_SSH_KEY: ${{ secrets.OIO_SSH_KEY }}
   deploy:
     needs: build
     uses: ./.github/workflows/deployMedleyDocker.yml
-    secrets: inherit
+    secrets:
+      CCRYPT_KEY: ${{ secrets.CCRYPT_KEY }}
+      OIO_SSH_KEY: ${{ secrets.OIO_SSH_KEY }}
 
