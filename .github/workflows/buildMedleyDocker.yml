@@ -70,10 +70,11 @@ jobs:
         if: steps.cache-lfs.outputs.cache-hit == 'true'
         run: mv docker_medley ../save_docker_medley
 
-      # Checkout latest commit
+      # Checkout latest (online) commit
       - name: Checkout Online code
         uses: actions/checkout@v4
         with:
+          repository: ${{ github.repository_owner }}/online
           lfs: ${{ steps.cache-lfs.outputs.cache-hit != 'true' }}
 
       - name: Checkout lfs files
