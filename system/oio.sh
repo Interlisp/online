@@ -210,11 +210,50 @@ case $1 in
            ;;
 
            Idev2prodI)
-		lastlast1=$(docker images -q ghcr.io/interlisp/online-medley:lastlastproduction)
-		docker tag ghcr.io/interlisp/online-medley:lastproduction ghcr.io/interlisp/online-medley:lastlastproduction
-		docker tag ghcr.io/interlisp/online-medley:production ghcr.io/interlisp/online-medley:lastproduction
-		docker tag ghcr.io/interlisp/online-medley:development ghcr.io/interlisp/online-medley:production
+		if [ -z "$(docker images -q ghcr.io/interlisp/online-medley:development)" ]
+                then
+                  echo "ERROR: docker image \"ghcr.io/interlisp/online-medley:development\" does not exist."
+                  exit 1
+                fi
+		if [ -n "$(docker images -q ghcr.io/interlisp/online-medley:production-3)" ]
+                then
+                  docker image rm ghcr.io/interlisp/online-medley:production-3
+                fi
+		if [ -n "$(docker images -q ghcr.io/interlisp/online-medley:production-2)" ]
+                then
+                  docker tag ghcr.io/interlisp/online-medley:production-2 ghcr.io/interlisp/online-medley:production-3
+                fi
+		if [ -n "$(docker images -q ghcr.io/interlisp/online-medley:production-1)" ]
+                then
+       		  docker tag ghcr.io/interlisp/online-medley:production-1 ghcr.io/interlisp/online-medley:production-2
+                fi
+		if [ -n "$(docker images -q ghcr.io/interlisp/online-medley:production)" ]
+                then
+		  docker tag ghcr.io/interlisp/online-medley:production ghcr.io/interlisp/online-medley:production-1
+                fi
+        	#
+                docker tag ghcr.io/interlisp/online-medley:development ghcr.io/interlisp/online-medley:production
 		echo "Online-medley moved from development to production."
+           ;;
+
+           IrestoreI)
+		if [ -z "$(docker images -q ghcr.io/interlisp/online-medley:production-1)" ]
+                then
+                  echo "ERROR: docker image \"ghcr.io/interlisp/online-medley:production-1\" does not exist."
+                  echo "Cannot restore previous production version"
+                  exit 1
+                fi
+                docker tag ghcr.io/interlisp/online-medley:production-1 ghcr.io/interlisp/online-medley:production
+		if [ -n "$(docker images -q ghcr.io/interlisp/online-medley:production-2)" ]
+                then
+                  docker tag ghcr.io/interlisp/online-medley:production-2 ghcr.io/interlisp/online-medley:production-1
+                fi
+		if [ -n "$(docker images -q ghcr.io/interlisp/online-medley:production-3)" ]
+                then
+       		  docker tag ghcr.io/interlisp/online-medley:production-3 ghcr.io/interlisp/online-medley:production-2
+                  docker image rm ghcr.io/interlisp/online-medley:production-3
+                fi
+		echo "Previous Online-medley production version restored."
            ;;
 
            *)
@@ -299,6 +338,7 @@ case $1 in
         echo
 	echo "${oio} medley pulldev:  pull latest development (test) online-medley image from GHCR"
         echo "${oio} medley dev2prod:  move current development online-medley image to production status"
+        echo "${oio} medley restore:  restore previous production online-medley image"
 	echo
 	echo "${oio} portal pulldev:  pull latest development portal (online-development) docker image from GHCR"
         echo "${oio} portal pullprod:  pull latest production portal (online-production) docker image from GHCR"
