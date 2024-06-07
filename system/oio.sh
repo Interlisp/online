@@ -205,7 +205,13 @@ case $1 in
 
 
            IpulldevI)
+                olddev=$(docker images -q ghcr.io/interlisp/online-medley:development)
 		docker pull ghcr.io/interlisp/online-medley:development
+                newdev=$(docker images -q ghcr.io/interlisp/online-medley:development)
+                if [ -n "${olddev}" ] && [ "${olddev}" != "${newdev}" ]
+                then
+                  docker image rm ${olddev}
+                fi
                 echo "Online-medley development release pulled from Github Container Registry"
            ;;
 
