@@ -26,7 +26,7 @@ const passport = require('passport');
 const app = express();
 const filesApp = require('./files');
 app.use((req, res, next) => {
-            if(isFIO(req)) filesApp(req, res);
+            if(config.isFIO(req)) filesApp(req, res);
             else next();
         });
 
