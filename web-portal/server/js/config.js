@@ -153,7 +153,7 @@ var isFIO = function(req) {
     return (req.hostname.toLowerCase() == "files.interlisp.org"
 }
 */
-var is FIO = isNCO;
+var isFIO = isNCO;
 exports.isFIO = isFIO;
 
 var medleyMemoryArg = "64";
