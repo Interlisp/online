@@ -148,12 +148,9 @@ var isNCO = function(req) {
 };
 exports.isNCO = isNCO;
 
-/*
 var isFIO = function(req) {
-    return (req.hostname.toLowerCase() == "files.interlisp.org"
+    return (req.hostname.toLowerCase() == "files.interlisp.org");
 }
-*/
-var isFIO = isNCO;
 exports.isFIO = isFIO;
 
 var medleyMemoryArg = "64";
