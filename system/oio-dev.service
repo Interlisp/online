@@ -18,6 +18,7 @@ ExecStart=/usr/bin/docker run \
                -v /var/run/docker.sock:/var/run/docker.sock \
                -v /srv/oio/development:/srv/oio \
                -v /srv/oio/static:/srv/static \
+               -v /srv/oio/files:/srv/files \
                -v /etc/letsencrypt:/etc/letsencrypt \
                -e DEV_OR_PROD \
                -e NODE_ENV \
