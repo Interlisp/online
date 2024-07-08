@@ -21,8 +21,15 @@ const session = require("express-session");
 const passport = require('passport');
 //const favicon = require('serve-favicon')
 
-// Set up express basics
+// Set up main app as well as the filesApp
+// And reroute queries with
 const app = express();
+const filesApp = require('./files');
+app.use((req, res, next) => {
+            if(isFIO(req)) filesApp(req, res);
+            else next();
+        });
+
 //app.use(favicon(path.join(config.imagesDir, 'favicon.ico')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -37,11 +44,11 @@ logger.token('user', (req, res) => { return (req.user && req.user.username) || "
 logger.token('user-agent-short', (req, res) => { return (req.get('User-Agent') && req.get('User-Agent').split(' ', 1)[0]) || "Unknown"; });
 app.use(
   logger(
-    ':date[iso] :user :method :url :user-agent-short :status :response-time ms - :res[content-length]', { 
+    ':date[iso] :user :method :url :user-agent-short :status :response-time ms - :res[content-length]', {
         stream: logStream,
         skip: (req, res) => {
           return !(/^\/interlisp/.test(req.originalUrl) || /^\/client\/go/.test(req.originalUrl) || /^\/main$/.test(req.originalUrl) || /^\/$/.test(req.originalUrl));
-        }      
+        }
     }));
 
 //  Set up express session

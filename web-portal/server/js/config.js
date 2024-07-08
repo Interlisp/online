@@ -148,6 +148,14 @@ var isNCO = function(req) {
 };
 exports.isNCO = isNCO;
 
+/*
+var isFIO = function(req) {
+    return (req.hostname.toLowerCase() == "files.interlisp.org"
+}
+*/
+var is FIO = isNCO;
+exports.isFIO = isFIO;
+
 var medleyMemoryArg = "64";
 exports.medleyMemoryArg = medleyMemoryArg;
 
@@ -156,6 +164,9 @@ exports.medleyNetworkHostMode = medleyNetworkHostMode;
 
 var staticHostingPath = "/srv/static";
 exports.staticHostingPath = staticHostingPath;
+
+var filesHostingPath = "/srv/files";
+exports.filesHostingPath = filesHostingPath;
 
 var idleTimeoutSecs = 7200;
 var idleTimeoutSecsGuest = 3600;

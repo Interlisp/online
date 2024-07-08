@@ -1,16 +1,16 @@
 #!/usr/bin/env node
 /*******************************************************************************
- * 
- *   server.js:  Start up http(s) server(s) for online.interlisp.org web portal. 
+ *
+ *   server.js:  Start up http(s) server(s) for online.interlisp.org web portal.
  *               This is the module that starts up the whole portal by loading
  *               the express app (app.js) and initiating the server listens.
  *               Called by something like "node ./server.js".
- * 
+ *
  *   2021-11-18 Frank Halasz
- * 
- * 
- *   Copyright: 2021-2022 by Interlisp.org 
- * 
+ *
+ *
+ *   Copyright: 2021-2024 by Interlisp.org
+ *
  *
  ******************************************************************************/
 var config = require('./config');
@@ -36,9 +36,9 @@ if(config.supportHttps) {
 /**
  * Create HTTP & HTTPS server.
  */
- 
+
 if(config.supportHttps) {
-  var sslOpts = 
+  var sslOpts =
     {
       key: fs.readFileSync(config.tlsKeyPath),
       cert: fs.readFileSync(config.tlsCertPath),
