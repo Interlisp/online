@@ -16,15 +16,20 @@ const express = require("express");
 
 const filesApp = express();
 
-filesApp.use('/', express.static(config.filesHostingPath));
+filesApp.use((req, res, next) => {
+  if (req.url.substr(-1,1) == "/") res.redirect("index.html");
+  else next();
+});
+
+filesApp.use(express.static(config.filesHostingPath));
 
 // catch 404 and forward to error handler
-filesApp.use(function(req, res, next) {
+filesApp.use((req, res, next) => {
   next(createError(404, `${req.originalUrl} Not Found`));
 });
 
 // error handler
-filesApp.use(function(err, req, res, next) {
+filesApp.use((err, req, res, next) => {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = config.isDev ? err : {};
