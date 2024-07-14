@@ -16,12 +16,17 @@ const express = require("express");
 
 const filesApp = express();
 
-filesApp.use((req, res, next) => {
-  if (req.url.substr(-1,1) == "/") res.redirect("index.html");
-  else next();
-});
+//filesApp.use((req, res, next) => {
+//  if (req.url.substr(-1,1) == "/") res.redirect("index.html");
+//  else next();
+//});
 
-filesApp.use(express.static(config.filesHostingPath));
+const staticOptions = {
+    dotfiles: "allow",
+    index: "index.html"
+};
+
+filesApp.use(express.static(config.filesHostingPath, staticOptions));
 
 // catch 404 and forward to error handler
 filesApp.use((req, res, next) => {
