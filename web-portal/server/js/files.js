@@ -16,10 +16,10 @@ const express = require("express");
 
 const filesApp = express();
 
-//filesApp.use((req, res, next) => {
-//  if (req.url.substr(-1,1) == "/") res.redirect("index.html");
-//  else next();
-//});
+filesApp.use((req, res, next) => {
+            if(req.protocol === 'https' || !config.supportHttps) next();
+            else res.redirect(`https://${req.hostname}:${config.httpsRedirectPort}${req.url}`);
+          });
 
 const staticOptions = {
     dotfiles: "allow",
