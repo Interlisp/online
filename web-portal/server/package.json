@@ -12,6 +12,7 @@
     "express-session": "*",
     "gmail-send": "^1.8.14",
     "http-errors": "^1.8.0",
+    "istextorbinary": "^9.5.0",
     "mongoose": "^6.0.13",
     "morgan": "^1.10.0",
     "passport": "^0.5.0",
