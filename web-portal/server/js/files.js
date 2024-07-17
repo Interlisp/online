@@ -61,7 +61,7 @@ filesApp.use((req, res, next) => {
       res.end();
   } else {
       res.status(404);
-      res.send("<!DOCTYPE html><html><body><h1>Cannot find file: " + req.OriginalUrl + "</h1></body></html>");
+      res.send("<!DOCTYPE html><html><body><h3>ERROR: Cannot find file: " + req.originalUrl + "</h3></body></html>");
   }
 });
 
