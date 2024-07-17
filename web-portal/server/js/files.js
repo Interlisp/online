@@ -63,7 +63,7 @@ filesApp.use((req, res, next) => {
       res.status(404);
       res.send("<!DOCTYPE html><html><body><h1>Cannot find file: " + req.OriginalUrl + "</h1></body></html>");
   }
-}
+});
 
 
 module.exports = filesApp;
