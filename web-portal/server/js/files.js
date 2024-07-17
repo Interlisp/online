@@ -33,6 +33,7 @@ function setContentType(res, path, stat) {
     } else {
         if(ext == '.sh') {
             res.set('Content-Type', 'text/plain; charset=UTF-8');
+        }
     }
 }
 
