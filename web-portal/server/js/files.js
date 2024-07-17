@@ -56,7 +56,9 @@ filesApp.use(express.static(config.filesHostingPath, staticOptions));
 
 // catch 404 and forward to error handler
 filesApp.use((req, res, next) => {
-  next(createError(404, `${req.originalUrl} Not Found`));
+  console.log("heeeeeere *******************************************************************");
+  res.send(' **************** ' + req.originalURL');
+  //next(createError(404, `${req.originalUrl} Not Found`));
 });
 
 // error handler
