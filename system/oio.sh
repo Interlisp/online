@@ -317,6 +317,18 @@ case $1 in
          fi
      ;;
 
+     start)
+         sudo systemctl start "${oio}".service
+     ;;
+
+     stop)
+         sudo systemctl stop "${oio}".service
+     ;;
+
+     xstat)
+         sudo systemctl status "${oio}".service
+     ;;
+
      help)
         echo "Usage:"
         echo
@@ -354,6 +366,10 @@ case $1 in
             echo "${oio} noRm off: turn noDockerRm off"
             echo
         fi
+        echo "${oio} start:  start ${oio}.service"
+        echo "${oio} stop:   stop ${oio}.service"
+        echo "${oio} xstat:  = systemctl status ${oio}.service"
+        echo
 	;;
 
     *)
