@@ -31,8 +31,12 @@ function setContentType(res, path, stat) {
             res.set('Content-Type', 'text/plain; charset=UTF-8');
         }
     } else {
-        if(ext == '.sh') {
+        switch(ext) {
+          case '.sh':
+          case '.command':
+          case '.awk':
             res.set('Content-Type', 'text/plain; charset=UTF-8');
+            break;
         }
     }
 }
