@@ -54,23 +54,16 @@ const staticOptions = {
 
 filesApp.use(express.static(config.filesHostingPath, staticOptions));
 
-// catch 404 and forward to error handler
+// can't find file - send error message
 filesApp.use((req, res, next) => {
-  console.log("heeeeeere *** " + req.originalURL);
-  console.log(" *** " + req.url);
-  console.dir(res.headersSent);
-  //next(createError(404, `${req.originalUrl} Not Found`));
-});
+  if(req.url == "/favicon.ico") {
+      res.status(404);
+      res.end();
+  } else {
+      res.status(404);
+      res.send("<!DOCTYPE html><html><body><h1>Cannot find file: " + req.OriginalUrl + "</h1></body></html>");
+  }
+}
 
-// error handler
-filesApp.use((err, req, res, next) => {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = config.isDev ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
 
 module.exports = filesApp;
