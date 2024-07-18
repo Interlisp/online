@@ -35,6 +35,7 @@ function setContentType(res, path, stat) {
           case '.sh':
           case '.command':
           case '.awk':
+          case '.lisp':
             res.set('Content-Type', 'text/plain; charset=UTF-8');
             break;
         }
