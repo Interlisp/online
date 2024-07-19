@@ -28,7 +28,7 @@ function setContentType(res, path, stat) {
     if(ext.length == 0) {
         const buffer = mFs.readFileSync(path);
         const name = mPath.basename(path);
-        if(isInterlispSource(buffer, name) {
+        if(isInterlispSource(buffer, name)) {
             res.set('Content-Type', 'application/octet-stream');
         } else if (isText(null, buffer)) {
             res.set('Content-Type', 'text/plain; charset=UTF-8');
