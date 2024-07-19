@@ -27,15 +27,14 @@ function setContentType(res, path, stat) {
     const ext = mPath.extname(path);
     if(ext.length == 0) {
         const buffer = mFs.readFileSync(path);
-        if(isBinary(null, buffer)) {
-            console.log("BINARY: " + path);
+        const name = mPath.basename(path);
+        if(isInterlispSource(buffer, name) {
             res.set('Content-Type', 'application/octet-stream');
         } else if (isText(null, buffer)) {
-            console.log("TEXT: " + path);
             res.set('Content-Type', 'text/plain; charset=UTF-8');
             res.set('X-Content-Type-Options', 'nosniff');
-        } else {
-            console.log("NEITHER: " + path);
+         } else {
+            res.set('Content-Type', 'application/octet-stream');
         }
     } else {
         switch(ext) {
@@ -56,6 +55,16 @@ function setContentType(res, path, stat) {
         }
     }
 }
+
+// Does buffer contain an Interlisp source file?
+function isInterlispSource(buffer, name) {
+     return (
+              buffer.includes("(DEFINE-FILE-INFO")
+              && buffer.includes(name + "COMS")
+            );
+
+}
+
 
 filesApp.use((req, res, next) => {
             if(req.protocol === 'https' || !config.supportHttps) next();
