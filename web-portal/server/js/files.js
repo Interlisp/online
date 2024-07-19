@@ -26,16 +26,28 @@ function setContentType(res, path, stat) {
     const ext = mPath.extname(path);
     if(ext.length == 0) {
         if(isBinary(path)) {
+            console.log("BINARY: " + path);
             res.set('Content-Type', 'application/octet-stream');
-        } else {
+        } elif (isText(path)) {
+            console.log("TEXT: " + path);
             res.set('Content-Type', 'text/plain; charset=UTF-8');
+        } else {
+            console.log("NEITHER: " + path);
         }
     } else {
         switch(ext) {
-          case '.sh':
-          case '.command':
           case '.awk':
+          case '.cmd':
+          case '.command':
+          case '.dribble':
+          case '.iss':
           case '.lisp':
+          case '.ps1':
+          case '.sh':
+          case '.tty':
+          case '.sh':
+          case '.yaml':
+          case '.yml':
             res.set('Content-Type', 'text/plain; charset=UTF-8');
             break;
         }
