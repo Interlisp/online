@@ -28,7 +28,7 @@ function setContentType(res, path, stat) {
         if(isBinary(path)) {
             console.log("BINARY: " + path);
             res.set('Content-Type', 'application/octet-stream');
-        } elif (isText(path)) {
+        } else if (isText(path)) {
             console.log("TEXT: " + path);
             res.set('Content-Type', 'text/plain; charset=UTF-8');
         } else {
