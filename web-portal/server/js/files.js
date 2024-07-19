@@ -33,6 +33,7 @@ function setContentType(res, path, stat) {
         } else if (isText(null, buffer)) {
             console.log("TEXT: " + path);
             res.set('Content-Type', 'text/plain; charset=UTF-8');
+            res.set('X-Content-Type-Options', 'nosniff');
         } else {
             console.log("NEITHER: " + path);
         }
