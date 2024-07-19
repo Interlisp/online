@@ -10,25 +10,27 @@
  *
  *
  ******************************************************************************/
-
+const mFs = require('fs');
 const mPath = require('node:path');
+const mExpress = require("express");
+
 const config = require("./config");
-const express = require("express");
 const { isText, isBinary, getEncoding } = require('istextorbinary');
 
-const filesApp = express();
+const filesApp = mExpress();
 
 // Define function to set content type headers for files with no
 // extension.  Use isBinary to distinguish octet-stream versus
 // text content types.
-// Used by express.static
+// Used by mExpress.static
 function setContentType(res, path, stat) {
     const ext = mPath.extname(path);
     if(ext.length == 0) {
-        if(isBinary(path)) {
+        const buffer = mFs.readFileSync(path);
+        if(isBinary(null, buffer)) {
             console.log("BINARY: " + path);
             res.set('Content-Type', 'application/octet-stream');
-        } else if (isText(path)) {
+        } else if (isText(null, buffer)) {
             console.log("TEXT: " + path);
             res.set('Content-Type', 'text/plain; charset=UTF-8');
         } else {
@@ -65,7 +67,7 @@ const staticOptions = {
     setHeaders: setContentType
 };
 
-filesApp.use(express.static(config.filesHostingPath, staticOptions));
+filesApp.use(mExpress.static(config.filesHostingPath, staticOptions));
 
 // can't find file - send error message
 filesApp.use((req, res, next) => {
