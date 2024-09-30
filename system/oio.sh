@@ -201,63 +201,63 @@ case $1 in
 
      # install docker images for new onine-medley release
      medley)
+
+        image=ghcr.io/interlisp/online-medley
+
         case "I$2I" in
 
 
            IpulldevI)
-                olddev=$(docker images -q ghcr.io/interlisp/online-medley:development)
-		docker pull ghcr.io/interlisp/online-medley:development
-                newdev=$(docker images -q ghcr.io/interlisp/online-medley:development)
-                if [ -n "${olddev}" ] && [ "${olddev}" != "${newdev}" ]
-                then
-                  docker image rm ${olddev}
-                fi
+                image=ghcr.io/interlisp/online-medley
+                docker image tag ${image}:development ${image}:2bdeleted
+		docker pull ${image}:development
+                docker image rm ${image}:2bdeleted
                 echo "Online-medley development release pulled from Github Container Registry"
            ;;
 
            Idev2prodI)
-		if [ -z "$(docker images -q ghcr.io/interlisp/online-medley:development)" ]
+		if [ -z "$(docker images -q ${image}:development)" ]
                 then
-                  echo "ERROR: docker image \"ghcr.io/interlisp/online-medley:development\" does not exist."
+                  echo "ERROR: docker image \"${image}:development\" does not exist."
                   exit 1
                 fi
-		if [ -n "$(docker images -q ghcr.io/interlisp/online-medley:production-3)" ]
+		if [ -n "$(docker images -q ${image}:production-3)" ]
                 then
-                  docker image rm ghcr.io/interlisp/online-medley:production-3
+                  docker image rm ${image}:production-3
                 fi
-		if [ -n "$(docker images -q ghcr.io/interlisp/online-medley:production-2)" ]
+		if [ -n "$(docker images -q ${image}:production-2)" ]
                 then
-                  docker tag ghcr.io/interlisp/online-medley:production-2 ghcr.io/interlisp/online-medley:production-3
+                  docker tag ${image}:production-2 ${image}:production-3
                 fi
-		if [ -n "$(docker images -q ghcr.io/interlisp/online-medley:production-1)" ]
+		if [ -n "$(docker images -q ${image}:production-1)" ]
                 then
-       		  docker tag ghcr.io/interlisp/online-medley:production-1 ghcr.io/interlisp/online-medley:production-2
+       		  docker tag ${image}:production-1 ${image}:production-2
                 fi
-		if [ -n "$(docker images -q ghcr.io/interlisp/online-medley:production)" ]
+		if [ -n "$(docker images -q ${image}:production)" ]
                 then
-		  docker tag ghcr.io/interlisp/online-medley:production ghcr.io/interlisp/online-medley:production-1
+		  docker tag ${image}:production ${image}:production-1
                 fi
         	#
-                docker tag ghcr.io/interlisp/online-medley:development ghcr.io/interlisp/online-medley:production
+                docker tag ${image}:development ${image}:production
 		echo "Online-medley moved from development to production."
            ;;
 
            IrestoreI)
-		if [ -z "$(docker images -q ghcr.io/interlisp/online-medley:production-1)" ]
+		if [ -z "$(docker images -q ${image}:production-1)" ]
                 then
-                  echo "ERROR: docker image \"ghcr.io/interlisp/online-medley:production-1\" does not exist."
+                  echo "ERROR: docker image \"${image}:production-1\" does not exist."
                   echo "Cannot restore previous production version"
                   exit 1
                 fi
-                docker tag ghcr.io/interlisp/online-medley:production-1 ghcr.io/interlisp/online-medley:production
-		if [ -n "$(docker images -q ghcr.io/interlisp/online-medley:production-2)" ]
+                docker tag ${image}:production-1 ${image}:production
+		if [ -n "$(docker images -q ${image}:production-2)" ]
                 then
-                  docker tag ghcr.io/interlisp/online-medley:production-2 ghcr.io/interlisp/online-medley:production-1
+                  docker tag ${image}:production-2 ${image}:production-1
                 fi
-		if [ -n "$(docker images -q ghcr.io/interlisp/online-medley:production-3)" ]
+		if [ -n "$(docker images -q ${image}:production-3)" ]
                 then
-       		  docker tag ghcr.io/interlisp/online-medley:production-3 ghcr.io/interlisp/online-medley:production-2
-                  docker image rm ghcr.io/interlisp/online-medley:production-3
+       		  docker tag ${image}:production-3 ${image}:production-2
+                  docker image rm ${image}:production-3
                 fi
 		echo "Previous Online-medley production version restored."
            ;;
@@ -270,6 +270,9 @@ case $1 in
            ;;
 
 	esac
+
+        image=
+
      ;;
 
      # install docker image for new portal releases - dev and production
