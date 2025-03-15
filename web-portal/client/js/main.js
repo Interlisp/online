@@ -109,7 +109,7 @@ window.addEventListener('load', (event) => {
             dlg.showModal();
         }
     }
-    if(isAutologin) startSession("interlisp");
+    if(isAutoLogin) startSession("interlisp");
 });
 
 function startSession (interlispOrXterm) {

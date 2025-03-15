@@ -105,7 +105,7 @@ app.get('/main',
 app.get('/guest',
          (req, res) => {
             const newQuery = {};
-            newQuery.autoLogin = "";
+            newQuery.autologin = "";
             newQuery.username = config.guestUsername;
             newQuery.password = config.guestPassword;
             if(req.query.notecards != undefined) newQuery.notecards="";
