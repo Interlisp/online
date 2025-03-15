@@ -121,7 +121,7 @@ function passportAuthenticate(req, res, next) {
                             console.log("Error in logging login: " + err);
                         }
                         if(user.uname)
-                            if (user.uname == "guest") && (req.query.autologin != undefined) {
+                            if ((user.uname == "guest") && (req.query.autologin != undefined)) {
                                 const newQuery={};
                                 newQuery.autologin="";
                                 if(req.query.notecards != undefined) newQuery.notecards="";
