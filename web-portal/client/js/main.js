@@ -97,7 +97,7 @@ window.addEventListener('load', (event) => {
     fillWindowOnClick();
     document.getElementById("dev-options-checkbox").checked = (localStore.getItem("show_dev_options") == "true");
     showDevOptionsOnClick();
-    if(! fromvnc) {
+    if( ! (isAutoLogin || fromvnc)) {
         if(isVerified != true) {
             const dlg = document.getElementById(rr ? "verification-dialog2" : "verification-dialog1");
             dlg.showModal();
