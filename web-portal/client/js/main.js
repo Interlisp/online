@@ -58,8 +58,8 @@ window.addEventListener('load', (event) => {
         showRow("initial_exec");
         showRow("run_notecards");
         showRow("run_rooms");
-        document.getElementById("run_notecards_cb").checked = ilNotecards;
-        document.getElementById("run_rooms_cb").checked = ilRooms;
+        document.getElementById("run_notecards_cb").checked = alNotecards;
+        document.getElementById("run_rooms_cb").checked = alRooms;
         document.getElementById("sftp_checkbox").checked = false;
         document.getElementById("interlisp_rb").checked = true;
     } else if(isGuest) {
