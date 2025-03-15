@@ -1,13 +1,13 @@
 /*******************************************************************************
- * 
+ *
  *   main.js:  Page-level code used by the main.pug page.
- * 
- * 
+ *
+ *
  *   2022-03-09 Frank Halasz
- * 
- * 
- *   Copyright: 2022 by Interlisp.org 
- * 
+ *
+ *
+ *   Copyright: 2022 by Interlisp.org
+ *
  *
  ******************************************************************************/
 
@@ -29,6 +29,8 @@ window.addEventListener('load', (event) => {
     const urlParams = new URLSearchParams(window.location.search);
     const rr = urlParams.get('rr') || false;
     const fromvnc = urlParams.get('fromvnc') || false;
+
+    if (! isAutoLogin) document.getElementById("page-container").style.visibility = "visible";
 
     if (targetSystem == "Notecards") {
         document.getElementById("fill_window_cb").checked = true;
