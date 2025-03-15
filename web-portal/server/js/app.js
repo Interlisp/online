@@ -95,7 +95,7 @@ app.get('/main',
                              isVerified: (await userRouter.getIsVerified(req) ? 'true' : 'false'),
                              nodisclaimer: (await userRouter.getNoDisclaimer(req) ? 'true' : 'false'),
                              isNCO: config.isNCO(req),
-                             isAutoLogin: req.query.autologin,
+                             isAutoLogin: (req.query.autologin != undefined),
                              notecards: (req.query.notecards != undefined),
                              rooms: (req.query.rooms != undefined)
                            }
