@@ -19,6 +19,7 @@ const express = require('express');
 const logger = require('morgan');
 const session = require("express-session");
 const passport = require('passport');
+const url = require('url');
 //const favicon = require('serve-favicon')
 
 // Set up main app as well as the filesApp
@@ -86,17 +87,32 @@ app.use('/js', express.static(config.clientJsPath));
 app.get('/main',
          ensureLoggedIn(),
          async (req, res, next) =>
-             { res.render('main',
+             {
+                  res.render('main',
                            {
                              login: req.user.username,
                              isGuest: (req.user.username == config.guestUsername),
                              isVerified: (await userRouter.getIsVerified(req) ? 'true' : 'false'),
                              nodisclaimer: (await userRouter.getNoDisclaimer(req) ? 'true' : 'false'),
-                             isNCO: config.isNCO(req)
-                            }
-                          );
-              }
-        );
+                             isNCO: config.isNCO(req),
+                             isAutoLogin: req.query.autologin,
+                             notecards: (req.query.notecards != undefined),
+                             rooms: (req.query.rooms != undefined)
+                           }
+                  );
+             }
+       );
+app.get('/guest',
+         (req, res) => {
+            const newQuery = {};
+            newQuery.autoLogin = "";
+            newQuery.username = config.guestUsername;
+            newQuery.password = config.guestPassword;
+            if(req.query.notecards != undefined) newQuery.notecards="";
+            if(req.query.rooms != undefined) newQuery.rooms="";
+            res.redirect(url.format({pathname:"/user/autologin", query: newQuery}));
+         }
+       );
 app.use('/user', userRouter);
 app.use('/medley', ensureLoggedIn(), medleyRouter);
 app.use('/client', ensureLoggedIn(), clientRouter);

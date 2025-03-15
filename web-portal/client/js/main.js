@@ -21,7 +21,7 @@
 var localStore;
 
 window.addEventListener('resize', (event) => {
-   fillWindowOnClick(); 
+   fillWindowOnClick();
 });
 
 window.addEventListener('load', (event) => {
@@ -48,6 +48,18 @@ window.addEventListener('load', (event) => {
         document.getElementById("run_rooms_cb").checked = false;
         document.getElementById("custom_sysout_cb").checked = false;
         document.getElementById("custom_init_cb").checked = false;
+        document.getElementById("sftp_checkbox").checked = false;
+        document.getElementById("interlisp_rb").checked = true;
+    } else if(isAutoLogin) {
+        document.getElementById("fill_window_cb").checked = true;
+        document.getElementById("dev-div").style.display = "none";
+        document.getElementById("do_not_checkbox_div").style.display = "none";
+        hideRow("resume");
+        showRow("initial_exec");
+        showRow("run_notecards");
+        showRow("run_rooms");
+        document.getElementById("run_notecards_cb").checked = ilNotecards;
+        document.getElementById("run_rooms_cb").checked = ilRooms;
         document.getElementById("sftp_checkbox").checked = false;
         document.getElementById("interlisp_rb").checked = true;
     } else if(isGuest) {
@@ -97,6 +109,7 @@ window.addEventListener('load', (event) => {
             dlg.showModal();
         }
     }
+    if(isAutologin) startSession("interlisp");
 });
 
 function startSession (interlispOrXterm) {

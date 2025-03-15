@@ -92,44 +92,55 @@ passport.deserializeUser(userModel.deserializeUser());
 //
 //
 
-userRouter.post('/login',
-            (req, res, next) => {
-                  passport.authenticate('local',
-                  (err, user, info) => {
-                    if (err) {
-                      return next(err);
-                    }
-
-                    if (!user) {
-                      console.dir(info);
-                      return res.redirect('/user/login?info=' + info);
-                    }
-
-
-                    req.logIn(user, async function(err) {
-                      if (err) {
-                        return next(err);
-                      } else {
-                          try {
-                               await userModel.updateOne({username: user.username},{$set: {lastLogin: Date.now()}, $inc: {numLogins : 1}});
-                          } catch (err) {
-                                console.log("Update last login time error: " + err);
-                          }
-                          try {
-                               await loginModel.create({username: user.username, timestamp: Date.now()});
-                          } catch (err) {
-                               console.log("Error in logging login: " + err);
-                          }
-                          if(user.uname)
-                              return res.redirect('/main');
-                          else
-                              return res.render('reregister', {isNCO: config.isNCO(req)});
-                      }
-                    });
-
-                  })(req, res, next);
+function passportAuthenticate(req, res, next) {
+    passport.authenticate('local',
+        (err, user, info) => {
+            if (err) {
+                return next(err);
             }
-);
+
+            if (!user) {
+                console.dir(info);
+                return res.redirect('/user/login?info=' + info);
+            }
+
+
+            req.logIn(user,
+                async function(err) {
+                    if (err) {
+                        return next(err);
+                    } else {
+                        try {
+                            await userModel.updateOne({username: user.username},{$set: {lastLogin: Date.now()}, $inc: {numLogins : 1}});
+                        } catch (err) {
+                            console.log("Update last login time error: " + err);
+                        }
+                        try {
+                            await loginModel.create({username: user.username, timestamp: Date.now()});
+                        } catch (err) {
+                            console.log("Error in logging login: " + err);
+                        }
+                        if(user.uname)
+                            if (user.uname == "guest") && (req.query.autologin != undefined) {
+                                const newQuery={};
+                                newQuery.autologin="";
+                                if(req.query.notecards != undefined) newQuery.notecards="";
+                                if(req.query.rooms != undefined) newQuery.rooms="";
+                                return res.redirect(url.format({pathname:"/main", query: newQuery}));
+                            }
+                            else
+                                return res.redirect('/main');
+                        else
+                            return res.render('reregister', {isNCO: config.isNCO(req)});
+                    }
+                }
+            );
+        }
+    )(req, res, next);
+}
+
+userRouter.post('/login', passportAuthenticate);
+userRouter.get('/autologin', passportAuthenticate);
 
 userRouter.get('/login',
     (req, res) => {
