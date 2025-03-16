@@ -30,7 +30,13 @@ window.addEventListener('load', (event) => {
     const rr = urlParams.get('rr') || false;
     const fromvnc = urlParams.get('fromvnc') || false;
 
-    if (! isAutoLogin) document.getElementById("page-container").style.visibility = "visible";
+    if (isAutoLogin) {
+        document.body.style("background-image") = url('images/logos/logo_red_no_border_568x385.png');
+        document.body.style("background-repeat") = "no-repeat";
+        document.body.style("background-position") = "center";
+        document.body.style("position") = "relative";
+    }
+    else document.getElementById("page-container").style.visibility = "visible";
 
     if (targetSystem == "Notecards") {
         document.getElementById("fill_window_cb").checked = true;
@@ -56,10 +62,6 @@ window.addEventListener('load', (event) => {
         document.getElementById("fill_window_cb").checked = true;
         document.getElementById("dev-div").style.display = "none";
         document.getElementById("do_not_checkbox_div").style.display = "none";
-        hideRow("resume");
-        showRow("initial_exec");
-        showRow("run_notecards");
-        showRow("run_rooms");
         document.getElementById("run_notecards_cb").checked = alNotecards;
         document.getElementById("run_rooms_cb").checked = alRooms;
         document.getElementById("sftp_checkbox").checked = false;
