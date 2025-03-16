@@ -16,6 +16,8 @@
 const config = require("./config");
 const express = require("express");
 const docker = require('./docker');
+const url = require("url");
+
 //
 //  The router
 //
@@ -112,6 +114,7 @@ function interlispRunCmd(req) {
             + dockerTlsMounts
             + ` --env PORT=${port}`
             + ` --env NCO=${config.isNCO(req) ? "true" : "false"}`
+            + ` --env OIO_FB_URL=${url.format({protocol: req.protocol, host: req.hostname})}`
             + medleyEnvs(req)
             + ` --env IDLE_SECS=${isGuest ? config.idleTimeoutSecsGuest : config.idleTimeoutSecs}`
             + sftpEnvs(req)
