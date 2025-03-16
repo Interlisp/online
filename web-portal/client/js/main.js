@@ -31,10 +31,10 @@ window.addEventListener('load', (event) => {
     const fromvnc = urlParams.get('fromvnc') || false;
 
     if (isAutoLogin) {
-        document.body.style("background-image") = url('images/logos/logo_red_no_border_568x385.png');
-        document.body.style("background-repeat") = "no-repeat";
-        document.body.style("background-position") = "center";
-        document.body.style("position") = "relative";
+        document.body.style.backgroundImage = "url('images/logos/logo_red_no_border_568x385.png')";
+        document.body.style.backgroundRepeat = "no-repeat";
+        document.body.style.backgroundPosition = "center";
+        document.body.style.position = "relative";
     }
     else document.getElementById("page-container").style.visibility = "visible";
 
