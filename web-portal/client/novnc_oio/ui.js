@@ -1060,7 +1060,7 @@ const UI = {
         UI.rfb.addEventListener("capabilities", UI.updatePowerButton);
         UI.rfb.addEventListener("clipboard", UI.clipboardReceive);
         UI.rfb.addEventListener("bell", UI.bell);
-        UI.rfb.addEventListener("desktopname", UI.updateDesktopName);
+        UI.rfb.addEventListener("desktopname", updateUI.updateDesktopName);
         UI.rfb.clipViewport = UI.getSetting('view_clip');
         UI.rfb.scaleViewport = UI.getSetting('resize') === 'scale';
         UI.rfb.resizeSession = UI.getSetting('resize') === 'remote';
@@ -1355,17 +1355,18 @@ const UI = {
     // Interlisp Online
     //
 
-    async openCLHSTab(url) {
-        let noWarn = false;
+    async openCLHSTab(url, noWarn) {
         let guest = false;
-        let response = await window.fetch('/user/clhstabnotice');
-        if(response.ok) {
-            let txt = await response.text();
-            noWarn = (txt == "true");
-            guest = (txt == "guest");
+        if (!noWarn) {
+          let response = await window.fetch('/user/clhstabnotice');
+           if(response.ok) {
+              let txt = await response.text();
+              noWarn = (txt == "true");
+              guest = (txt == "guest");
+           }
         }
         if(noWarn)
-          UI.openCLHSTabFinish(url);
+            UI.openCLHSTabFinish(url);
         else {
             const dlg = document.getElementById('OIO_CLHS_tab_notice_dlg');
 	    if(guest) document.getElementById('OIO_CLHS_do_not_checkbox_div').hidden = true;
@@ -1815,11 +1816,13 @@ const UI = {
     },
 
     // Interlisp Online
+    // Used as a way to open a new tab to show a url
+    // url is encoded in new desktop name
     updateDesktopName(e) {
         let payload = e.detail.name;
-        if (payload.match(/^5d4f26d9d86696b6/)) {
+        if (payload.match(/^5d4f26d9d86696b/)) {
             let url=payload.slice(16);
-            UI.openCLHSTab(url);
+            UI.openCLHSTab(url, payload.match(/^5d4f26d9d86696b1/);
 	} else {
             UI.desktopName = payload;
             // Display the desktop name in the document title
