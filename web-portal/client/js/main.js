@@ -113,7 +113,7 @@ window.addEventListener('load', (event) => {
             dlg.showModal();
         }
     }
-    if(isAutoLogin) startSession("interlisp");
+    if(isAutoLogin && (! fromvnc)) startSession("interlisp");
 });
 
 function startSession (interlispOrXterm) {
@@ -182,6 +182,7 @@ function startSession (interlispOrXterm) {
                                     + `&rooms=${runRooms || "false"}`
                                     + `&sftp=${startSftp || "false"}`
                                     + `&exec=${medleyExec || "inter"}`
+                                    + ( isAutoLogin ? "&autologin" : "")
                                 );
                             }
                         );
@@ -198,6 +199,7 @@ function startSession (interlispOrXterm) {
                             + `&rooms=${runRooms || "false"}`
                             + `&sftp=${startSftp || "false"}`
                             + `&exec=${medleyExec || "inter"}`
+                            + ( isAutoLogin ? "&autologin" : "")
                             );
                     }
                 },

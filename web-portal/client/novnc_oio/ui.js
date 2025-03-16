@@ -1161,7 +1161,10 @@ const UI = {
         //
         // UI.openControlbar();
         // UI.openConnectPanel();
-        window.location.assign(window.location.origin + "/main?fromvnc=1");
+        if(document.location.href.match(/autologin/))
+            window.location.assign(window.location.origin + "/main?fromvnc=1&autologin=1");
+        else
+            window.location.assign(window.location.origin + "/main?fromvnc=1");
     },
 
     securityFailed(e) {
