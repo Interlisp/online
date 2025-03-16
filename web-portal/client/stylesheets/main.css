@@ -11,7 +11,7 @@
  **************************************************************************/
 
 #page-container {
-  visibility: "hidden";
+  visibility: hidden;
 }
 
 #logged-in-as {
