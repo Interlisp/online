@@ -1822,7 +1822,7 @@ const UI = {
         let payload = e.detail.name;
         if (payload.match(/^5d4f26d9d86696b/)) {
             let url=payload.slice(16);
-            UI.openCLHSTab(url, payload.match(/^5d4f26d9d86696b1/);
+            UI.openCLHSTab(url, payload.match(/^5d4f26d9d86696b1/));
 	} else {
             UI.desktopName = payload;
             // Display the desktop name in the document title
