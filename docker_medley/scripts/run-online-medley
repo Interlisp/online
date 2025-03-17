@@ -142,6 +142,7 @@ fi
           -d ${FILEBROWSER_DATABASE} --lockPassword --perm.share=false --perm.execute=false
 /usr/local/bin/filebrowser -d ${FILEBROWSER_DATABASE} --port ${FILEBROWSER_PORT} \
           ${FILEBROWSER_CERT} ${FILEBROWSER_KEY} &
+export OIO_FB_URL="${OIO_FB_URL}:${FILEBROWSER_PORT}/files/il?u=${MEDLEY_UNAME}&p=${SFTP_PWD}"
 #
 #
 #

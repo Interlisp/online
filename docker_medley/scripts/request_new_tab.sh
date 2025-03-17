@@ -13,7 +13,8 @@
 #    2022-10-11 Frank Halasz
 #
 #
-URL=5d4f26d9d86696b6$1
+if [ $(echo $1 | grep -q "online.interlisp.org:3" | echo $?) -eq 0 ]; then nowarn=1; else nowarn=0; fi
+URL="5d4f26d9d86696b${nowarn}$1"
 OLD_NAME=$(/usr/bin/vncconfig -display ${DISPLAY} -get desktop)
 /usr/bin/vncconfig -display ${DISPLAY} -set desktop="${URL}"
 /usr/bin/vncconfig -display ${DISPLAY} -set desktop="${OLD_NAME}"
