@@ -117,6 +117,10 @@ app.get('/main',
        );
 app.get('/guest',
          (req, res) => {
+
+            const cookieUrl = urlEncode(`${req.protocol}://${req.get('host')}${req.originalUrl}`);
+            res.cookie('autologinURL`, cookieUrl);
+
             const newQuery = {};
             newQuery.autologin = "";
             newQuery.username = config.guestUsername;
