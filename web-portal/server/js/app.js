@@ -20,6 +20,7 @@ const logger = require('morgan');
 const session = require("express-session");
 const passport = require('passport');
 const url = require('url');
+const cookieParser = require('cookie-parser');
 //const favicon = require('serve-favicon')
 
 // Set up main app as well as the filesApp
@@ -74,6 +75,9 @@ app.use(passport.initialize());
 app.use(passport.session());
 const ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn.bind(null, '/user/login');
 
+// Use cookie-parser
+app.use(cookieParser());
+
 // Do the routing
 app.use((req, res, next) => {
             if(req.protocol === 'https' || !config.supportHttps) next();
@@ -88,16 +92,25 @@ app.get('/main',
          ensureLoggedIn(),
          async (req, res, next) =>
              {
-                  res.render('main',
+                  let page = 'main';
+                  let alURL = "";
+                  const fromvnc = (req.query.fromvnc != undefined);
+                  const isAutoLogin = (req.query.autologin != undefined);
+                  if(isAutoLogin && fromvnc) {
+                      alURL = req.cookies.autologinURL;
+                      page = 'again';
+                  }
+                  res.render(page,
                            {
                              login: req.user.username,
                              isGuest: (req.user.username == config.guestUsername),
                              isVerified: (await userRouter.getIsVerified(req) ? 'true' : 'false'),
                              nodisclaimer: (await userRouter.getNoDisclaimer(req) ? 'true' : 'false'),
                              isNCO: config.isNCO(req),
-                             isAutoLogin: (req.query.autologin != undefined),
+                             isAutoLogin: isAutoLogin,
                              notecards: (req.query.notecards != undefined),
-                             rooms: (req.query.rooms != undefined)
+                             rooms: (req.query.rooms != undefined),
+                             alURL: alURL
                            }
                   );
              }
