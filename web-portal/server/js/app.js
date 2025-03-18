@@ -110,7 +110,7 @@ app.get('/main',
                              isAutoLogin: isAutoLogin,
                              notecards: (req.query.notecards != undefined),
                              rooms: (req.query.rooms != undefined),
-                             alURL: alURL
+                             alURL: alURL || "dummy"
                            }
                   );
              }
@@ -118,7 +118,7 @@ app.get('/main',
 app.get('/guest',
          (req, res) => {
 
-            const cookieUrl = urlEncode(`${req.protocol}://${req.get('host')}${req.originalUrl}`);
+            const cookieUrl = encodeURI(`${req.protocol}://${req.get('host')}${req.originalUrl}`);
             res.cookie('autologinURL', cookieUrl);
 
             const newQuery = {};
