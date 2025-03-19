@@ -14,16 +14,18 @@
   text-align: center;
   vertical-align: middle;
   display: table-cell;
+  visibility: hidden;
 }
 
 #run-button {
   font-size: 24px;
   line-height: 1.6;
   padding: 1rem 0rem;
+  visibility: visible;
 }
 
 body {
-  background-image: url('images/logos/logo_red_no_border_568x385.png');
+  background-image: url('/images/logos/logo_red_no_border_568x385.png');
   background-repeat: no-repeat;
   background-position: center;
   position: relative;
