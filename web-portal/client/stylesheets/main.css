@@ -10,6 +10,10 @@
  *
  **************************************************************************/
 
+#page-container {
+  visibility: hidden;
+}
+
 #logged-in-as {
   font-size: 15px;
   font-style: italic;

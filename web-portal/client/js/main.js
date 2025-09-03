@@ -1,13 +1,13 @@
 /*******************************************************************************
- * 
+ *
  *   main.js:  Page-level code used by the main.pug page.
- * 
- * 
+ *
+ *
  *   2022-03-09 Frank Halasz
- * 
- * 
- *   Copyright: 2022 by Interlisp.org 
- * 
+ *
+ *
+ *   Copyright: 2022 by Interlisp.org
+ *
  *
  ******************************************************************************/
 
@@ -21,7 +21,7 @@
 var localStore;
 
 window.addEventListener('resize', (event) => {
-   fillWindowOnClick(); 
+   fillWindowOnClick();
 });
 
 window.addEventListener('load', (event) => {
@@ -29,6 +29,14 @@ window.addEventListener('load', (event) => {
     const urlParams = new URLSearchParams(window.location.search);
     const rr = urlParams.get('rr') || false;
     const fromvnc = urlParams.get('fromvnc') || false;
+
+    if (isAutoLogin) {
+        document.body.style.backgroundImage = "url('images/logos/logo_red_no_border_568x385.png')";
+        document.body.style.backgroundRepeat = "no-repeat";
+        document.body.style.backgroundPosition = "center";
+        document.body.style.position = "relative";
+    }
+    else document.getElementById("page-container").style.visibility = "visible";
 
     if (targetSystem == "Notecards") {
         document.getElementById("fill_window_cb").checked = true;
@@ -48,6 +56,14 @@ window.addEventListener('load', (event) => {
         document.getElementById("run_rooms_cb").checked = false;
         document.getElementById("custom_sysout_cb").checked = false;
         document.getElementById("custom_init_cb").checked = false;
+        document.getElementById("sftp_checkbox").checked = false;
+        document.getElementById("interlisp_rb").checked = true;
+    } else if(isAutoLogin) {
+        document.getElementById("fill_window_cb").checked = true;
+        document.getElementById("dev-div").style.display = "none";
+        document.getElementById("do_not_checkbox_div").style.display = "none";
+        document.getElementById("run_notecards_cb").checked = alNotecards;
+        document.getElementById("run_rooms_cb").checked = alRooms;
         document.getElementById("sftp_checkbox").checked = false;
         document.getElementById("interlisp_rb").checked = true;
     } else if(isGuest) {
@@ -85,7 +101,7 @@ window.addEventListener('load', (event) => {
     fillWindowOnClick();
     document.getElementById("dev-options-checkbox").checked = (localStore.getItem("show_dev_options") == "true");
     showDevOptionsOnClick();
-    if(! fromvnc) {
+    if( ! (isAutoLogin || fromvnc)) {
         if(isVerified != true) {
             const dlg = document.getElementById(rr ? "verification-dialog2" : "verification-dialog1");
             dlg.showModal();
@@ -97,6 +113,7 @@ window.addEventListener('load', (event) => {
             dlg.showModal();
         }
     }
+    if(isAutoLogin && (! fromvnc)) startSession("interlisp");
 });
 
 function startSession (interlispOrXterm) {
@@ -165,6 +182,7 @@ function startSession (interlispOrXterm) {
                                     + `&rooms=${runRooms || "false"}`
                                     + `&sftp=${startSftp || "false"}`
                                     + `&exec=${medleyExec || "inter"}`
+                                    + ( isAutoLogin ? "&autologin" : "")
                                 );
                             }
                         );
@@ -181,6 +199,7 @@ function startSession (interlispOrXterm) {
                             + `&rooms=${runRooms || "false"}`
                             + `&sftp=${startSftp || "false"}`
                             + `&exec=${medleyExec || "inter"}`
+                            + ( isAutoLogin ? "&autologin" : "")
                             );
                     }
                 },

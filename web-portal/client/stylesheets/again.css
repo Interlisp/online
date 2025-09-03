@@ -1,0 +1,35 @@
+/***************************************************************************
+ *
+ *   again.css:  css code for again.pug on online.interlisp.org web portal.
+ *
+ *   2025-03-17 Frank Halasz
+ *
+ *
+ *   Copyright: 2025 by Interlisp.org
+ *
+ *
+ **************************************************************************/
+
+#page-container {
+  text-align: center;
+  display: table-cell;
+  visibility: hidden;
+  height: 100vh;
+  width: 100vw;
+}
+
+#again-button {
+  font-size: 24px;
+  line-height: 1.6;
+  padding: 1rem 0rem;
+  visibility: visible;
+}
+
+body {
+  height: 100vh;
+  background-image: url('/images/logos/logo_red_no_border_568x385.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  position: relative;
+}
+

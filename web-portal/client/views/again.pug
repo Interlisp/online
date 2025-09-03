@@ -1,0 +1,32 @@
+//-
+    /***************************************************************************
+     *
+     *   again.pug:  page for online.interlisp.org web portal to be used in
+     *               the autologin case when returneing from noVnc
+     *
+     *   2025-03-17 Frank Halasz
+     *
+     *
+     *   Copyright: 2025 by Interlisp.org
+     *
+     *
+     **************************************************************************/
+ 
+extends layout
+
+block variables
+
+block headeradds
+
+    script.
+        const alURL = "#{alURL}";
+
+    link(rel="stylesheet", href="/stylesheets/again.css")
+
+        
+
+block content
+
+    .row.text-center#again-button
+        button.main-button(type="button" onclick='window.location.assign(decodeURI(alURL));')!= "Run Medley Again"
+    

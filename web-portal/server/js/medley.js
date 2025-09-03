@@ -16,6 +16,8 @@
 const config = require("./config");
 const express = require("express");
 const docker = require('./docker');
+const url = require("url");
+
 //
 //  The router
 //
@@ -112,6 +114,7 @@ function interlispRunCmd(req) {
             + dockerTlsMounts
             + ` --env PORT=${port}`
             + ` --env NCO=${config.isNCO(req) ? "true" : "false"}`
+            + ` --env OIO_FB_URL=${url.format({protocol: req.protocol, host: req.hostname})}`
             + medleyEnvs(req)
             + ` --env IDLE_SECS=${isGuest ? config.idleTimeoutSecsGuest : config.idleTimeoutSecs}`
             + sftpEnvs(req)
@@ -272,6 +275,7 @@ function goToVnc(req, res, next) {
     var url = `/client/go?target=${req.oioTarget}&port=${req.oioPort}&autoconnect=1&view_only=0`;
     url = `${url}${config.supportHttps ? "&encrypt=1" : ""}&u=${req.user.uname}&p=${req.sftpPwd}`;
     if(config.isNCO(req)) url = `${url}&nco=1`;
+    if(req.query.autologin != undefined) url = `${url}&autologin=1`;
     res.redirect(url);
 }
 

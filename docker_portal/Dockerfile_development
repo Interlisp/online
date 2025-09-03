@@ -36,16 +36,6 @@ RUN ( curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg |
     && apt-get update \
     && apt-get install -y gh
 #
-#     Install Python 2.7 (required by Cloud 9
-#
-RUN apt-add-repository universe \
-    && apt-get update \
-    && apt-get install -y python2-minimal
-#
-#     Install Cloud9 IDE
-#
-RUN curl -L https://raw.githubusercontent.com/c9/install/master/install.sh | bash
-#
 #  Repopulate the web-portal source code with full portal code base and .git directory
 #
 COPY --chown=oio:oio . /opt/oio
