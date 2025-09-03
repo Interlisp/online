@@ -10,7 +10,7 @@
 # 
 #
 # *****************************************************************************/
-FROM ubuntu:24.04
+FROM ubuntu:22.04
 SHELL ["/bin/bash", "-c"]
 USER root:root
 #
@@ -48,11 +48,11 @@ RUN ( \
 #
 #     Install Mongo DB
 #
-RUN ( wget -qO - https://www.mongodb.org/static/pgp/server-8.0.asc | apt-key add - ) \
+RUN ( wget -qO - https://www.mongodb.org/static/pgp/server-5.0.asc | apt-key add - ) \
     && \
     ( \
-       echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu noble/mongodb-org/8.0 multiverse" \
-          | tee /etc/apt/sources.list.d/mongodb-org-8.0.list \
+       echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/5.0 multiverse" \
+          | tee /etc/apt/sources.list.d/mongodb-org-5.0.list \
     ) \
     && apt-get update \
     && apt-get install -y mongodb-org
