@@ -71,6 +71,9 @@ RUN apt-get install -y websockify
 #  install xterm plus twm for minimal window manager function on xterm/sftp "page"
 RUN apt-get install -y xterm twm autocutsel
 
+# install ghostscript for use by pdfstreamn in Medley (ps2pdf)
+RUN apt-get install -y ghostscript
+
 # install sshd
 RUN apt-get -y install openssh-server && \
     mkdir -p /var/run/sshd && \
