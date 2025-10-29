@@ -1,10 +1,12 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED "18-Mar-2025 22:45:51" {DSK}<home>medley>il>ONLINE-INIT.;1 10668  
+(FILECREATED "29-Oct-2025 10:51:28" {DSK}<home>frank>il>medley>greetfiles>ONLINE-INIT.;2 8007   
 
-      :EDIT-BY "guest"
+      :EDIT-BY "FGH"
 
-      :PREVIOUS-DATE "17-Mar-2025 17:06:18" {DSK}<home>medley>il>ONLINE-INIT.;1)
+      :CHANGES-TO (FNS Online.DoInit)
+
+      :PREVIOUS-DATE "25-Feb-2024 11:38:10" {DSK}<home>frank>il>medley>greetfiles>ONLINE-INIT.;1)
 
 
 (PRETTYCOMPRINT ONLINE-INITCOMS)
@@ -20,8 +22,8 @@
         (INITVARS (Online.LogoutTimeout 30)
                (ONLINEP NIL))
         (ADVISE (SAVEVM :IN \IDLER))
-        (FNS Online.SftpInitInfo Online.SftpUpdateInfo Online.SetUpNOTECARDSDIRECTORIES 
-             Online.FileButton Online.DoInit ONLINEP)
+        (FNS Online.SftpInitInfo Online.SftpUpdateInfo Online.SetUpNOTECARDSDIRECTORIES Online.DoInit
+             ONLINEP)
         (DECLARE%: DONTEVAL@LOAD DOCOPY (P (Online.DoInit)))
         (DECLARE%: FIRST DONTEVAL@LOAD DOCOPY (P (BKSYSBUF " "])
 
@@ -100,56 +102,10 @@
                  (PRIN1 "and Notecards will not work properly." T)
                  NIL])
 
-(Online.FileButton
-  [LAMBDA NIL                                              (* ; "Edited 18-Mar-2025 22:31 by guest")
-                                                             (* ; "Edited 17-Mar-2025 16:51 by fgh")
-                                                           (* ; "Edited 16-Mar-2025 23:40 by guest")
-
-    (* ;; " Add the FILES IMPORT/EXPORT button to the bottom of the button stack on the right side of the screen")
-
-    (LET* ((RIGHTMARGINISH 140)
-           (Apps.BUTTONS (for B in *ALL-BUTTONS* when (WINDOWPROP B 'Apps.BUTTON) collect B))
-           (LowestButton (CAR Apps.BUTTONS))
-           P B L)
-          (if LowestButton
-              then 
-                   (* ;; " Find the lowest existing button on the right side of the screen")
-
-                   (for B in Apps.BUTTONS when [ILESSP (fetch BOTTOM of (WINDOWPROP B 'REGION))
-                                                      (fetch BOTTOM of (WINDOWPROP LowestButton
-                                                                              'REGION]
-                      do (SETQ LowestButton B)) 
-
-                   (* ;; 
-               " Set the y-position for the label  based on the lowest button, then create the label")
-
-                   (SETQ L (Apps.CreateLabel "FILES" (IDIFFERENCE SCREENWIDTH (IDIFFERENCE 
-                                                                                     RIGHTMARGINISH 
-                                                                                     50))
-                                  (IDIFFERENCE (fetch BOTTOM of (WINDOWPROP LowestButton 'REGION))
-                                         35)))
-                   (WINDOWPROP L 'RIGHTBUTTONFN 'NILL) 
-
-                   (* ;; 
-                   " Set the position of the files button based on the label, then create the button")
-
-                   (SETQ P (create POSITION
-                                  XCOORD _ (IDIFFERENCE SCREENWIDTH RIGHTMARGINISH)
-                                  YCOORD _ (IDIFFERENCE (fetch BOTTOM of (WINDOWPROP LowestButton
-                                                                                'REGION))
-                                                  85)))
-                   (SETQ B (CREATE-BUTTON '(ShellBrowse (UNIX-GETENV "OIO_FB_URL"))
-                                  "IMPORT/EXPORT" P))
-                   (WINDOWPROP B 'RIGHTBUTTONFN 'NILL)
-                   [WINDOWPROP B 'BUTTONEVENTFN (FUNCTION (LAMBDA (BUTTON)
-                                                            (if (LASTMOUSESTATE (ONLY LEFT))
-                                                                then (EXECUTE-BUTTON BUTTON]
-                   T])
-
 (Online.DoInit
   [LAMBDA NIL
 
-    (* ;; "Edited 16-Mar-2025 23:26 by guest")
+    (* ;; "Edited 29-Oct-2025 10:50 by FGH")
 
     (* ;; "Edited 25-Feb-2024 11:37 by fgh")
 
@@ -222,9 +178,11 @@
 
            (Online.SetUpNOTECARDSDIRECTORIES)
 
-           (* ;; "Create File Import/Export Button")
+           (* ;; "If there is a start-script file, load it ")
 
-           (Online.FileButton])
+           (LET [(START-SCRIPT (UNIX-GETENV 'START_SCRIPT]
+                (IF START-SCRIPT
+                    THEN (LOAD START-SCRIPT])
 
 (ONLINEP
   [LAMBDA NIL                                                (* ; "Edited 24-Feb-2024 22:31 by fgh")
@@ -239,7 +197,6 @@
 (BKSYSBUF " ")
 )
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (1640 10532 (Online.SftpInitInfo 1650 . 2523) (Online.SftpUpdateInfo 2525 . 2780) (
-Online.SetUpNOTECARDSDIRECTORIES 2782 . 4490) (Online.FileButton 4492 . 7320) (Online.DoInit 7322 . 
-10393) (ONLINEP 10395 . 10530)))))
+  (FILEMAP (NIL (1692 7871 (Online.SftpInitInfo 1702 . 2575) (Online.SftpUpdateInfo 2577 . 2832) (
+Online.SetUpNOTECARDSDIRECTORIES 2834 . 4542) (Online.DoInit 4544 . 7732) (ONLINEP 7734 . 7869)))))
 STOP

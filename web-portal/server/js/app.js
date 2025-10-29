@@ -110,7 +110,8 @@ app.get('/main',
                              isAutoLogin: isAutoLogin,
                              notecards: (req.query.notecards != undefined),
                              rooms: (req.query.rooms != undefined),
-                             alURL: alURL || "dummy"
+                             alURL: alURL || "dummy",
+                             start: (req.query.start != undefined) && (req.query.start != "") ? req.query.start : ""
                            }
                   );
              }
@@ -127,6 +128,7 @@ app.get('/guest',
             newQuery.password = config.guestPassword;
             if(req.query.notecards != undefined) newQuery.notecards="";
             if(req.query.rooms != undefined) newQuery.rooms="";
+            if((req.query.start != undefined) && (req.query.start != "")) newQuery.start = req.query.start;
             res.redirect(url.format({pathname:"/user/autologin", query: newQuery}));
          }
        );

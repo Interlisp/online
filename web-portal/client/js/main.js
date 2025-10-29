@@ -159,36 +159,7 @@ function startSession (interlispOrXterm) {
         .then(  data => {
                     const isRunning = data.isRunning;
                     const sessionType = data.target;
-                    if(isRunning) {
-                        new Promise((resolve, reject) => {
-                            const dlg = document.getElementById("reconnect-dialog");
-                            const typeEl = document.getElementById("rd-type-span");
-                            typeEl.html = sessionType;
-                            dlg.resolve = resolve;
-                            dlg.reject = reject;
-                            dlg.showModal();
-                            }
-                        )
-                        .then(RorK => {
-                                window.location.assign(
-                                    `/medley/${interlispOrXterm || "interlisp"}`
-                                    + `?screen_width=${screenWidth}`
-                                    + `&screen_height=${screenHeight}`
-                                    + `&if=${RorK}`
-                                    + `&resume=${resume || "false"}`
-                                    + `&custom=${custom || "false"}`
-                                    + `&custom_init=${customInit || "false"}`
-                                    + `&notecards=${runNotecards || "false"}`
-                                    + `&rooms=${runRooms || "false"}`
-                                    + `&sftp=${startSftp || "false"}`
-                                    + `&exec=${medleyExec || "inter"}`
-                                    + ( isAutoLogin ? "&autologin" : "")
-                                );
-                            }
-                        );
-                    }
-                    else {
-                        window.location.assign(
+                    const medley_url =
                             `/medley/${interlispOrXterm || "interlisp"}`
                             + `?screen_width=${screenWidth}`
                             + `&screen_height=${screenHeight}`
@@ -200,8 +171,22 @@ function startSession (interlispOrXterm) {
                             + `&sftp=${startSftp || "false"}`
                             + `&exec=${medleyExec || "inter"}`
                             + ( isAutoLogin ? "&autologin" : "")
-                            );
+                            + ( (alStart != "") ? `&start=${alStart}` : ""
+			;
+
+                    if(isRunning) {
+                        new Promise((resolve, reject) => {
+                            const dlg = document.getElementById("reconnect-dialog");
+                            const typeEl = document.getElementById("rd-type-span");
+                            typeEl.html = sessionType;
+                            dlg.resolve = resolve;
+                            dlg.reject = reject;
+                            dlg.showModal();
+                            }
+                        )
+                        .then(RorK => { window.location.assign(medley_url + `&if=${RorK}`); } );
                     }
+                    else window.location.assign(medley_url);
                 },
                 reason => {}
         );

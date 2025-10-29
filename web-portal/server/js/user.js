@@ -126,6 +126,8 @@ function passportAuthenticate(req, res, next) {
                                 newQuery.autologin="";
                                 if(req.query.notecards != undefined) newQuery.notecards="";
                                 if(req.query.rooms != undefined) newQuery.rooms="";
+                                if((req.query.start != undefined) && (req.query.start != ""))
+                                    newQuery.start=req.query.start;
                                 return res.redirect(url.format({pathname:"/main", query: newQuery}));
                             }
                             else
