@@ -70,8 +70,12 @@ function medleyEnvs(req) {
     const nc = (req.query.notecards && (req.query.notecards.toLowerCase() == "true")) ? "true" : "false";
     const rooms = (req.query.rooms && (req.query.rooms.toLowerCase() == "true")) ? "true" : "false";
     const exec = (req.query.exec && (req.query.exec.toLowerCase() == "common")) ? "common" : "inter";
-    try { const start = req.query.start && decodeURI(req.query.start); }
-      catch(e) { const start = false; }
+    var start = false;
+    try {
+         if ((req.query.start != undefined) && (req.query.start != ""))
+             start = decodeURIcomponent(req.query.start);
+        }
+    catch(e) { start = false; }
     return    ` --env MEDLEY_EMAIL='${u.username}'`
             + ` --env MEDLEY_UNAME='${u.uname || "medley" }'`
             + ` --env MEDLEY_FIRSTNAME='${u.firstname || "Medley"}'`
