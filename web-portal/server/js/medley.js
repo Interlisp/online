@@ -71,11 +71,13 @@ function medleyEnvs(req) {
     const rooms = (req.query.rooms && (req.query.rooms.toLowerCase() == "true")) ? "true" : "false";
     const exec = (req.query.exec && (req.query.exec.toLowerCase() == "common")) ? "common" : "inter";
     var start = false;
+    var frank = 0;
     try {
-         if ((req.query.start != undefined) && (req.query.start != ""))
+         if ((req.query.start != undefined) && (req.query.start != "")){
              start = decodeURIComponent(req.query.start);
+             frank = 1;}
         }
-    catch(e) { start = false; }
+    catch(e) { start = false; frank = 2;}
     return    ` --env MEDLEY_EMAIL='${u.username}'`
             + ` --env MEDLEY_UNAME='${u.uname || "medley" }'`
             + ` --env MEDLEY_FIRSTNAME='${u.firstname || "Medley"}'`
@@ -85,6 +87,7 @@ function medleyEnvs(req) {
             + ` --env RUN_ROOMS=${rooms}`
             + ` --env MEDLEY_EXEC=${exec}`
             + ` --env MEDLEY_MEMORY=${config.medleyMemoryArg}`
+            + ` --env FRANK=${frank}`
             + ( start ? ` --env START_SCRIPT_URL='${start}'` : "" )
     ;
 }
