@@ -73,7 +73,7 @@ function medleyEnvs(req) {
     var start = false;
     try {
          if ((req.query.start != undefined) && (req.query.start != ""))
-             start = decodeURIcomponent(req.query.start);
+             start = decodeURIComponent(req.query.start);
         }
     catch(e) { start = false; }
     return    ` --env MEDLEY_EMAIL='${u.username}'`

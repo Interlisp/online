@@ -173,7 +173,6 @@ function startSession (interlispOrXterm) {
                             + ( isAutoLogin ? "&autologin" : "")
                             + ( (alStart != "") ? `&start=${encodeURIComponent(alStart)}` : "" )
 			;
-                     console.log(medley_url);
 
                     if(isRunning) {
                         new Promise((resolve, reject) => {
