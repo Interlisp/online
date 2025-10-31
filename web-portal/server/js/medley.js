@@ -74,7 +74,7 @@ function medleyEnvs(req) {
     var frank = 0;
     try {
          if ((req.query.start != undefined) && (req.query.start != "")){
-             start = decodeURIComponent(req.query.start);
+             start = req.query.start;
              frank = req.query.start;}
         }
     catch(e) { start = false; frank = 2;}
