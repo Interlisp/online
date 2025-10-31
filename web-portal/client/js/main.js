@@ -171,7 +171,7 @@ function startSession (interlispOrXterm) {
                             + `&sftp=${startSftp || "false"}`
                             + `&exec=${medleyExec || "inter"}`
                             + ( isAutoLogin ? "&autologin" : "")
-                            + ( (alStart != "") ? `&start=${alStart}` : "" )
+                            + ( (alStart != "") ? `&start=${encodeURIComponent(alStart)}` : "" )
 			;
                      console.log(medley_url);
 if(false){
