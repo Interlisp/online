@@ -174,7 +174,7 @@ function startSession (interlispOrXterm) {
                             + ( (alStart != "") ? `&start=${alStart}` : "" )
 			;
                      console.log(medley_url);
-
+if(false){
                     if(isRunning) {
                         new Promise((resolve, reject) => {
                             const dlg = document.getElementById("reconnect-dialog");
@@ -188,6 +188,7 @@ function startSession (interlispOrXterm) {
                         .then(RorK => { window.location.assign(medley_url + `&if=${RorK}`); } );
                     }
                     else window.location.assign(medley_url);
+}
                 },
                 reason => {}
         );
