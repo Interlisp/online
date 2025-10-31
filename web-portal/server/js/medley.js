@@ -75,7 +75,7 @@ function medleyEnvs(req) {
     try {
          if ((req.query.start != undefined) && (req.query.start != "")){
              start = decodeURIComponent(req.query.start);
-             frank = 1;}
+             frank = req.query.start;}
         }
     catch(e) { start = false; frank = 2;}
     return    ` --env MEDLEY_EMAIL='${u.username}'`
