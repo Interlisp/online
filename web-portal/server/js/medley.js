@@ -73,9 +73,8 @@ function medleyEnvs(req) {
     var start = false;
     var frank = 0;
     try {
-         if ((req.query.start != undefined) && (req.query.start != "")){
+         if ((req.query.start != undefined) && (req.query.start != ""))
              start = req.query.start;
-             frank = req.query.start;}
         }
     catch(e) { start = false; frank = 2;}
     return    ` --env MEDLEY_EMAIL='${u.username}'`
@@ -87,7 +86,6 @@ function medleyEnvs(req) {
             + ` --env RUN_ROOMS=${rooms}`
             + ` --env MEDLEY_EXEC=${exec}`
             + ` --env MEDLEY_MEMORY=${config.medleyMemoryArg}`
-            + ` --env FRANK=${frank}`
             + ( start ? ` --env START_SCRIPT_URL="${start}"` : "" )
     ;
 }
