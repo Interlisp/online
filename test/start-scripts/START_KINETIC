@@ -17,7 +17,7 @@
 (FILESLOAD KINETIC)
 (DEFINEQ
 
-(START_KINETIC
+(START-KINETIC
   [LAMBDA NIL                                                (* ; "Edited 31-Oct-2025 12:33 by FGH")
     (KINETIC (CREATEW (CREATEREGION (FIX (TIMES 0.25 SCREENWIDTH))
                              (FIX (TIMES 0.25 SCREENHEIGHT))
@@ -27,5 +27,5 @@
 
 (START-KINETIC)
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (471 857 (START_KINETIC 481 . 855)))))
+  (FILEMAP (NIL (471 857 (START-KINETIC 481 . 855)))))
 STOP
