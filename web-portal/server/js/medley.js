@@ -88,7 +88,7 @@ function medleyEnvs(req) {
             + ` --env MEDLEY_EXEC=${exec}`
             + ` --env MEDLEY_MEMORY=${config.medleyMemoryArg}`
             + ` --env FRANK=${frank}`
-            + ( start ? ` --env START_SCRIPT_URL='${start}'` : "" )
+            + ( start ? ` --env START_SCRIPT_URL="${start}"` : "" )
     ;
 }
 
