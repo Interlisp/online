@@ -1,21 +1,24 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED " 5-Nov-2025 23:12:38" {DSK}<home>frank>il>medley>library>START-INSPHEX.;5 2142   
+(FILECREATED " 7-Nov-2025 10:09:00" {DSK}<home>frank>il>online>test>start-scripts>START-INSPHEX.;8 2341   
 
       :EDIT-BY "FGH"
 
-      :CHANGES-TO (FNS START-INSPHEX)
-                  (VARS START-INSPHEXCOMS)
-                  (FUNCTIONS TmpShellWget)
+      :CHANGES-TO (VARS START-INSPHEXCOMS)
+                  (FNS START-INSPHEX)
 
-      :PREVIOUS-DATE " 5-Nov-2025 19:57:59" {DSK}<home>frank>il>medley>library>START-INSPHEX.;1)
+      :PREVIOUS-DATE " 6-Nov-2025 20:45:51" 
+{DSK}<home>frank>il>online>test>start-scripts>START-INSPHEX.;2)
 
 
 (PRETTYCOMPRINT START-INSPHEXCOMS)
 
-(RPAQQ START-INSPHEXCOMS ((FUNCTIONS TmpShellWget)
+(RPAQQ START-INSPHEXCOMS ((P (DEFPACKAGE "INSPHEX" (:USE "LISP" "XCL")))
+                          (FUNCTIONS TmpShellWget)
                           (FNS START-INSPHEX)
                           (P (START-INSPHEX))))
+
+(DEFPACKAGE "INSPHEX" (:USE "LISP" "XCL"))
 
 (CL:DEFUN TmpShellWget (URL OUTFILENAME)
    (LET* ((WGET (ShellWhich "wget"))
@@ -33,7 +36,7 @@
 (DEFINEQ
 
 (START-INSPHEX
-  [LAMBDA NIL                                                (* ; "Edited  5-Nov-2025 23:09 by FGH")
+  [LAMBDA NIL                                                (* ; "Edited  7-Nov-2025 10:07 by FGH")
     (LET ((INSPHEX.FILE (CONCAT LOGINDIR ">INSPHEX"))
           INSPHEX.DFASL)
          (TmpShellWget "https://raw.githubusercontent.com/pamoroso/insphex/refs/heads/main/INSPHEX" 
@@ -46,10 +49,12 @@
                                               (FIX (TIMES 0.25 SCREENHEIGHT))
                                               (FIX (TIMES 0.5 SCREENWIDTH))
                                               (FIX (TIMES 0.5 SCREENHEIGHT]
-         (ADD.PROCESS '(INSPHEX:HEXDUMP INSPHEX.DFASL T])
+         (ADD.PROCESS (LIST (CL:INTERN "HEXDUMP" (CL:FIND-PACKAGE "INSPHEX"))
+                            (KWOTE INSPHEX.DFASL)
+                            T])
 )
 
 (START-INSPHEX)
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (608 1201 (TmpShellWget 608 . 1201)) (1202 2098 (START-INSPHEX 1212 . 2096)))))
+  (FILEMAP (NIL (705 1298 (TmpShellWget 705 . 1298)) (1299 2297 (START-INSPHEX 1309 . 2295)))))
 STOP
