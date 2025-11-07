@@ -1,11 +1,11 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED " 7-Nov-2025 10:09:00" {DSK}<home>frank>il>online>test>start-scripts>START-INSPHEX.;8 2341   
+(FILECREATED " 7-Nov-2025 10:43:14" {DSK}<home>frank>il>online>test>start-scripts>START-INSPHEX.;10 2342   
 
       :EDIT-BY "FGH"
 
-      :CHANGES-TO (VARS START-INSPHEXCOMS)
-                  (FNS START-INSPHEX)
+      :CHANGES-TO (FNS START-INSPHEX)
+                  (VARS START-INSPHEXCOMS)
 
       :PREVIOUS-DATE " 6-Nov-2025 20:45:51" 
 {DSK}<home>frank>il>online>test>start-scripts>START-INSPHEX.;2)
@@ -36,7 +36,7 @@
 (DEFINEQ
 
 (START-INSPHEX
-  [LAMBDA NIL                                                (* ; "Edited  7-Nov-2025 10:07 by FGH")
+  [LAMBDA NIL                                                (* ; "Edited  7-Nov-2025 10:43 by FGH")
     (LET ((INSPHEX.FILE (CONCAT LOGINDIR ">INSPHEX"))
           INSPHEX.DFASL)
          (TmpShellWget "https://raw.githubusercontent.com/pamoroso/insphex/refs/heads/main/INSPHEX" 
@@ -45,7 +45,7 @@
          (LOAD INSPHEX.DFASL)
          [ADVISE '(TEDIT IN INSPHEX::CREATE-HEX-WINDOW)
                 'BEFORE
-                '(SETQ WINDOW (CREATEW (CREATEREGION (FIX (TIMES 0.25 SCREENWIDTH))
+                '(SETQ WINDOW (CREATEW (CREATEREGION (FIX (TIMES 0.35 SCREENWIDTH))
                                               (FIX (TIMES 0.25 SCREENHEIGHT))
                                               (FIX (TIMES 0.5 SCREENWIDTH))
                                               (FIX (TIMES 0.5 SCREENHEIGHT]
@@ -56,5 +56,5 @@
 
 (START-INSPHEX)
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (705 1298 (TmpShellWget 705 . 1298)) (1299 2297 (START-INSPHEX 1309 . 2295)))))
+  (FILEMAP (NIL (706 1299 (TmpShellWget 706 . 1299)) (1300 2298 (START-INSPHEX 1310 . 2296)))))
 STOP
