@@ -203,24 +203,7 @@ case $1 in
      medley)
 
         image=ghcr.io/interlisp/online-medley
-
-        case "I$2I" in
-
-
-           IpulldevI)
-                image=ghcr.io/interlisp/online-medley
-                docker image tag ${image}:development ${image}:2bdeleted
-		docker pull ${image}:development
-                docker image rm ${image}:2bdeleted
-                echo "Online-medley development release pulled from Github Container Registry"
-           ;;
-
-           Idev2prodI)
-		if [ -z "$(docker images -q ${image}:development)" ]
-                then
-                  echo "ERROR: docker image \"${image}:development\" does not exist."
-                  exit 1
-                fi
+        age_production() {
 		if [ -n "$(docker images -q ${image}:production-3)" ]
                 then
                   docker image rm ${image}:production-3
@@ -237,9 +220,59 @@ case $1 in
                 then
 		  docker tag ${image}:production ${image}:production-1
                 fi
+        }
+
+
+        case "I$2I" in
+
+
+           IpulldevI)
+                docker image tag ${image}:development ${image}:2bdeleted
+		docker pull ${image}:development
+                docker image rm ${image}:2bdeleted
+                echo "Latest Online-medley development release pulled from Github Container Registry"
+           ;;
+
+           IpullprodI)
+                docker image tag ${image}:production ${image}:holdfornow
+		docker pull ${image}:production
+                if [ $? -ne 0 ]
+                then
+                  docker image tag ${image}:holdfornow ${image}:production
+                  echo "Pull of latest production image failed.  Exiting"
+                  exit 1
+                fi
+                docker image tag ${image}:production ${image}:newproduction
+                docker image tag ${image}:holdfornow ${image}:production
+                docker image rm ${image}:holdfornow
+                age_production
+                docker image tag ${image}:newproduction ${image}:production
+                docker image rm ${image}:newproduction
+                echo "Latest Online-medley production release pulled from Github Container Registry"
+           ;;
+
+           Idev2prodI)
+		if [ -z "$(docker images -q ${image}:development)" ]
+                then
+                  echo "ERROR: docker image \"${image}:development\" does not exist."
+                  exit 1
+                fi
+                age_production
         	#
                 docker tag ${image}:development ${image}:production
-		echo "Online-medley moved from development to production."
+		echo "Online-medley development image additionally tagged as production."
+           ;;
+
+           Iprod2devI)
+		if [ -z "$(docker images -q ${image}:production)" ]
+                then
+                  echo "ERROR: docker image \"${image}:production\" does not exist."
+                  exit 1
+                fi
+                docker image tag ${image}:development ${image}:2bdeleted
+                docker tag ${image}:production ${image}:development
+                docker image rm ${image}:2bdeleted
+		echo "Online-medley production image additionally tagged as development."
            ;;
 
            IrestoreI)
@@ -357,9 +390,11 @@ case $1 in
         echo "${oio} logins log:  show logins log for the last month"
         echo "${oio} logins log YYYY-MM-DD:  show logins log since YYYY-MM-DD"
         echo
-	echo "${oio} medley pulldev:  pull latest development (test) online-medley image from GHCR"
-        echo "${oio} medley dev2prod:  move current development online-medley image to production status"
-        echo "${oio} medley restore:  restore previous production online-medley image"
+	echo "${oio} medley pulldev:   pull latest development (test) online-medley image from GHCR"
+	echo "${oio} medley pullprod:  pull latest production online-medley image from GHCR"
+        echo "${oio} medley dev2prod:  move current development online-medley image into production status"
+        echo "${oio} medley prod2dev:  tag the current production online-medley image as being development as well"
+        echo "${oio} medley restore:   restore previous production online-medley image"
 	echo
 	echo "${oio} portal pulldev:  pull latest development portal (online-development) docker image from GHCR"
         echo "${oio} portal pullprod:  pull latest production portal (online-production) docker image from GHCR"
