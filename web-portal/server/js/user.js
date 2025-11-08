@@ -121,15 +121,8 @@ function passportAuthenticate(req, res, next) {
                             console.log("Error in logging login: " + err);
                         }
                         if(user.uname)
-                            if ((user.uname == "guest") && (req.query.autologin != undefined)) {
-                                const newQuery={};
-                                newQuery.autologin="true";
-                                if(req.query.notecards != undefined) newQuery.notecards="true";
-                                if(req.query.rooms != undefined) newQuery.rooms="true";
-                                if((req.query.start != undefined) && (req.query.start != ""))
-                                    newQuery.start=req.query.start;
-                                return res.redirect(url.format({pathname:"/main", query: newQuery}));
-                            }
+                            if (req.query.autologin != undefined)
+                                return res.redirect(url.format({pathname:"/main", query: req.query}));
                             else
                                 return res.redirect('/main');
                         else
