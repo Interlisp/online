@@ -116,20 +116,25 @@ app.get('/main',
                   );
              }
        );
-app.get('/guest',
+app.get([ '/guest', '/demo/guest' ],
          (req, res) => {
 
             const cookieUrl = encodeURI(`${req.protocol}://${req.get('host')}${req.originalUrl}`);
             res.cookie('autologinURL', cookieUrl);
 
-            const newQuery = {};
-            newQuery.autologin = "";
-            newQuery.username = config.guestUsername;
-            newQuery.password = config.guestPassword;
-            if(req.query.notecards != undefined) newQuery.notecards="";
-            if(req.query.rooms != undefined) newQuery.rooms="";
-            if((req.query.start != undefined) && (req.query.start != "")) newQuery.start = req.query.start;
-            res.redirect(url.format({pathname:"/user/autologin", query: newQuery}));
+            req.query.username = config.guestUsername;
+            req.query.password = config.guestPassword;
+            res.redirect("/user/autologin");
+         }
+       );
+app.get([ '/demo/login' ],
+         (req, res) => {
+
+            const cookieUrl = encodeURI(`${req.protocol}://${req.get('host')}${req.originalUrl}`);
+            res.cookie('autologinURL', cookieUrl);
+
+	    req.query.autologin = "true";
+            res.redirect("/main");
          }
        );
 app.use('/user', userRouter);

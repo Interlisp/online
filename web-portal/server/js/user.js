@@ -123,9 +123,9 @@ function passportAuthenticate(req, res, next) {
                         if(user.uname)
                             if ((user.uname == "guest") && (req.query.autologin != undefined)) {
                                 const newQuery={};
-                                newQuery.autologin="";
-                                if(req.query.notecards != undefined) newQuery.notecards="";
-                                if(req.query.rooms != undefined) newQuery.rooms="";
+                                newQuery.autologin="true";
+                                if(req.query.notecards != undefined) newQuery.notecards="true";
+                                if(req.query.rooms != undefined) newQuery.rooms="true";
                                 if((req.query.start != undefined) && (req.query.start != ""))
                                     newQuery.start=req.query.start;
                                 return res.redirect(url.format({pathname:"/main", query: newQuery}));
