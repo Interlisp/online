@@ -121,10 +121,10 @@ function passportAuthenticate(req, res, next) {
                             console.log("Error in logging login: " + err);
                         }
                         if(user.uname)
-                            if (req.query.autologin != undefined)
+                            #if (req.query.autologin != undefined)
                                 return res.redirect(url.format({pathname:"/main", query: req.query}));
-                            else
-                                return res.redirect('/main');
+                            #else
+                            #    return res.redirect('/main');
                         else
                             return res.render('reregister', {isNCO: config.isNCO(req)});
                     }
