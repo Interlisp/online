@@ -141,7 +141,8 @@ jobs:
           DOCKER_NAMESPACE=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
           echo "docker_namespace=${DOCKER_NAMESPACE}" >> ${GITHUB_OUTPUT}
           DOCKER_REPO=${DOCKER_REGISTRY}${DOCKER_NAMESPACE}/${{ steps.tag.outputs.repo_name }}-medley
-          DOCKER_TAGS="${DOCKER_REPO}:development,${DOCKER_REPO}:${RELEASE_TAG#*-}_${MEDLEY_RELEASE#*-}_${MAIKO_RELEASE#*-}"
+          if [ "${{ github.ref_name }}" = "main" ]; then devOrProd=production; else devOrProd=development; fi
+          DOCKER_TAGS="${DOCKER_REPO}:${devOrProd},${DOCKER_REPO}:${RELEASE_TAG#*-}_${MEDLEY_RELEASE#*-}_${MAIKO_RELEASE#*-}"
           echo "build_time=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> ${GITHUB_OUTPUT}
           echo "docker_tags=${DOCKER_TAGS}" >> ${GITHUB_OUTPUT}
 
