@@ -132,10 +132,10 @@ app.get([ '/demo/login' ],
 
             const cookieUrl = encodeURI(`${req.protocol}://${req.get('host')}${req.originalUrl}`);
             res.cookie('autologinURL', cookieUrl);
-            if(req.query == undefined) req.query = {}; 
+            if(req.query == undefined) req.query = {};
 	    req.query.autologin = "true";
             res.redirect(url.format({pathname:"/main", query: req.query}));
-         }.
+         }
        );
 app.use('/user', userRouter);
 app.use('/medley', ensureLoggedIn(), medleyRouter);
