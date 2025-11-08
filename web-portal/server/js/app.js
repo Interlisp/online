@@ -121,10 +121,10 @@ app.get([ '/guest', '/demo/guest' ],
 
             const cookieUrl = encodeURI(`${req.protocol}://${req.get('host')}${req.originalUrl}`);
             res.cookie('autologinURL', cookieUrl);
-
+            req.query.autologin = "true";
             req.query.username = config.guestUsername;
             req.query.password = config.guestPassword;
-            res.redirect("/user/autologin");
+            res.redirect(url.format({pathname:"/user/autologin", query: req.query}));
          }
        );
 app.get([ '/demo/login' ],
@@ -134,7 +134,7 @@ app.get([ '/demo/login' ],
             res.cookie('autologinURL', cookieUrl);
 
 	    req.query.autologin = "true";
-            res.redirect("/main");
+            res.redirect(url.format({pathname:"/main", query: req.query}));
          }
        );
 app.use('/user', userRouter);
