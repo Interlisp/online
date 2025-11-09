@@ -120,9 +120,9 @@ function passportAuthenticate(req, res, next) {
                         } catch (err) {
                             console.log("Error in logging login: " + err);
                         }
-                        if(user.uname)
+                        if(user.uname) res.redirect(req.session.returnTo);
                             // if (req.query.autologin != undefined)
-                                return res.redirect(url.format({pathname:"/main", query: req.query}));
+                                //return res.redirect(url.format({pathname:"/main", query: req.query}));
                             // else
                             //    return res.redirect('/main');
                         else

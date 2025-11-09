@@ -117,26 +117,44 @@ app.get('/main',
              }
        );
 app.get([ '/guest', '/demo/guest' ],
+         (req, res, next) => {
+            if(req.query.autologin === undefined) {
+              if (req.isAuthenticated && req.isAuthenticated()) {
+                req.logout();
+              }
+              req.session.returnTo = `${req.protocol}://${req.get('host')}${req.originalUrl}&autologin=true`;
+              let newQuery = {};
+              newQuery.username = config.guestUsername;
+              newQuery.password = config.guestPassword;
+              res.redirect(url.format({pathname:"/user/autologin", query: newQuery}));
+            }
+            else next();
+         },
          (req, res) => {
-
             const cookieUrl = encodeURI(`${req.protocol}://${req.get('host')}${req.originalUrl}`);
             res.cookie('autologinURL', cookieUrl);
-            req.query.autologin = "true";
-            req.query.username = config.guestUsername;
-            req.query.password = config.guestPassword;
-            res.redirect(url.format({pathname:"/user/autologin", query: req.query}));
-         }
-       );
-app.get([ '/demo/login' ],
-         (req, res) => {
-
-            const cookieUrl = encodeURI(`${req.protocol}://${req.get('host')}${req.originalUrl}`);
-            res.cookie('autologinURL', cookieUrl);
-            if(req.query == undefined) req.query = {};
-	    req.query.autologin = "true";
             res.redirect(url.format({pathname:"/main", query: req.query}));
          }
        );
+
+app.get([ '/demo/login' ],
+         (req, res, next) => {
+             if(req.query.autologin === undefined) {
+               if (req.isAuthenticated && req.isAuthenticated()) {
+                  req.logout();
+               }
+               req.session.returnTo = `${req.protocol}://${req.get('host')}${req.originalUrl}&autologin=true`;
+               res.redirect(url.format({ pathname:"/user/autologin", query:{} }));
+             }
+             else next();
+         },
+         (req, res) => {
+            const cookieUrl = encodeURI(`${req.protocol}://${req.get('host')}${req.originalUrl}`);
+            res.cookie('autologinURL', cookieUrl);
+            res.redirect(url.format({pathname:"/main", query: req.query}));
+         }
+       );
+
 app.use('/user', userRouter);
 app.use('/medley', ensureLoggedIn(), medleyRouter);
 app.use('/client', ensureLoggedIn(), clientRouter);
