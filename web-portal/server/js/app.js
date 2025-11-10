@@ -124,7 +124,10 @@ function autologinGoToMain(req, res, next) {
 }
 
 function autologinReturnTo(req) {
-    return req.originalUrl + (req.originalUrl.includes("?") ? "&" : "?") + "autologin=true";
+    const newURL = new URL(req.originalURL);
+    const query = newURL.searchParams;
+    query.append("autologin", "true");
+    return newURL;
 }
 
 app.get([ '/guest', '/demo', '/demo/guest' ],
@@ -152,7 +155,7 @@ app.get([ '/demo/login' ],
                   if (req.user.uname == config.guestUsername) req.logout();
                   else res.render('relogin',
                          {
-                           username: req.user.username,
+                           loggedUsername: req.user.username,
                            redirectNo: url.format({ pathname:"/user/autologin", query:{} }),
                            redirectYes: url.format({ pathname:"/user/autologin", query:{logout: "true"} })
                           }

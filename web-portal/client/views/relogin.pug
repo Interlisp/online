@@ -21,18 +21,16 @@ block headeradds
 
     script.
    
-        document.getElementByName("username").innerHTML = "#{loggedUsername}";
+        document.getElementById("username").innerHTML = "#{loggedUsername}";
         
-        function Yes() { window.location.xxx = "#{redirectYes}" }
+        function Yes() { window.location.assign("#{redirectYes}"); }
 
-        function No() { window.location.xxx = "#{redirectNo}" };
+        function No() { window.location.assign("#{redirectNo}"); }
 
 block content
 
     div#page-title Change Login?
     
-    include combined.pug
-
     div#logged-in-as-div
       p Currently logged in as: <span id=username></span>
       p
@@ -42,7 +40,7 @@ block content
       p
     .row
         .text-center#yes_no_button_div
-            button(type="button" id="yes_button" onclick="yes()").main-button No, log in again
-            button(type="button" id="no_button" onclick="no()").main-button Yes, continue with current login
+            button(type="button" id="yes_button" onclick="Yes()").main-button No, log in again
+            button(type="button" id="no_button" onclick="No()").main-button Yes, continue with current login
 
 
