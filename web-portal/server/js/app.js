@@ -124,10 +124,6 @@ function autologinGoToMain(req, res, next) {
 }
 
 function autologinReturnTo(req) {
-    // const newURL = new URL(req.originalUrl);
-    // const query = newURL.searchParams;
-    // query.append("autologin", "true");
-    // return newURL;
     return req.originalUrl + (req.originalUrl.includes("?") ? "&" : "?") + "autologin=true";
 }
 
@@ -153,7 +149,7 @@ app.get([ '/demo/login' ],
              if(req.query.autologin === undefined) {
                req.session.returnTo = autologinReturnTo(req);
                if (req.isAuthenticated && req.isAuthenticated()) {
-                  if (req.user.uname == config.guestUsername) req.logout();
+                  if (req.user.username == config.guestUsername) req.logout();
                   else res.render('relogin',
                          {
                            loggedUsername: req.user.username,
