@@ -141,7 +141,7 @@ app.get([ '/guest', '/demo', '/demo/guest' ],
             }
             else next();
          },
-         autologinGoToMain()
+         autologinGoToMain
        );
 
 app.get([ '/demo/login' ],
@@ -162,7 +162,7 @@ app.get([ '/demo/login' ],
              }
              else next();
          },
-         autologinGoToMain()
+         autologinGoToMain
        );
 
 app.use('/user', userRouter);
