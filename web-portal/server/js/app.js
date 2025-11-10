@@ -149,17 +149,18 @@ app.get([ '/demo/login' ],
              if(req.query.autologin === undefined) {
                req.session.returnTo = autologinReturnTo(req);
                if (req.isAuthenticated && req.isAuthenticated()) {
-                  if (req.user.username == config.guestUsername)
-                     res.redirect(url.format({ pathname:"/user/autologin", query:{logout: "true"} }));
+                  if (req.user.username == config.guestUsername) {
+                     res.redirect(url.format({ pathname:"/user/login", query:{ } }));
+                  }
                   else res.render('relogin',
                          {
                            loggedUsername: req.user.username,
-                           redirectNo: url.format({ pathname:"/user/autologin", query:{} }),
-                           redirectYes: url.format({ pathname:"/user/autologin", query:{logout: "true"} })
+                           redirectNo: req.session.returnTo,
+                           redirectYes: url.format({ pathname:"/user/login", query:{ } })
                           }
                         );
                }
-               else res.redirect(url.format({ pathname:"/user/autologin", query:{} }));
+               else res.redirect(url.format({ pathname:"/user/login", query:{} }));
              }
              else next();
          },
