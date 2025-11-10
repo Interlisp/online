@@ -124,7 +124,7 @@ function autologinGoToMain(req, res, next) {
 }
 
 function autologinReturnTo(req) {
-    const newURL = new URL(req.originalURL);
+    const newURL = new URL(req.originalUrl);
     const query = newURL.searchParams;
     query.append("autologin", "true");
     return newURL;
