@@ -97,7 +97,7 @@ app.get('/main',
                   const fromvnc = (req.query.fromvnc != undefined);
                   const isAutoLogin = (req.query.autologin != undefined);
                   if(isAutoLogin && fromvnc) {
-                      alURL = decodeURI(req.cookies.autologinURL);
+                      alURL = req.cookies.autologinURL;
                       page = 'again';
                   }
                   res.render(page,
@@ -118,16 +118,17 @@ app.get('/main',
        );
 
 function autologinGoToMain(req, res, next) {
-    const cookieUrl = encodeURI(`${req.protocol}://${req.get('host')}${req.originalUrl}`);
+    const cookieUrl = encodeURIComponent(`${req.protocol}://${req.get('host')}${req.originalUrl}`);
     res.cookie('autologinURL', cookieUrl);
     res.redirect(url.format({pathname:"/main", query: req.query}));
 }
 
 function autologinReturnTo(req) {
-    const newURL = new URL(req.originalUrl);
-    const query = newURL.searchParams;
-    query.append("autologin", "true");
-    return newURL;
+    // const newURL = new URL(req.originalUrl);
+    // const query = newURL.searchParams;
+    // query.append("autologin", "true");
+    // return newURL;
+    return req.originalUrl + (req.originalUrl.includes("?") ? "&" : "?") + "autologin=true";
 }
 
 app.get([ '/guest', '/demo', '/demo/guest' ],
