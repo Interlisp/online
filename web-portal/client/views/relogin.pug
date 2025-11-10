@@ -1,0 +1,48 @@
+//-
+    /***************************************************************************
+     * 
+     *   relogin.pug:  relogin page for online.interlisp.org web portal. 
+     * 
+     *   2025-11-09 Frank Halasz
+     * 
+     * 
+     *   Copyright: 2025 by Interlisp.org 
+     * 
+     *
+     **************************************************************************/
+
+extends layout
+
+block variables
+
+block headeradds
+
+    link(rel="stylesheet", href="/stylesheets/login.css")
+
+    script.
+   
+        document.getElementByName("username").innerHTML = "#{loggedUsername}";
+        
+        function Yes() { window.location.xxx = "#{redirectYes}" }
+
+        function No() { window.location.xxx = "#{redirectNo}" };
+
+block content
+
+    div#page-title Change Login?
+    
+    include combined.pug
+
+    div#logged-in-as-div
+      p Currently logged in as: <span id=username></span>
+      p
+      p
+      p Keep current login?
+      p
+      p
+    .row
+        .text-center#yes_no_button_div
+            button(type="button" id="yes_button" onclick="yes()").main-button No, log in again
+            button(type="button" id="no_button" onclick="no()").main-button Yes, continue with current login
+
+

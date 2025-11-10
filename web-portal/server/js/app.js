@@ -97,7 +97,7 @@ app.get('/main',
                   const fromvnc = (req.query.fromvnc != undefined);
                   const isAutoLogin = (req.query.autologin != undefined);
                   if(isAutoLogin && fromvnc) {
-                      alURL = req.cookies.autologinURL;
+                      alURL = decodeURI(req.cookies.autologinURL);
                       page = 'again';
                   }
                   res.render(page,
@@ -116,13 +116,24 @@ app.get('/main',
                   );
              }
        );
-app.get([ '/guest', '/demo/guest' ],
+
+function autologinGoToMain(req, res, next) {
+    const cookieUrl = encodeURI(`${req.protocol}://${req.get('host')}${req.originalUrl}`);
+    res.cookie('autologinURL', cookieUrl);
+    res.redirect(url.format({pathname:"/main", query: req.query}));
+}
+
+function autologinReturnTo(req) {
+    return req.originalUrl + (req.originalUrl.includes("?") ? "&" : "?") + "autologin=true";
+}
+
+app.get([ '/guest', '/demo', '/demo/guest' ],
          (req, res, next) => {
             if(req.query.autologin === undefined) {
               if (req.isAuthenticated && req.isAuthenticated()) {
                 req.logout();
               }
-              req.session.returnTo = `${req.protocol}://${req.get('host')}${req.originalUrl}&autologin=true`;
+              req.session.returnTo = autologinReturnTo(req);
               let newQuery = {};
               newQuery.username = config.guestUsername;
               newQuery.password = config.guestPassword;
@@ -130,29 +141,28 @@ app.get([ '/guest', '/demo/guest' ],
             }
             else next();
          },
-         (req, res) => {
-            const cookieUrl = encodeURI(`${req.protocol}://${req.get('host')}${req.originalUrl}`);
-            res.cookie('autologinURL', cookieUrl);
-            res.redirect(url.format({pathname:"/main", query: req.query}));
-         }
+         autologinGoToMain()
        );
 
 app.get([ '/demo/login' ],
          (req, res, next) => {
              if(req.query.autologin === undefined) {
+               req.session.returnTo = autologinReturnTo(req);
                if (req.isAuthenticated && req.isAuthenticated()) {
-                  req.logout();
+                  if (req.user.uname == config.guestUsername) req.logout();
+                  else res.render('relogin',
+                         {
+                           username: req.user.username,
+                           redirectNo: url.format({ pathname:"/user/autologin", query:{} }),
+                           redirectYes: url.format({ pathname:"/user/autologin", query:{logout: "true"} })
+                          }
+                        );
                }
-               req.session.returnTo = `${req.protocol}://${req.get('host')}${req.originalUrl}&autologin=true`;
                res.redirect(url.format({ pathname:"/user/autologin", query:{} }));
              }
              else next();
          },
-         (req, res) => {
-            const cookieUrl = encodeURI(`${req.protocol}://${req.get('host')}${req.originalUrl}`);
-            res.cookie('autologinURL', cookieUrl);
-            res.redirect(url.format({pathname:"/main", query: req.query}));
-         }
+         autologinGoToMain()
        );
 
 app.use('/user', userRouter);
