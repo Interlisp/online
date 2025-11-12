@@ -17,11 +17,13 @@ block variables
 
 block headeradds
 
-    link(rel="stylesheet", href="/stylesheets/login.css")
+    link(rel="stylesheet", href="/stylesheets/common.css")
 
     script.
    
-        document.getElementById("username").innerText = "#{loggedUsername}";
+        window.addEventListener('load', 
+                                 function() { document.getElementById("username").innerText = "#{loggedUsername}"; }
+                               );
         
         function Yes() { window.location.assign("#{redirectYes}"); }
 
@@ -29,9 +31,9 @@ block headeradds
 
 block content
 
-    div#page-title Change Login?
+    div#page-title Demo Mode:  Re-login?
     
-    div#logged-in-as-div
+    div.text-center.h2
       p Currently logged in as: <span id="username"></span>
       p
       p
@@ -40,7 +42,8 @@ block content
       p
     .row
         .text-center#yes_no_button_div
-            button(type="button" id="yes_button" onclick="Yes()").main-button No, log in again
             button(type="button" id="no_button" onclick="No()").main-button Yes, continue with current login
+            br
+            button(type="button" id="yes_button" onclick="Yes()").main-button No, re-login
 
 
