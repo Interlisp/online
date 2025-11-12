@@ -155,7 +155,7 @@ app.get([ '/demo/login' ],
                   else res.render('relogin',
                          {
                            loggedUsername: req.user.username,
-                           redirectYes: req.session.returnTo,
+                           redirectYes: encodeURIComponent(req.session.returnTo),
                            redirectNo: url.format({ pathname:"/user/login", query:{ } })
                           }
                         );

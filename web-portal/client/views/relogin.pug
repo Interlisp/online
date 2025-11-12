@@ -25,7 +25,7 @@ block headeradds
                                  function() { document.getElementById("username").innerText = "#{loggedUsername}"; }
                                );
         
-        function Yes() { window.location.assign("#{redirectYes}"); }
+        function Yes() { window.location.assign(decodeURIComponent("#{redirectYes}")); }
 
         function No() { window.location.assign("#{redirectNo}"); }
 
