@@ -129,7 +129,7 @@ function startSession (interlispOrXterm) {
     const medleyExec = document.getElementById("interlisp_rb").checked ? "inter" : "common";
     const startScriptUrl =
             (function() {
-                const ss = document.getElementById("start_script_url").value;
+                let ss = document.getElementById("start_script_url").value;
                 if (ss != "") {
                   if (ss.includes("%2F")) ss = decodeURIComponent(ss);
                   return encodeURIComponent(ss);
