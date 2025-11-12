@@ -33,17 +33,18 @@ block content
 
     div#page-title Demo Mode:  Re-login?
     
-    div.text-center.h2
-      p Currently logged in as: <span id="username"></span>
-      p
-      p
-      p Keep current login?
-      p
-      p
+    div.text-center.field.primary-field
+        p Currently logged in as: <span id="username"></span>
+        p
+        p
+        p Keep current login?
+        p
+        p
     .row
-        .text-center#yes_no_button_div
+        .text-center.field.primary-field#yes_no_button_div
             button(type="button" id="no_button" onclick="No()").main-button Yes, continue with current login
-            br
+            p
+            p
             button(type="button" id="yes_button" onclick="Yes()").main-button No, re-login
 
 
