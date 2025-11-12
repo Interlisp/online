@@ -1,6 +1,6 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED "11-Nov-2025 20:45:40" {DSK}<home>frank>il>online>start-scripts>START-INSPHEX.;12 2401   
+(FILECREATED "11-Nov-2025 21:56:34" {DSK}<home>frank>il>online>start-scripts>START-INSPHEX.;13 2262   
 
       :EDIT-BY "FGH"
 
@@ -8,7 +8,7 @@
                   (VARS START-INSPHEXCOMS)
                   (FUNCTIONS TmpShellWget)
 
-      :PREVIOUS-DATE "11-Nov-2025 20:10:15" {DSK}<home>frank>il>online>start-scripts>START-INSPHEX.;11
+      :PREVIOUS-DATE "11-Nov-2025 20:45:40" {DSK}<home>frank>il>online>start-scripts>START-INSPHEX.;12
 )
 
 
@@ -34,13 +34,10 @@
 (DEFINEQ
 
 (START-INSPHEX
-  [LAMBDA NIL                                                (* ; "Edited 11-Nov-2025 20:44 by FGH")
+  [LAMBDA NIL                                                (* ; "Edited 11-Nov-2025 21:56 by FGH")
                                                              (* ; "Edited  7-Nov-2025 10:43 by FGH")
-    (LET* ((INSPHEX.FILE (CONCAT LOGINDIR ">INSPHEX"))
-           (INSPHEX.DFASL (CONCAT INSPHEX.FILE ".DFASL")))
-          (DIRECTORY INSPHEX.DFASL 'DELETE)
-          (DIRECTORY (CONCAT INSPHEX.FILE ".")
-                 'DELETE)
+    (LET* ((INSPHEX.FILE (OUTFILEP (CONCAT LOGINDIR ">INSPHEX")))
+           INSPHEX.DFASL)
           (TmpShellWget "https://raw.githubusercontent.com/pamoroso/insphex/refs/heads/main/INSPHEX"
                  INSPHEX.FILE)
           (SETQ INSPHEX.DFASL (CL:COMPILE-FILE INSPHEX.FILE))
@@ -55,5 +52,5 @@
 
 (START-INSPHEX)
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (623 1216 (TmpShellWget 623 . 1216)) (1217 2357 (START-INSPHEX 1227 . 2355)))))
+  (FILEMAP (NIL (623 1216 (TmpShellWget 623 . 1216)) (1217 2218 (START-INSPHEX 1227 . 2216)))))
 STOP
