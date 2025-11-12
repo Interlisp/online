@@ -131,7 +131,7 @@ function startSession (interlispOrXterm) {
             (function() {
                 const ss = document.getElementById("start_script_url").value;
                 if (ss != "") {
-                  if (ss.includes("%2F)) ss = decodeURIComponent(ss);
+                  if (ss.includes("%2F")) ss = decodeURIComponent(ss);
                   return encodeURIComponent(ss);
                 }
                 if (alStart != "") return encodeURIComponent(alStart);
