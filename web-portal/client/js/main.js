@@ -127,6 +127,13 @@ function startSession (interlispOrXterm) {
     const runRooms = document.getElementById("run_rooms_cb").checked ? "true": "false";
     const startSftp = document.getElementById("sftp_checkbox").checked ? "true": "false";
     const medleyExec = document.getElementById("interlisp_rb").checked ? "inter" : "common";
+    const startScriptUrl =
+            (function() {
+                const ss = document.getElementById("start_script_url").value;
+                if (ss != "") return encodeURIComponent(ss);
+                if (alStart != "") return encodeURIComponent(alStart);
+                return "";
+             })();
     if(!isGuest) {
         localStore.setItem("fill-window", fillWindow ? 'true' : 'false');
         if(! fillWindow) {
@@ -171,8 +178,8 @@ function startSession (interlispOrXterm) {
                             + `&sftp=${startSftp || "false"}`
                             + `&exec=${medleyExec || "inter"}`
                             + ( isAutoLogin ? "&autologin" : "")
-                            + ( (alStart != "") ? `&start=${encodeURIComponent(alStart)}` : "" )
-			;
+                            + ( (startScriptUrl != "") ? `&start=${startScriptUrl}` : "" )
+			; 
 
                     if(isRunning) {
                         new Promise((resolve, reject) => {

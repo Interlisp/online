@@ -122,3 +122,14 @@ dialog(id="help-dialog-which-exec").help-dialog
         Additional Exec windows based on either Interlisp or Common Lisp can be started at any time from the background menu.
     .single-button-div
         button(type="button" onclick='helpDialogClose("which-exec");').main-button OK
+dialog(id="help-dialog-start-script").help-dialog
+    h2  Help
+    p.
+        A start-script if a Medley Lisp file that will be LOADed at the end of the ONLINE-INIT script while Online
+        Medley is starting up.  It can be used to fetch other files from the Internet and/or to run code that will
+        set-up the Medley environment or start a specific Medley application.  This is generally used for automatings
+        demos.  Example start-scripts can be found at https://github.com/interlisp/online/start-scripts. 
+    p.
+        In this field enter a URL that points to a Medley Lisp file that can be downloaded from the Internet with
+        wget.  This file will be downloaded amd LOADed at the end of ONLINE-INIT.
+
