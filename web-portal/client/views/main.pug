@@ -117,8 +117,11 @@ block content
       #dev-div-controls(style="display:none;")
         #start_script_row
           div.run-option.dev-div-run-option.
-            p URL for start-script&nbsp;&nbsp;&nbsp;<span class=in-circle onclick='helpOnClick("start-script");'>?</span>
-            <input type="url" id="start_script_url" name="start_script_url" class="url-input" style="width:100%">
+            <tr>
+              <td style="text-align:left">URL for start-script</td>
+              <td style="text-align:right"><span class=in-circle onclick='helpOnClick("start-script");'>?</span></td>
+            </tr>
+            <input type="url" id="start_script_url" name="start_script_url" class="url-input" style="width:100%;margin-bottom:16px;">
         #custom_sysout_row
           label.run-option.dev-div-run-option.
             <input type="checkbox" id="custom_sysout_cb" class="checkbox-input">&nbsp;Run custom sysout
