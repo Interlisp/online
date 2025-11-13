@@ -116,10 +116,9 @@ block content
           <input type="checkbox" id="dev-options-checkbox" onclick="showDevOptionsOnClick();" class="checkbox-input">&nbsp;Show advanced options
       #dev-div-controls(style="display:none;")
         #start_script_row
-          label.run-option.dev-div-run-option.
-            <label for="start_script_url">URL for start-script</label>
-            span.in-circle(onclick='helpOnClick("start-script");') ?
-            <input type="url" id="start_script_url" name="start_script_url" class="url-input">
+          div.run-option.dev-div-run-option.
+            p URL for start-script&nbsp;&nbsp;&nbsp;<span class=in-circle onclick='helpOnClick("start-script");'>?</span>
+            <input type="url" id="start_script_url" name="start_script_url" class="url-input" style="width:100%">
         #custom_sysout_row
           label.run-option.dev-div-run-option.
             <input type="checkbox" id="custom_sysout_cb" class="checkbox-input">&nbsp;Run custom sysout
