@@ -117,11 +117,18 @@ block content
       #dev-div-controls(style="display:none;")
         #start_script_row
           div.run-option.dev-div-run-option.
-            <tr style="width:100%">
-              <td style="text-align:left;width:50%;">URL for start-script</td>
-              <td style="text-align:right;width:50%;">
-                <span class=in-circle onclick='helpOnClick("start-script");'>?</span></td>
-            </tr>
+            table
+              thead
+                tr
+                  th
+                   th
+              tbody  
+	        <tr style="width:100%">
+                   <td style="text-align:left;width:50%;">URL for start-script</td>
+                   <td style="text-align:right;width:50%;">
+                       <span class=in-circle onclick='helpOnClick("start-script");'>?</span>
+                   </td>
+                </tr>
             <input type="url" id="start_script_url" name="start_script_url" class="url-input" style="width:100%;margin-bottom:12px;">
         #custom_sysout_row
           label.run-option.dev-div-run-option.
