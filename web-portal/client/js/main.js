@@ -182,7 +182,7 @@ function startSession (interlispOrXterm) {
                             + `&exec=${medleyExec || "inter"}`
                             + ( isAutoLogin ? "&autologin" : "")
                             + ( (startScriptUrl != "") ? `&start=${encodeURIComponent(startScriptUrl)}` : "" )
-			; 
+			;
 
                     if(isRunning) {
                         new Promise((resolve, reject) => {

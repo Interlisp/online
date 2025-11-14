@@ -103,11 +103,8 @@ function passportAuthenticate(req, res, next) {
             if (!user) {
                 console.dir(info);
                 let redirectTo = "/user/login";
-                if ((info !== undefined) && (info != "")) {
-                  redirectTo = redirectTo + "?info=";
-                  if ( (typeof info) == "string") redirectTo = redirectTo + encodeURIComponent(info);
-                  else redirectTo = redirectTo + encodeURIComponent(util.inspect(info, {depth:0}));
-                }
+                if ((info !== undefined) && (info != ""))
+                  redirectTo = redirectTo + "?info=" + encodeURIComponent(info);
                 return res.redirect(redirectTo);
             }
 
