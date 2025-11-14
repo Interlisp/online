@@ -99,7 +99,10 @@ window.addEventListener('load', (event) => {
             document.getElementById("interlisp_rb").checked = true;
     }
     fillWindowOnClick();
-    document.getElementById("dev-options-checkbox").checked = (localStore.getItem("show_dev_options") == "true");
+    if (alStart != "") document.getElementById("start_script_url").value = alStart;
+    else document.getElementById("start_script_url").value = localStore.getItem("start_script_url");
+    if ((localStore.getItem("show_dev_options") == "true") || (document.getElementById("start_script_url").value != ""))
+          document.getElementById("dev-options-checkbox").checked = true;
     showDevOptionsOnClick();
     if( ! (isAutoLogin || fromvnc)) {
         if(isVerified != true) {
@@ -130,14 +133,11 @@ function startSession (interlispOrXterm) {
     const startScriptUrl =
             (function() {
                 let ss = document.getElementById("start_script_url").value;
-                if (ss != "") {
-                  if (ss.includes("%2F")) ss = decodeURIComponent(ss);
-                  return encodeURIComponent(ss);
-                }
-                if (alStart != "") return encodeURIComponent(alStart);
-                return "";
+                if (ss.includes("%2F")) ss = decodeURIComponent(ss);
+                return ss;
              })();
     if(!isGuest) {
+        localStore.setItem("start_script_url", startScriptUrl);
         localStore.setItem("fill-window", fillWindow ? 'true' : 'false');
         if(! fillWindow) {
             localStore.setItem("screen_width", screenWidth);
@@ -181,7 +181,7 @@ function startSession (interlispOrXterm) {
                             + `&sftp=${startSftp || "false"}`
                             + `&exec=${medleyExec || "inter"}`
                             + ( isAutoLogin ? "&autologin" : "")
-                            + ( (startScriptUrl != "") ? `&start=${startScriptUrl}` : "" )
+                            + ( (startScriptUrl != "") ? `&start=${encodeURIComponent(startScriptUrl)}` : "" )
 			; 
 
                     if(isRunning) {
