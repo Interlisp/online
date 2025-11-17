@@ -10,6 +10,7 @@ An addition aspect of Demo Mode is that login processing can (optionally) be ski
 To access Demo mode, use the following URLs:
 
 ```https://online.interlisp.og/demo?start=\<START-SCRIPT>``` for automatic guest login.
+
 ```https://online.interlisp.og/demo/login?start=\<START-SCRIPT>``` to require logins
 
 ```<START-SCRIPT>``` is a URL pointing to a start-script lisp file that can be wget'd by the OIO server.  **This URL must be encoded using the equivalent of Javascript's *encodeURIComponent*.**  The easiest way to do this is via one of the many websites that offer this service such as https://meyerweb.com/eric/tools/dencoder/.
