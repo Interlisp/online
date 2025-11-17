@@ -30,7 +30,7 @@ Below is the start-script for a demo of INSPHEX.  The start-script defines and t
 
 ## Start scripts outside of Demo mode
 
-Start scripts can also be used outside of Demo mode.  In the normal workflow, the user will be taken to the "Run Medley" page.  On the Ru
+Start scripts can also be used outside of Demo mode.  In the normal workflow, the user will be taken to the "Run Medley" page.  On the Run Medley page, if you enable 
 
 
 
@@ -51,6 +51,6 @@ Start scripts can also be used outside of Demo mode.  In the normal workflow, th
 
 > Written with [StackEdit](https://stackedit.io/).
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTExMDM2NzQxNTksNTkwMDEwODczLDc4Nz
-Y0MDkyMl19
+eyJoaXN0b3J5IjpbMjA5MjExNDY1Myw1OTAwMTA4NzMsNzg3Nj
+QwOTIyXX0=
 -->
