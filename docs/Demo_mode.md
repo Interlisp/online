@@ -26,9 +26,9 @@ Any LOADable Lisp file (source or compiled, Interlisp or Medley CommonLisp) can 
 
 Sample start scripts can be found in the Interlisp/Online Github repo in the start-scripts directory.
 
-Most demos will require Lisp (or other) files that are not included in the standard Online Medley image.  One very handy function to be used in start scripts for these demos is ```(ShellWget URL OUTFILE)```.   This function will download (using wget) the file specified by URL and store it in the versioned Online Medley file system under the name OUTFILE.  OUTFILE can then be LOADed in the start-script.
+Most demos will require Lisp (or other) files that are not included in the standard Online Medley image.  One very handy function to be used in start scripts for these demos is ```(ShellWget URL OUTFILE)```.   This function will download (using wget) the file specified by URL and store it in the versioned Online Medley file system under the name OUTFILE.  OUTFILE can then be LOADed by the start script.
 
-Below is the start-script for a demo of INSPHEX.  The start-script defines and then runs a function called START-INSPHEX.  START-INPHEX in turn uses ShellWget to download the source code to INSPHEX from Github, compiles it, loads the compiled file and then uses ADD.PROCESS to run the main HEXDUMP function.  There is some additional complication in the call to ADD.PROCESS to ensure that packages are handled correctly.  Most exisitng Interlisp demos will not need this complexity since they don't use packages.
+Below is the start script for a demo of Pamoroso's INSPHEX utility  The start script defines and then runs a function called START-INSPHEX.  START-INPHEX in turn uses ShellWget to download the source code to INSPHEX from Github, compiles it, loads the compiled file and then uses ADD.PROCESS to run the main HEXDUMP function.  There is some additional complication in the call to ADD.PROCESS to ensure that packages are handled correctly.  Most exisitng Interlisp demos will not need this complexity since they don't use packages.
 
 ```
 (DEFINE-FILE-INFO ^^PACKAGE "INTERLISP" ^^READTABLE "INTERLISP" ^^BASE 10)
@@ -88,6 +88,6 @@ Additionally, if a ```start=<encoded start-script URL>``` query parameter is inc
 
 > Written with [StackEdit](https://stackedit.io/).
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbODQ1MDU5MDAwLDIxNTAzNzAxMCwxNzE0MT
+eyJoaXN0b3J5IjpbMzgxODg5MDg3LDIxNTAzNzAxMCwxNzE0MT
 E2OTc0XX0=
 -->
