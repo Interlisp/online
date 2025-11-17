@@ -12,7 +12,7 @@ To access Demo mode, use the following URLs:
 ```https://online.interlisp.og/demo?start=\<START-SCRIPT>``` for automatic guest login.
 ```https://online.interlisp.og/demo/login?start=\<START-SCRIPT>``` to require logins
 
-```<START-SCRIPT>``` is a URL pointing to a start-script lisp file that
+```<START-SCRIPT>``` is a URL pointing to a start-script lisp file that can be wget'd by the OIO server.  ***This URL must be encoded using the equivalent of Javascr
 
 
 
@@ -36,5 +36,5 @@ To access Demo mode, use the following URLs:
 
 > Written with [StackEdit](https://stackedit.io/).
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTYyNDEzMzcxM119
+eyJoaXN0b3J5IjpbMTE2MDkzMDY3MV19
 -->
