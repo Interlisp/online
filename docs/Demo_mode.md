@@ -54,10 +54,7 @@ Below is the start-script for a demo of INSPHEX.  The start-script defines and t
                                               (FIX (TIMES 0.5 SCREENWIDTH))
                                               (FIX (TIMES 0.5 SCREENHEIGHT])
 )
-
 (START-INSPHEX)
-(DECLARE%: DONTCOPY
-  (FILEMAP (NIL (506 1597 (START-INSPHEX 516 . 1595)))))
 STOP
 
 ```
@@ -89,5 +86,5 @@ Additionally, if a ```start=<encoded start-script URL>``` query parameter is inc
 
 > Written with [StackEdit](https://stackedit.io/).
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTcwOTU3NjkyLDE3MTQxMTY5NzRdfQ==
+eyJoaXN0b3J5IjpbMjE1MDM3MDEwLDE3MTQxMTY5NzRdfQ==
 -->
