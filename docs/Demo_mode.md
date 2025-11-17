@@ -32,7 +32,7 @@ Below is the start-script for a demo of INSPHEX.  The start-script defines and t
 
 Start scripts can also be used outside of Demo mode.  In the normal workflow, the user will be taken to the "Run Medley" page.  On the Run Medley page, if you enable *Show advanced options* there will be a field into which you can enter the URL for a start-script (in either original or URI encoded forms).   When Online Medley starts up, the specified start script will be download and LOADed as in Demo mode.
 
-Additionally, i
+Additionally, if a ```start=<encoded URL>``` query parameter is included in the URL used to access OIO (outside of Demo mode), then the decoded 
 
 
 
@@ -55,6 +55,6 @@ Additionally, i
 
 > Written with [StackEdit](https://stackedit.io/).
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNzU3NDY2MjAwLDU5MDAxMDg3Myw3ODc2ND
-A5MjJdfQ==
+eyJoaXN0b3J5IjpbLTUwNDIyNTE3MSw1OTAwMTA4NzMsNzg3Nj
+QwOTIyXX0=
 -->
