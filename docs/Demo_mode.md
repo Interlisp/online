@@ -28,7 +28,9 @@ Most demos will require Lisp (or other) files that are not included in the stand
 
 Below is the start-script for a demo of INSPHEX.  The start-script defines and then runs a function called START-INSPHEX.  START-INPHEX in turn uses ShellWget to download the source code to INSPHEX from Github, compiles it, loads the compiled file and then uses ADD.PROCESS to run the main HEXDUMP function.  There is some additional complication in the call to ADD.PROCESS to ensure that packages are handled correctly.  Most exisitng Interlisp demos will not need this complexity since they don't use packages.
 
-## Start scripts outside of Dem
+## Start scripts outside of Demo mode
+
+Start scripts can also be used outside of Demo mode.  In the normal workflow, the user will be taken to the "Run Medley" page.  On the Ru
 
 
 
@@ -49,6 +51,6 @@ Below is the start-script for a demo of INSPHEX.  The start-script defines and t
 
 > Written with [StackEdit](https://stackedit.io/).
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMjEwMzA5NjM3NSw1OTAwMTA4NzMsNzg3Nj
-QwOTIyXX0=
+eyJoaXN0b3J5IjpbLTExMDM2NzQxNTksNTkwMDEwODczLDc4Nz
+Y0MDkyMl19
 -->
