@@ -16,13 +16,13 @@ To access Demo mode, use the following URLs:
 
 In addition to the *start* query parameter, Demo mode supports the *notecards=1* and *rooms=1* query parameters.  If these query parameters are included in the Demo mode URL, then NoteCards and/or Rooms will be automatically started when Online Medley runs, in addition to the start-script.
 
-Any of the query parameters (start, notecards, rooms) can be left off, with the expected change of function.  For example, https://online.interlisp.org/demo?notecards=1 will automatically login as guest and start notecards - but not run any start-script.
+Any of the query parameters (start, notecards, rooms) can be left off, with the expected change of function.  For example, https://online.interlisp.org/demo?notecards=1 will automatically login as guest and start notecards - but not run any start script.
 
 Example Demo mode URL:  https://online.interlisp.org/demo?start=https%3A%2F%2Fgithub.com%2FInterlisp%2Fonline%2Fraw%2Frefs%2Fheads%2Ffgh_museum-mode%2Fstart-scripts%2FSTART-INSPHEX.LCOM&notecards=1.  This URL will automatically login as guest, wget and LOAD the file START-INSPHEX.LCOM from the Interlisp/Online repo on github and start Notecards.
 
 ## Start scripts
 
-Sample start scripts can be found in the Interlisp/Online Github repo in the start-scripts directory.
+Any LOADable Lisp file (source or compiled, InterStart scriptsSample start scripts can be found in the Interlisp/Online Github repo in the start-scripts directory.
 
 Most demos will require Lisp (or other) files that are not included in the standard Online Medley image.  One very handy function to be used in start-scripts for these demos is ```(ShellWget URL OUTFILE)```.   This function will download (using wget) the file specified by URL and store it in the versioned Online Medley file system under the name OUTFILE.  OUTFILE can then be LOADed in the start-script.
 
@@ -86,6 +86,6 @@ Additionally, if a ```start=<encoded start-script URL>``` query parameter is inc
 
 > Written with [StackEdit](https://stackedit.io/).
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMjAzMzM2NzE0NCwyMTUwMzcwMTAsMTcxND
+eyJoaXN0b3J5IjpbMTc5NDc0NTk4OCwyMTUwMzcwMTAsMTcxND
 ExNjk3NF19
 -->
