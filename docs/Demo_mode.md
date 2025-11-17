@@ -67,7 +67,9 @@ Start scripts can also be used outside of Demo mode.  In the normal OIO workflow
 
 Additionally, if a ```start=<encoded start-script URL>``` query parameter is included in the URL used to access OIO (outside of Demo mode), then the specified URL (decoded) will be prepopulated into the Advanced Options/Start URL field on the Run Medley page.
 
-## 
+## Synonyms for 
+
+For legacy reasons,  https::online.interlisp.org/demo/guest 
 
 
 
@@ -89,6 +91,6 @@ Additionally, if a ```start=<encoded start-script URL>``` query parameter is inc
 
 > Written with [StackEdit](https://stackedit.io/).
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTUwMTE4NTkxOCwyMTUwMzcwMTAsMTcxND
-ExNjk3NF19
+eyJoaXN0b3J5IjpbLTE1NTU4Nzg4MjUsMjE1MDM3MDEwLDE3MT
+QxMTY5NzRdfQ==
 -->
