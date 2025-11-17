@@ -28,11 +28,15 @@ Most demos will require Lisp (or other) files that are not included in the stand
 
 Below is the start-script for a demo of INSPHEX.  The start-script defines and then runs a function called START-INSPHEX.  START-INPHEX in turn uses ShellWget to download the source code to INSPHEX from Github, compiles it, loads the compiled file and then uses ADD.PROCESS to run the main HEXDUMP function.  There is some additional complication in the call to ADD.PROCESS to ensure that packages are handled correctly.  Most exisitng Interlisp demos will not need this complexity since they don't use packages.
 
+```
+
+```
+
 ## Start scripts outside of Demo mode
 
 Start scripts can also be used outside of Demo mode.  In the normal workflow, the user will be taken to the "Run Medley" page.  On the Run Medley page, if you enable *Show advanced options* there will be a field into which you can enter the URL for a start-script (in either original or URI encoded forms).   When Online Medley starts up, the specified start script will be download and LOADed as in Demo mode.
 
-Additionally, if a ```start=<encoded URL>``` query parameter is included in the URL used to access OIO (outside of Demo mode), then the specified URL (decoded) will be inserted into the Advanced Options/Start URL field on the Run Medley page.
+Additionally, if a ```start=<encoded start-script URL>``` query parameter is included in the URL used to access OIO (outside of Demo mode), then the specified URL (decoded) will be prepopulated into the Advanced Options/Start URL field on the Run Medley page.
 
 
 
@@ -55,6 +59,6 @@ Additionally, if a ```start=<encoded URL>``` query parameter is included in the 
 
 > Written with [StackEdit](https://stackedit.io/).
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE3NTA3NjYyMDEsNTkwMDEwODczLDc4Nz
-Y0MDkyMl19
+eyJoaXN0b3J5IjpbMTcxNDExNjk3NCw1OTAwMTA4NzMsNzg3Nj
+QwOTIyXX0=
 -->
