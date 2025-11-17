@@ -40,9 +40,7 @@ Below is the start-script for a demo of INSPHEX.  The start-script defines and t
 (DEFINEQ
 
 (START-INSPHEX
-  [LAMBDA NIL                                                (* ; "Edited 16-Nov-2025 21:14 by FGH")
-                                                             (* ; "Edited 11-Nov-2025 23:54 by FGH")
-                                                             (* ; "Edited  7-Nov-2025 10:43 by FGH")
+  [LAMBDA NIL                                               
     (LET* ((INSPHEX.FILE (OUTFILEP "{CORE}INSPHEX"))
            INSPHEX.DFASL)
           (ShellWget "https://raw.githubusercontent.com/pamoroso/insphex/refs/heads/main/INSPHEX"
@@ -91,5 +89,5 @@ Additionally, if a ```start=<encoded start-script URL>``` query parameter is inc
 
 > Written with [StackEdit](https://stackedit.io/).
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNzg4MDU3Mzg3LDE3MTQxMTY5NzRdfQ==
+eyJoaXN0b3J5IjpbMTcwOTU3NjkyLDE3MTQxMTY5NzRdfQ==
 -->
