@@ -2,9 +2,9 @@
 # Online.Interlisp.Org: Demo mode (aka Museum Mode)
 ## Overview
 
-When accessing online.interlisp.org (OIO) using Demo Mode,  Online Medley will LOAD a Lisp file called a *start script*.   The start script is specified by a query parameter in the URL through which OIO was accessed.  Before the Online Medley run starts, the start script file is downloaded using ```wget```into a known file in the Medley file system.  It is then LOADed as the last step in the ONLINE-INIT initialization.  The intent is that upon LOAD the start script will run a demo by defining and/or LOADing additional Lisp code and then starting up that demo, e.g., via a P file package command.  The start script is LOADed as the last step in running the ONLINE-INIT initialization.   from where it is LOADed by ONLINE-INIT. 
+When accessing online.interlisp.org (OIO) using Demo Mode,  Online Medley will LOAD a Lisp file called a *start script*.   The start script is specified by a query parameter in the URL through which OIO was accessed.  Before the Online Medley run starts, the start script file is downloaded using ```wget```into a known file in the Medley file system.  It is then LOADed as the last step in the ONLINE-INIT initialization.  The intent is that upon LOAD the start script will run a demo by defining and/or LOADing additional Lisp code and then starting up that demo, e.g., via a P file package command.  
 
-An addition aspect of Demo Mode is that based on flags in the URL login processing can be skipped, the user automatically logged in as guest, and the Online Medley session started with no user interaction required.   Alternatively,  the login process can remain but the standard "Run Medley" page will be skipped and the user will go directly from login to the running Medley without having to set all the run parameters in the Run Medley page.  Automatic guest login is sufficient for most demos.  But requiring login allows demos to save files and context between runs of Online Medley, which is not possible with guest login.
+An addition aspect of Demo Mode is that login processing can (optionally) be skipped, the user automatically logged in as guest, and the Online Medley session started with no user interaction required.   Alternatively,  the login process can remain but the standard "Run Medley" page will be skipped and the user will go directly from login to the running Medley without having to set all the run parameters in the Run Medley page.  Automatic guest login is sufficient for most demos.  But requiring login allows demos to save files and context between runs of Online Medley, which is not possible with guest login.
 
 ## Demo mode URLs
 To access Demo mode, use the following URLs:
@@ -86,6 +86,6 @@ Additionally, if a ```start=<encoded start-script URL>``` query parameter is inc
 
 > Written with [StackEdit](https://stackedit.io/).
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTEzMzM4ODk5MzAsMjE1MDM3MDEwLDE3MT
-QxMTY5NzRdfQ==
+eyJoaXN0b3J5IjpbMTg3MDM2MDUyNSwyMTUwMzcwMTAsMTcxND
+ExNjk3NF19
 -->
