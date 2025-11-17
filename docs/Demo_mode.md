@@ -63,10 +63,11 @@ STOP
 
 ## Start scripts outside of Demo mode
 
-Start scripts can also be used outside of Demo mode.  In the normal workflow, the user will be taken to the "Run Medley" page.  On the Run Medley page, if you enable *Show advanced options* there will be a field into which you can enter the URL for a start-script (in either original or URI encoded forms).   When Online Medley starts up, the specified start script will be download and LOADed as in Demo mode.
+Start scripts can also be used outside of Demo mode.  In the normal OIO workflow, the user will be taken to the "Run Medley" page.  On the Run Medley page, if you enable *Show advanced options* there will be a field into which you can enter the URL for a start-script (in either original or URI encoded forms).   When Online Medley starts up, the specified start script will be wget'd and LOADed as in Demo mode.
 
 Additionally, if a ```start=<encoded start-script URL>``` query parameter is included in the URL used to access OIO (outside of Demo mode), then the specified URL (decoded) will be prepopulated into the Advanced Options/Start URL field on the Run Medley page.
 
+## 
 
 
 
@@ -88,6 +89,6 @@ Additionally, if a ```start=<encoded start-script URL>``` query parameter is inc
 
 > Written with [StackEdit](https://stackedit.io/).
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTAzOTMyNzE4NSwyMTUwMzcwMTAsMTcxND
+eyJoaXN0b3J5IjpbLTUwMTE4NTkxOCwyMTUwMzcwMTAsMTcxND
 ExNjk3NF19
 -->
