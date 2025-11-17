@@ -24,7 +24,7 @@ Example Demo mode URL:  https://online.interlisp.org/demo?start=https%3A%2F%2Fgi
 
 Sample start scripts can be found in the Interlisp/Online Github repo in the start-scripts directory.
 
-Most demos will require Lisp (or other) files thyat are not inclOne very handy function to be used in start-scripts is ```(ShellWget URL OUTFILE)```.  
+Most demos will require Lisp (or other) files that are not included in the standard Online Medley image.  One very handy function to be used in start-scripts for these demos is ```(ShellWget URL OUTFILE)```.   This function will download (using wget) the file specified
 
 
 
@@ -46,5 +46,5 @@ Most demos will require Lisp (or other) files thyat are not inclOne very handy f
 
 > Written with [StackEdit](https://stackedit.io/).
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTc2MzYxMjQ0Niw3ODc2NDA5MjJdfQ==
+eyJoaXN0b3J5IjpbLTc2NzAxNjk3Nyw3ODc2NDA5MjJdfQ==
 -->
