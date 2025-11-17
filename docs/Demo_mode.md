@@ -2,7 +2,7 @@
 # Online.Interlisp.Org: Demo mode (aka Museum Mode)
 ## Overview
 
-When accessing online.interlisp.org (OIO) using Demo Mode,  Online Medley will LOAD a lisp file called a *start script*.   The start script is specified by a query parameter in the URL through which OIO was accessed.  This lisp file is referred to as a *start-script* and the intention is that when it is LOADed it will run a demo by defining and/or LOADing additional lisp code and then starting up that demo, e.g., via a P file package command.  Before the Online Medley run is started, the start-script file is downloaded using ```wget```into a known file in the Medley file system from where it is LOADed by ONLINE-INIT. 
+When accessing online.interlisp.org (OIO) using Demo Mode,  Online Medley will LOAD a lisp file called a *start script*.   The start script is specified by a query parameter in the URL through which OIO was accessed.  The intention is that when it is LOADed the start script will run a demo by defining and/or LOADing additional lisp code and then starting up that demo, e.g., via a P file package command.  The start script is LOADed as the last step in running thBefore the Online Medley run is started, the start-script file is downloaded using ```wget```into a known file in the Medley file system from where it is LOADed by ONLINE-INIT. 
 
 An addition aspect of Demo Mode is that based on flags in the URL login processing can be skipped, the user automatically logged in as guest, and the Online Medley session started with no user interaction required.   Alternatively,  the login process can remain but the standard "Run Medley" page will be skipped and the user will go directly from login to the running Medley without having to set all the run parameters in the Run Medley page.  Automatic guest login is sufficient for most demos.  But requiring login allows demos to save files and context between runs of Online Medley, which is not possible with guest login.
 
@@ -86,6 +86,6 @@ Additionally, if a ```start=<encoded start-script URL>``` query parameter is inc
 
 > Written with [StackEdit](https://stackedit.io/).
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTgzOTg3OTkwOSwyMTUwMzcwMTAsMTcxND
+eyJoaXN0b3J5IjpbLTQ1NDEyNTE5NCwyMTUwMzcwMTAsMTcxND
 ExNjk3NF19
 -->
