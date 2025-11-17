@@ -22,7 +22,7 @@ Example Demo mode URL:  https://online.interlisp.org/demo?start=https%3A%2F%2Fgi
 
 ## Start scripts
 
-
+Sample start scripts can be found in the Interlisp/Online Github repo at https;//github.com/insterlisp/online/start-scripts
 
 
 
@@ -44,5 +44,5 @@ Example Demo mode URL:  https://online.interlisp.org/demo?start=https%3A%2F%2Fgi
 
 > Written with [StackEdit](https://stackedit.io/).
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTIwNzk5NjcxNjYsNzg3NjQwOTIyXX0=
+eyJoaXN0b3J5IjpbLTIxNDY5MDAxMTEsNzg3NjQwOTIyXX0=
 -->
