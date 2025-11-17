@@ -29,6 +29,38 @@ Most demos will require Lisp (or other) files that are not included in the stand
 Below is the start-script for a demo of INSPHEX.  The start-script defines and then runs a function called START-INSPHEX.  START-INPHEX in turn uses ShellWget to download the source code to INSPHEX from Github, compiles it, loads the compiled file and then uses ADD.PROCESS to run the main HEXDUMP function.  There is some additional complication in the call to ADD.PROCESS to ensure that packages are handled correctly.  Most exisitng Interlisp demos will not need this complexity since they don't use packages.
 
 ```
+(DEFINE-FILE-INFO ^^PACKAGE "INTERLISP" ^^READTABLE "INTERLISP" ^^BASE 10)
+
+(FILECREATED "16-Nov-2025 21:15:14" {DSK}<home>frank>il>START-INSPHEX.;1 1641)
+
+(PRETTYCOMPRINT START-INSPHEXCOMS)
+
+(RPAQQ START-INSPHEXCOMS ((FNS START-INSPHEX)
+                          (P (START-INSPHEX))))
+(DEFINEQ
+
+(START-INSPHEX
+  [LAMBDA NIL                                                (* ; "Edited 16-Nov-2025 21:14 by FGH")
+                                                             (* ; "Edited 11-Nov-2025 23:54 by FGH")
+                                                             (* ; "Edited  7-Nov-2025 10:43 by FGH")
+    (LET* ((INSPHEX.FILE (OUTFILEP "{CORE}INSPHEX"))
+           INSPHEX.DFASL)
+          (ShellWget "https://raw.githubusercontent.com/pamoroso/insphex/refs/heads/main/INSPHEX"
+                 INSPHEX.FILE)
+          (SETQ INSPHEX.DFASL (CL:COMPILE-FILE INSPHEX.FILE))
+          (LOAD INSPHEX.DFASL)
+          (ADD.PROCESS (LIST (CL:FIND-SYMBOL "HEXDUMP" "INSPHEX")
+                             (KWOTE INSPHEX.DFASL)
+                             '(CREATEW (CREATEREGION (FIX (TIMES 0.35 SCREENWIDTH))
+                                              (FIX (TIMES 0.25 SCREENHEIGHT))
+                                              (FIX (TIMES 0.5 SCREENWIDTH))
+                                              (FIX (TIMES 0.5 SCREENHEIGHT])
+)
+
+(START-INSPHEX)
+(DECLARE%: DONTCOPY
+  (FILEMAP (NIL (506 1597 (START-INSPHEX 516 . 1595)))))
+STOP
 
 ```
 
@@ -59,5 +91,5 @@ Additionally, if a ```start=<encoded start-script URL>``` query parameter is inc
 
 > Written with [StackEdit](https://stackedit.io/).
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTcxNDExNjk3NF19
+eyJoaXN0b3J5IjpbNzg4MDU3Mzg3LDE3MTQxMTY5NzRdfQ==
 -->
