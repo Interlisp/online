@@ -24,7 +24,7 @@ Example Demo mode URL:  https://online.interlisp.org/demo?start=https%3A%2F%2Fgi
 
 Sample start scripts can be found in the Interlisp/Online Github repo in the start-scripts directory.
 
-One very handy function to be used in start-scrip
+Most demos will require Lisp (or other) files thyat are not inclOne very handy function to be used in start-scripts is ```(ShellWget URL OUTFILE)```.  
 
 
 
@@ -46,5 +46,5 @@ One very handy function to be used in start-scrip
 
 > Written with [StackEdit](https://stackedit.io/).
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNjIxOTA4MDc4LDc4NzY0MDkyMl19
+eyJoaXN0b3J5IjpbLTc2MzYxMjQ0Niw3ODc2NDA5MjJdfQ==
 -->
