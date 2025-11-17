@@ -9,6 +9,7 @@ An addition aspect of Demo Mode is that based on flags in the URL login processi
 ##Demo mode URLs
 To access Demo mode, use the following URLs:
 
+```https://online.interlisp.og/demo?start=\<START-SCRIPT>```
 
 
 
@@ -32,5 +33,5 @@ To access Demo mode, use the following URLs:
 
 > Written with [StackEdit](https://stackedit.io/).
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMjY0NzA0MjI5XX0=
+eyJoaXN0b3J5IjpbLTE2NjQwOTkzMDddfQ==
 -->
