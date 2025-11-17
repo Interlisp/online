@@ -1,6 +1,6 @@
 # Online.Interlisp.Org: Operations Guide
 ## Overview
-Online.interlisp.org runs on an AWS EC2 instance (currently a t3.medium instance with 50GB attached EBS storage) controlled by the Interlisp.org AWS account.  This instance runs Ubuntu (currently 20.04) with Docker CE installed.  An AWS Elastic IP (3.19.8.9) is assigned to the instance, which in turn is pointed to by a DNS A record for online.interlisp.org managed via the Interlisp.org GoDaddy account.
+Online.interlisp.org runs on an AWS EC2 instance (currently a t3.medium instance with 50GB attached EBS storage) controlled by the Interlisp.org AWS account.  This instance runs Ubuntu (currently 20.04) with Docker CE installed.  An AWS Elastic IP (3.19.8.9) is assigned to the instance, which in turn is pointed to by a DNS A record for online.interlisp.org managed via the Interlisp.org NameCheap account. (We switched from GoDaddy in 2024; the NameCheap account is managed by [domains@interlisp.org](https://admin.google.com/u/1/ac/groups/00qsh70q2eprp4l/members).
 
 
 Build, operation and maintenance of online.interlisp.org centers around two Docker images:  the Portal image and the Medley (Online) image.  These two images are available from the Github Container Registry at ghcr.io/interlisp/online-production and ghcr.io/interlisp/online-medley, respectively.  (There is also a third image ghcr.io/interlisp/online-development that is a version of the Portal image with additional tools/features for test and development work.)
@@ -32,13 +32,14 @@ To enable this ssh connection, you will need an IAM login under the Interlisp.or
 2. AmazonS3FullAccess
 3. IAMUserChangePassword
 4. EC2InstanceConnect
-Any Administrator of the Interlisp.org AWS account can set this up for you (Larry, Frank, ?).
 
+The simplest way to set that up is to add your AWS login to the Administrators group. Any Administrator of the Interlisp.org AWS account can set this up for you -- [currently Frank, Herb, Larry, Nick](https://us-east-1.console.aws.amazon.com/iam/home?region=us-east-1#/groups/details/administrators?section=users).
 
 Once the IAM login is established, log into console.aws.amazon.com using the “interlisp” as the account (or, alternatively, 941561944431 as the account number) and your IAM username and password.
 
 
-From the AWS dashboard, navigate to the S3 service.   In the S3 dashboard, you should see a list of S3 buckets for the account.  (Currently, just 1 bucket.)  Click on the “oio.support” bucket, revealing a list of three Objects (aka, files).  These are the public/private keys that will enable ssh access to the online.interlisp.org EC2 host.
+From the AWS dashboard, navigate to the S3 service. (You might need to login at the [signin host](https://interlisp.signin.aws.amazon.com/console) to find the S3 dashboard.)
+In the S3 dashboard, you should see a list of S3 buckets for the account.  (Currently, just 1 bucket.)  Click on the “oio.support” bucket, revealing a list of three Objects (aka, files).  These are the public/private keys that will enable ssh access to the online.interlisp.org EC2 host.
 
 
 Download the .pem file and the .pub file and place them into the ~/.ssh directory on whatever machine you will be using for the ssh terminal.   Change the file permissions on the .pem file to prohibit all access except read/write by owner (chmod 0600 in Linux).  On many systems, you will also need to ensure that the ~/..ssh directory is set to prohibit all access except read/write/execute by owner.
@@ -148,7 +149,7 @@ sudo systemctl start oio.service
 ```
 
 
-## Bring new Medely release online
+## Bring new Medley release online
 
 1. Make sure that the Docker image corresponding to the new Medley release has been created and uploaded to 
 Docker Hub under interlisp/medley.  When listing the Tags (sorted by Newest) under interlisp/medley, there should be
