@@ -18,6 +18,7 @@ In addition to the *start* query parameter, Demo mode supports the *notecards=1*
 
 Any of the query parameters (start, notecards, rooms) can be left off, with the expected change of function.  For example, https://online.interlisp.org/demo?notecards=1 will automatically login as guest and start notecards - but not run any start-script.
 
+Example Demo mode URL:  
 
 
 
@@ -41,5 +42,5 @@ Any of the query parameters (start, notecards, rooms) can be left off, with the 
 
 > Written with [StackEdit](https://stackedit.io/).
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTE0NTE3OTA3OTZdfQ==
+eyJoaXN0b3J5IjpbLTU1OTQzNzAyM119
 -->
