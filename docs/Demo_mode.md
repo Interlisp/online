@@ -10,7 +10,9 @@ An addition aspect of Demo Mode is that based on flags in the URL login processi
 To access Demo mode, use the following URLs:
 
 ```https://online.interlisp.og/demo?start=\<START-SCRIPT>``` for automatic guest login.
-```https://online.interlisp.og/demo/login?start=\<START-SCRIPT>``` to enable log
+```https://online.interlisp.og/demo/login?start=\<START-SCRIPT>``` to require logins
+
+```<START-SCRIPT>``` is a URL pointing to a start-script lisp file that
 
 
 
@@ -34,5 +36,5 @@ To access Demo mode, use the following URLs:
 
 > Written with [StackEdit](https://stackedit.io/).
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTIxNDc3MzA2Nl19
+eyJoaXN0b3J5IjpbMTYyNDEzMzcxM119
 -->
