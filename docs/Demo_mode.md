@@ -14,7 +14,9 @@ To access Demo mode, use the following URLs:
 
 ```<START-SCRIPT>``` is a URL pointing to a start-script lisp file that can be wget'd by the OIO server.  ***This URL must be encoded using the equivalent of Javascript's *encodeURIComponent*.  The easiest way to do this is via one of the many websites that offer this service such as https://meyerweb.com/eric/tools/dencoder/.
 
-In addition to the *start* query parameter, Demo mode supports the *notecards=1* and *rooms=1* query parameters.  If these query parameters are included in the Demo mode URL, then NoteCards (and/or Rooms) will be automatic
+In addition to the *start* query parameter, Demo mode supports the *notecards=1* and *rooms=1* query parameters.  If these query parameters are included in the Demo mode URL, then NoteCards (and/or Rooms) will be automatically started when Online Medley runs, in addition to the start-script.
+
+Any of the query parameters (start, notecards, rooms) can be left off, with the
 
 
 
@@ -38,5 +40,5 @@ In addition to the *start* query parameter, Demo mode supports the *notecards=1*
 
 > Written with [StackEdit](https://stackedit.io/).
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMjAyMTg0MjAxN119
+eyJoaXN0b3J5IjpbLTMyMzg4NzE5NF19
 -->
