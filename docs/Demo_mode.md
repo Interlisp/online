@@ -71,7 +71,3 @@ Additionally, if a ```start=<encoded start-script URL>``` query parameter is inc
 
 For legacy reasons,  ```https:://online.interlisp.org/demo/guest``` and ```https:://online.interlisp.org/guest``` are synonyms for ```https::online.interlisp.org/demo```.
 
-<!--stackedit_data:
-eyJoaXN0b3J5IjpbODM4MzE2NTEzLDIxNTAzNzAxMCwxNzE0MT
-E2OTc0XX0=
--->
