@@ -1,15 +1,13 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED "29-Oct-2025 23:56:02" {DSK}<home>frank>il>medley>greetfiles>ONLINE-INIT.;2 11034  
+(FILECREATED "18-Nov-2025 23:19:56" {DSK}<home>frank>il>online>docker_medley>init>ONLINE-INIT.;51 10938  
 
       :EDIT-BY "FGH"
 
-      :CHANGES-TO (ADVICE (SAVEVM :IN \IDLER))
-                  (FNS Online.SftpInitInfo Online.SftpUpdateInfo Online.SetUpNOTECARDSDIRECTORIES 
-                       Online.DoInit ONLINEP Online.FileButton)
-                  (VARS ONLINE-INITCOMS)
+      :CHANGES-TO (VARS ONLINE-INITCOMS)
 
-      :PREVIOUS-DATE "18-Mar-2025 22:45:51" {DSK}<home>frank>il>medley>greetfiles>ONLINE-INIT.;1)
+      :PREVIOUS-DATE "29-Oct-2025 23:56:02" 
+{DSK}<home>frank>il>online>docker_medley>init>ONLINE-INIT.;50)
 
 
 (PRETTYCOMPRINT ONLINE-INITCOMS)
@@ -19,6 +17,8 @@
                APPS-INIT)
         (FILES (SYSLOAD)
                VTCHAT)
+        (FILES (SYSLOAD)
+               ONLINEUTILS)
         (GLOBALVARS Online.LogoutTimeout Online.SftpPort Online.SftpPassword Online.SftpDisplay 
                IDLE.PROFILE IDLE.BOUNCING.BOX Online.SftpDisplayMenu ONLINEP ShellBrowser ShellOpener
                CLHS.OPENER MEDLEYDIR)
@@ -35,6 +35,9 @@
 
 (FILESLOAD (SYSLOAD)
        VTCHAT)
+
+(FILESLOAD (SYSLOAD)
+       ONLINEUTILS)
 (DECLARE%: DOEVAL@COMPILE DONTCOPY
 
 (GLOBALVARS Online.LogoutTimeout Online.SftpPort Online.SftpPassword Online.SftpDisplay IDLE.PROFILE
@@ -247,7 +250,7 @@
 (BKSYSBUF " ")
 )
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (1924 10898 (Online.SftpInitInfo 1934 . 2807) (Online.SftpUpdateInfo 2809 . 3064) (
-Online.SetUpNOTECARDSDIRECTORIES 3066 . 4774) (Online.FileButton 4776 . 7604) (Online.DoInit 7606 . 
-10759) (ONLINEP 10761 . 10896)))))
+  (FILEMAP (NIL (1828 10802 (Online.SftpInitInfo 1838 . 2711) (Online.SftpUpdateInfo 2713 . 2968) (
+Online.SetUpNOTECARDSDIRECTORIES 2970 . 4678) (Online.FileButton 4680 . 7508) (Online.DoInit 7510 . 
+10663) (ONLINEP 10665 . 10800)))))
 STOP

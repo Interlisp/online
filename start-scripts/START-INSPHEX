@@ -1,43 +1,29 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED "11-Nov-2025 23:54:22" {DSK}<home>frank>il>online>start-scripts>START-INSPHEX.;18 2203   
+(FILECREATED "18-Nov-2025 23:40:40" {DSK}<home>frank>il>online>start-scripts>START-INSPHEX.;25 1665   
 
       :EDIT-BY "FGH"
 
       :CHANGES-TO (FNS START-INSPHEX)
-                  (FUNCTIONS TmpShellWget)
                   (VARS START-INSPHEXCOMS)
 
-      :PREVIOUS-DATE "11-Nov-2025 23:50:23" {DSK}<home>frank>il>online>start-scripts>START-INSPHEX.;17
+      :PREVIOUS-DATE "11-Nov-2025 23:54:22" {DSK}<home>frank>il>online>start-scripts>START-INSPHEX.;18
 )
 
 
 (PRETTYCOMPRINT START-INSPHEXCOMS)
 
-(RPAQQ START-INSPHEXCOMS ((FUNCTIONS TmpShellWget)
-                          (FNS START-INSPHEX)
+(RPAQQ START-INSPHEXCOMS ((FNS START-INSPHEX)
                           (P (START-INSPHEX))))
-
-(CL:DEFUN TmpShellWget (URL OUTFILENAME)                     (* ; "Edited 11-Nov-2025 23:50 by FGH")
-   (LET* ((WGET (ShellWhich "wget"))
-          (OUTNAME (OUTFILEP OUTFILENAME))
-          (TMPFILE (CONCAT "/tmp/wget" (CLOCK)))
-          (UNIXFILE (CONCAT "{UNIX}" TMPFILE))
-          (CMD (CONCAT WGET " " URL " -O " TMPFILE)))
-         (if (NULL WGET)
-             then (ERROR "ShellWget - wget not available"))
-         (ShellCommand CMD)
-         (COPYFILE UNIXFILE OUTNAME)
-         (DELFILE UNIXFILE)
-         OUTNAME))
 (DEFINEQ
 
 (START-INSPHEX
-  [LAMBDA NIL                                                (* ; "Edited 11-Nov-2025 23:54 by FGH")
+  [LAMBDA NIL                                                (* ; "Edited 18-Nov-2025 23:40 by FGH")
+                                                             (* ; "Edited 11-Nov-2025 23:54 by FGH")
                                                              (* ; "Edited  7-Nov-2025 10:43 by FGH")
     (LET* ((INSPHEX.FILE (OUTFILEP "{CORE}INSPHEX"))
            INSPHEX.DFASL)
-          (TmpShellWget "https://raw.githubusercontent.com/pamoroso/insphex/refs/heads/main/INSPHEX"
+          (ShellHttpGet "https://raw.githubusercontent.com/pamoroso/insphex/refs/heads/main/INSPHEX"
                  INSPHEX.FILE)
           (SETQ INSPHEX.DFASL (CL:COMPILE-FILE INSPHEX.FILE))
           (LOAD INSPHEX.DFASL)
@@ -51,5 +37,5 @@
 
 (START-INSPHEX)
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (623 1170 (TmpShellWget 623 . 1170)) (1171 2159 (START-INSPHEX 1181 . 2157)))))
+  (FILEMAP (NIL (528 1621 (START-INSPHEX 538 . 1619)))))
 STOP
