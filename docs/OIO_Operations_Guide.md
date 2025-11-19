@@ -35,10 +35,10 @@ To enable this ssh connection, you will need an IAM login under the Interlisp.or
 
 The simplest way to set that up is to add your AWS login to the Administrators group. Any Administrator of the Interlisp.org AWS account can set this up for you -- [currently Frank, Herb, Larry, Nick](https://us-east-1.console.aws.amazon.com/iam/home?region=us-east-1#/groups/details/administrators?section=users).
 
-Once the IAM login is established, log into console.aws.amazon.com using the “interlisp” as the account (or, alternatively, 941561944431 as the account number) and your IAM username and password.
+Once the IAM login is established, log into console.aws.amazon.com using “interlisp” as the account (or, alternatively, 941561944431 as the account number) and your IAM username and password.
 
 
-From the AWS dashboard, navigate to the S3 service. (You might need to login at the [signin host](https://interlisp.signin.aws.amazon.com/console) to find the S3 dashboard.)
+From the AWS dashboard, navigate to the S3 service. (You might need to login at [signin host](https://interlisp.signin.aws.amazon.com/console) to find the S3 dashboard.)
 In the S3 dashboard, you should see a list of S3 buckets for the account.  (Currently, just 1 bucket.)  Click on the “oio.support” bucket, revealing a list of three Objects (aka, files).  These are the public/private keys that will enable ssh access to the online.interlisp.org EC2 host.
 
 
