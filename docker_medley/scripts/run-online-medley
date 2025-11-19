@@ -67,6 +67,20 @@ if [ $# -gt 1 ] && [ "$2" = "custom" ]; then
     fi
 fi
 #
+unset START_SCRIPT
+if [ -n "${START_SCRIPT_URL}" ]
+then
+  export START_SCRIPT="${MEDLEY_USERDIR}/initdir/START-SCRIPT"
+  mkdir -p "$(dirname "${START_SCRIPT}")"
+  wget "${START_SCRIPT_URL}" -O "${START_SCRIPT}"
+  if [ $? -ne 0 ]
+  then
+    rm -f "${START_SCRIPT}"
+    unset START_SCRIPT
+  fi
+fi
+unset START_SCRIPT_URL
+#
 if [ $# -gt 2 ]; then
 	width=$3
 else

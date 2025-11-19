@@ -99,7 +99,10 @@ window.addEventListener('load', (event) => {
             document.getElementById("interlisp_rb").checked = true;
     }
     fillWindowOnClick();
-    document.getElementById("dev-options-checkbox").checked = (localStore.getItem("show_dev_options") == "true");
+    if (alStart != "") document.getElementById("start_script_url").value = alStart;
+    else document.getElementById("start_script_url").value = localStore.getItem("start_script_url");
+    if ((localStore.getItem("show_dev_options") == "true") || (document.getElementById("start_script_url").value != ""))
+          document.getElementById("dev-options-checkbox").checked = true;
     showDevOptionsOnClick();
     if( ! (isAutoLogin || fromvnc)) {
         if(isVerified != true) {
@@ -127,7 +130,14 @@ function startSession (interlispOrXterm) {
     const runRooms = document.getElementById("run_rooms_cb").checked ? "true": "false";
     const startSftp = document.getElementById("sftp_checkbox").checked ? "true": "false";
     const medleyExec = document.getElementById("interlisp_rb").checked ? "inter" : "common";
+    const startScriptUrl =
+            (function() {
+                let ss = document.getElementById("start_script_url").value;
+                if (ss.includes("%2F")) ss = decodeURIComponent(ss);
+                return ss;
+             })();
     if(!isGuest) {
+        localStore.setItem("start_script_url", startScriptUrl);
         localStore.setItem("fill-window", fillWindow ? 'true' : 'false');
         if(! fillWindow) {
             localStore.setItem("screen_width", screenWidth);
@@ -159,36 +169,7 @@ function startSession (interlispOrXterm) {
         .then(  data => {
                     const isRunning = data.isRunning;
                     const sessionType = data.target;
-                    if(isRunning) {
-                        new Promise((resolve, reject) => {
-                            const dlg = document.getElementById("reconnect-dialog");
-                            const typeEl = document.getElementById("rd-type-span");
-                            typeEl.html = sessionType;
-                            dlg.resolve = resolve;
-                            dlg.reject = reject;
-                            dlg.showModal();
-                            }
-                        )
-                        .then(RorK => {
-                                window.location.assign(
-                                    `/medley/${interlispOrXterm || "interlisp"}`
-                                    + `?screen_width=${screenWidth}`
-                                    + `&screen_height=${screenHeight}`
-                                    + `&if=${RorK}`
-                                    + `&resume=${resume || "false"}`
-                                    + `&custom=${custom || "false"}`
-                                    + `&custom_init=${customInit || "false"}`
-                                    + `&notecards=${runNotecards || "false"}`
-                                    + `&rooms=${runRooms || "false"}`
-                                    + `&sftp=${startSftp || "false"}`
-                                    + `&exec=${medleyExec || "inter"}`
-                                    + ( isAutoLogin ? "&autologin" : "")
-                                );
-                            }
-                        );
-                    }
-                    else {
-                        window.location.assign(
+                    const medley_url =
                             `/medley/${interlispOrXterm || "interlisp"}`
                             + `?screen_width=${screenWidth}`
                             + `&screen_height=${screenHeight}`
@@ -200,8 +181,22 @@ function startSession (interlispOrXterm) {
                             + `&sftp=${startSftp || "false"}`
                             + `&exec=${medleyExec || "inter"}`
                             + ( isAutoLogin ? "&autologin" : "")
-                            );
+                            + ( (startScriptUrl != "") ? `&start=${encodeURIComponent(startScriptUrl)}` : "" )
+			;
+
+                    if(isRunning) {
+                        new Promise((resolve, reject) => {
+                            const dlg = document.getElementById("reconnect-dialog");
+                            const typeEl = document.getElementById("rd-type-span");
+                            typeEl.html = sessionType;
+                            dlg.resolve = resolve;
+                            dlg.reject = reject;
+                            dlg.showModal();
+                            }
+                        )
+                        .then(RorK => { window.location.assign(medley_url + `&if=${RorK}`); } );
                     }
+                    else window.location.assign(medley_url);
                 },
                 reason => {}
         );

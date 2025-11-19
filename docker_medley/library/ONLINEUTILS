@@ -1,0 +1,47 @@
+(DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
+
+(FILECREATED "18-Nov-2025 22:54:33" {DSK}<home>frank>il>medley>library>ONLINEUTILS.;2 2078   
+
+      :EDIT-BY "FGH"
+
+      :CHANGES-TO (FNS ShellHttpGet)
+
+      :PREVIOUS-DATE "18-Nov-2025 22:48:48" {DSK}<home>frank>il>medley>library>ONLINEUTILS.;1)
+
+
+(PRETTYCOMPRINT ONLINEUTILSCOMS)
+
+(RPAQQ ONLINEUTILSCOMS ((FNS ShellHttpGet)))
+(DEFINEQ
+
+(ShellHttpGet
+  [LAMBDA (URL OUTFILENAME)                                  (* ; "Edited 18-Nov-2025 22:54 by FGH")
+
+    (* ;; "Download a file specified by URL from the internet and place it in anew file name OUTFILENAME.   OUTFILENAME will be versioned if it is on a versioned file device.   Protocol of URL must be http: or https:.  Uses wget (if it exists) or curl (if it exists) via a ShellCommand.  It is an error if the underlying system doesn't have either wget or curl.")
+                                                             (* ; "Edited 18-Nov-2025 22:39 by FGH")
+    (LET ((UURL (U-CASE URL)))
+         (if (NOT (OR (STRPOS "HTTP:://" UURL NIL NIL T)
+                      (STRPOS "HTTPS://" UURL NIL NIL T)))
+             then (ERROR "ShellHttpGet URL argument is not a HTTP:// or HTTPS:// Url")))
+    (LET* ((WGET (ShellWhich "wget"))
+           (CURL (if (NULL WGET)
+                     then (ShellWhich "curl")
+                   else NIL))
+           (OUTNAME (OUTFILEP OUTFILENAME))
+           (TMPFILE (CONCAT "/tmp/wget" (CLOCK)))
+           (UNIXFILE (CONCAT "{UNIX}" TMPFILE))
+           (CMD (if WGET
+                    then (CONCAT WGET " " URL " -O " TMPFILE)
+                  elseif CURL
+                    then (CONCAT CURL " " URL " --output " TMPFILE)
+                  else NIL)))
+          (if (NULL CMD)
+              then (ERROR "ShellHttpGet - neither wget nor curl are available on this system"))
+          (ShellCommand CMD)
+          (COPYFILE UNIXFILE OUTNAME)
+          (DELFILE UNIXFILE)
+          OUTNAME])
+)
+(DECLARE%: DONTCOPY
+  (FILEMAP (NIL (414 2055 (ShellHttpGet 424 . 2053)))))
+STOP

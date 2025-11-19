@@ -110,26 +110,63 @@ app.get('/main',
                              isAutoLogin: isAutoLogin,
                              notecards: (req.query.notecards != undefined),
                              rooms: (req.query.rooms != undefined),
-                             alURL: alURL || "dummy"
+                             alURL: alURL || "dummy",
+                             start: (req.query.start != undefined) && (req.query.start != "") ? req.query.start : ""
                            }
                   );
              }
        );
-app.get('/guest',
-         (req, res) => {
 
-            const cookieUrl = encodeURI(`${req.protocol}://${req.get('host')}${req.originalUrl}`);
-            res.cookie('autologinURL', cookieUrl);
+function autologinGoToMain(req, res, next) {
+    const cookieUrl = encodeURIComponent(`${req.protocol}://${req.get('host')}${req.originalUrl}`);
+    res.cookie('autologinURL', cookieUrl);
+    res.redirect(url.format({pathname:"/main", query: req.query}));
+}
 
-            const newQuery = {};
-            newQuery.autologin = "";
-            newQuery.username = config.guestUsername;
-            newQuery.password = config.guestPassword;
-            if(req.query.notecards != undefined) newQuery.notecards="";
-            if(req.query.rooms != undefined) newQuery.rooms="";
-            res.redirect(url.format({pathname:"/user/autologin", query: newQuery}));
-         }
+function autologinReturnTo(req) {
+    return req.originalUrl + (req.originalUrl.includes("?") ? "&" : "?") + "autologin=true";
+}
+
+app.get([ '/guest', '/demo', '/demo/guest' ],
+         (req, res, next) => {
+            if(req.query.autologin === undefined) {
+              if (req.isAuthenticated && req.isAuthenticated()) {
+                req.logout();
+              }
+              req.session.returnTo = autologinReturnTo(req);
+              let newQuery = {};
+              newQuery.username = config.guestUsername;
+              newQuery.password = config.guestPassword;
+              res.redirect(url.format({pathname:"/user/autologin", query: newQuery}));
+            }
+            else next();
+         },
+         autologinGoToMain
        );
+
+app.get([ '/demo/login' ],
+         (req, res, next) => {
+             if(req.query.autologin === undefined) {
+               req.session.returnTo = autologinReturnTo(req);
+               if (req.isAuthenticated && req.isAuthenticated()) {
+                  if (req.user.username == config.guestUsername) {
+                     res.redirect(url.format({ pathname:"/user/login", query:{ } }));
+                  }
+                  else res.render('relogin',
+                         {
+                           loggedUsername: req.user.username,
+                           redirectYes: encodeURIComponent(req.session.returnTo),
+                           redirectNo: url.format({ pathname:"/user/login", query:{ } })
+                          }
+                        );
+               }
+               else res.redirect(url.format({ pathname:"/user/login", query:{} }));
+             }
+             else next();
+         },
+         autologinGoToMain
+       );
+
 app.use('/user', userRouter);
 app.use('/medley', ensureLoggedIn(), medleyRouter);
 app.use('/client', ensureLoggedIn(), clientRouter);
