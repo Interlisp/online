@@ -93,6 +93,7 @@ function networkParams(port) {
             + ` -p 1${port}:1${port}`
             + ` -p 2${port}:2${port}`
             + ` -p 3${port}:3${port}`
+            + ` -p 4${port}:4${port}`
             ;
     return params;
 }
