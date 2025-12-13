@@ -108,11 +108,6 @@ RUN mkdir -p ${MEDLEY_USERDIR} \
     && mkdir ${MEDLEY_USERDIR}/vmem \
     && chown ${USER_NAME}:${USER_NAME} ${MEDLEY_USERDIR}/vmem
 
-# Create web files directory
-RUN mkdir -p ${MEDLEY_WEBDIR} \
-    && chown ${USER_NAME}:${USER_NAME} ${MEDLEY_WEBDIR}
-COPY --chown=${USER_NAME}:${USER_NAME} misc/test.html ${MEDLEY_WEBDIR}
-
 # copy the run-XXX and other scripts into ${MEDLEY_INSTALLDIR}/../online/bin
 ARG ONLINE_BINDIR=${MEDLEY_INSTALLDIR}/../online/bin
 RUN mkdir -p ${ONLINE_BINDIR} \
@@ -146,6 +141,11 @@ RUN mkdir -p /etc/letsencrypt/live/online.interlisp.org/ \
     && chmod go-rwx /etc/letsencrypt/live \
     && mkdir -p /etc/letsencrypt/archive/online.interlisp.org/ \
     && chmod go-rwx /etc/letsencrypt/archive
+
+# Create web files directory
+RUN mkdir -p ${MEDLEY_WEBDIR} \
+    && chown ${USER_NAME}:${USER_NAME} ${MEDLEY_WEBDIR}
+COPY --chown=${USER_NAME}:${USER_NAME} misc/test.html ${MEDLEY_WEBDIR}
 
 # In actual use, USER and ENTRYPOINT will be set by the docker run command
 WORKDIR ${HOMEDIR}
