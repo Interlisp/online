@@ -50,6 +50,7 @@ ARG HOMEDIR=/home/${USER_NAME}
 ARG MEDLEY_INSTALLDIR=/usr/local/interlisp/medley
 ENV MEDLEY_INSTALLDIR=${MEDLEY_INSTALLDIR}
 ENV MEDLEY_USERDIR=${HOMEDIR}/il
+ENV MEDLEY_WEBDIR=${HOMEDIR}/il/webfiles
 ARG MAIKO_INSTALLDIR=/usr/local/interlisp/maiko
 ENV MAIKO_INSTALLDIR=${MAIKO_INSTALLDIR}
 
@@ -105,6 +106,11 @@ RUN mkdir -p ${MEDLEY_USERDIR} \
     && chown ${USER_NAME}:${USER_NAME} ${MEDLEY_USERDIR} \
     && mkdir ${MEDLEY_USERDIR}/vmem \
     && chown ${USER_NAME}:${USER_NAME} ${MEDLEY_USERDIR}/vmem
+
+# Create web files directory
+RUN mkdir -p ${MEDLEY_WEBDIR} \
+    && chown ${USER_NAME}:${USER_NAME} ${MEDLEY_WEBDIR}
+COPY --chown=${USER_NAME}:${USER_NAME} misc/test.html ${MEDLEY_WEBDIR}
 
 # copy the run-XXX and other scripts into ${MEDLEY_INSTALLDIR}/../online/bin
 ARG ONLINE_BINDIR=${MEDLEY_INSTALLDIR}/../online/bin
