@@ -149,7 +149,8 @@ export OIO_FB_URL="${OIO_FB_URL}:${FILEBROWSER_PORT}/files/il?u=${MEDLEY_UNAME}&
 HTTP_PORT=4${PORT}
 if [ ${SUPPORT_HTTPS} = "yes" ]
 then
-   /usr/local/interlisp/online/bin/https.py "${HTTP_PORT}" "${FILEBROWSER_CERT}" "${FILEBROWSER_KEY}" "${MEDLEY_WEBDIR}" &
+   /usr/local/interlisp/online/bin/https.py \
+        "${HTTP_PORT}" "${FILEBROWSER_CERT}" "${FILEBROWSER_KEY}" "${MEDLEY_WEBDIR}" &
 else
   /usr/bin/python3 -m http.server ${HTTP_PORT} -d "${MEDLEY_WEBDIR}" &
 fi
