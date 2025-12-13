@@ -47,8 +47,10 @@ ENV NOTECARDS_RELEASE=$NOTECARDS_RELEASE
 ARG DEBIAN_FRONTEND=noninteractive
 ARG USER_NAME=medley
 ARG HOMEDIR=/home/${USER_NAME}
+ARG OIO_INSTALLDIR=/usr/local/interlisp/online
 ARG MEDLEY_INSTALLDIR=/usr/local/interlisp/medley
-ARG MEDLEY_WEBDIR=${HOMEDIR}/il/xyzzy
+ARG MEDLEY_WEBDIR=${HOMEDIR}/il/webfiles
+ENV OIO_INSTALLDIR=${OIO_INSTALLDIR}
 ENV MEDLEY_INSTALLDIR=${MEDLEY_INSTALLDIR}
 ENV MEDLEY_USERDIR=${HOMEDIR}/il
 ENV MEDLEY_WEBDIR=${MEDLEY_WEBDIR}
@@ -109,7 +111,7 @@ RUN mkdir -p ${MEDLEY_USERDIR} \
     && chown ${USER_NAME}:${USER_NAME} ${MEDLEY_USERDIR}/vmem
 
 # copy the run-XXX and other scripts into ${MEDLEY_INSTALLDIR}/../online/bin
-ARG ONLINE_BINDIR=${MEDLEY_INSTALLDIR}/../online/bin
+ARG ONLINE_BINDIR=${OIO_INSTALLDIR}/bin
 RUN mkdir -p ${ONLINE_BINDIR} \
     && chown root:root ${ONLINE_BINDIR}
 COPY scripts/* ${ONLINE_BINDIR}
@@ -142,10 +144,10 @@ RUN mkdir -p /etc/letsencrypt/live/online.interlisp.org/ \
     && mkdir -p /etc/letsencrypt/archive/online.interlisp.org/ \
     && chmod go-rwx /etc/letsencrypt/archive
 
-# Create web files directory
-RUN mkdir -p ${MEDLEY_WEBDIR} \
-    && chown ${USER_NAME}:${USER_NAME} ${MEDLEY_WEBDIR}
-COPY --chown=${USER_NAME}:${USER_NAME} misc/test.html ${MEDLEY_WEBDIR}
+# For web files directory - copied there in run-online-medley script
+RUN mkdir -p ${OIO_INSTALLDIR}/misc \
+    && chown root:root ${OIO_INSTALLDIR}/misc 
+COPY --chown=root:root misc/test.html ${OIO_INSTALLDIR}/misc
 
 # In actual use, USER and ENTRYPOINT will be set by the docker run command
 WORKDIR ${HOMEDIR}

@@ -146,10 +146,18 @@ export OIO_FB_URL="${OIO_FB_URL}:${FILEBROWSER_PORT}/files/il?u=${MEDLEY_UNAME}&
 #
 #  Start http server
 #
+# need to create WEBDIR here (if needed) and not in Dockerfile_medley since file system might be remaining
+# from before WEBDIR was intrduced
+if [ ! -e "${MEDLEY_WEBDIR}" ]
+then
+    mkdir -p "${MEDLEY_WEBDIR}"
+    cp -rp "${OIO_INSTALLDIR}"/misc/test.html  "${MEDLEY_WEBDIR}"
+    chown ${MEDLEY_UNAME} "${MEDLEY_WEBDIR}"/test.html
+fi
 HTTP_PORT=4${PORT}
 if [ ${SUPPORT_HTTPS} = "yes" ]
 then
-   /usr/local/interlisp/online/bin/https.py \
+   "${OIO_INSTALLDIR}"/bin/https.py \
         "${HTTP_PORT}" "${FILEBROWSER_CERT}" "${FILEBROWSER_KEY}" "${MEDLEY_WEBDIR}" &
 else
   /usr/bin/python3 -m http.server ${HTTP_PORT} -d "${MEDLEY_WEBDIR}" &
