@@ -1,17 +1,23 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED "18-Nov-2025 22:54:33" {DSK}<home>frank>il>medley>library>ONLINEUTILS.;2 2078   
+(FILECREATED "13-Dec-2025 22:45:29" {DSK}<home>medley>il>medley>library>ONLINEUTILS.;1 3336   
 
-      :EDIT-BY "FGH"
+      :EDIT-BY "fgh"
 
-      :CHANGES-TO (FNS ShellHttpGet)
+      :CHANGES-TO (VARS ONLINEUTILSCOMS)
+                  (FNS Online.WebfileURL Online.OpenWebfile)
 
-      :PREVIOUS-DATE "18-Nov-2025 22:48:48" {DSK}<home>frank>il>medley>library>ONLINEUTILS.;1)
+      :PREVIOUS-DATE "18-Nov-2025 22:54:33" {DSK}<usr>local>interlisp>medley>library>ONLINEUTILS.;1
+)
 
 
 (PRETTYCOMPRINT ONLINEUTILSCOMS)
 
-(RPAQQ ONLINEUTILSCOMS ((FNS ShellHttpGet)))
+(RPAQQ ONLINEUTILSCOMS [(FILES PSEUDOHOSTS)
+                        (FNS ShellHttpGet Online.WebfileURL Online.OpenWebfile)
+                        (P (PSEUDOHOST 'WEBFILES (CONCAT LOGINDIR "/webfiles"])
+
+(FILESLOAD PSEUDOHOSTS)
 (DEFINEQ
 
 (ShellHttpGet
@@ -41,7 +47,31 @@
           (COPYFILE UNIXFILE OUTNAME)
           (DELFILE UNIXFILE)
           OUTNAME])
+
+(Online.WebfileURL
+  [LAMBDA (WebFilePath)                                      (* ; "Edited 13-Dec-2025 22:40 by fgh")
+
+    (* ;; "Return the URL that will acess a webfile using the OIO https server")
+
+    (* ;; "WebfilePath is the path for the file below {WEBFILES}")
+                                                             (* ; "Edited 13-Dec-2025 21:59 by fgh")
+    (CONCAT "https://online.interlisp.org:" (UNIX-GETENV "OIO_WEBFILES_PORT")
+           "/" WebFilePath])
+
+(Online.OpenWebfile
+  [LAMBDA (WebFilePath)                                      (* ; "Edited 13-Dec-2025 22:44 by fgh")
+
+    (* ;; "Open a Webfile in a browser using the Online HTTPS server to access the file in the Medley file system.")
+
+    (* ;; " Webfiles are always tored in {WEBFILES}")
+
+    (* ;; " WebfilePath is the path to the file below {WEBFILES}")
+
+    (ShellOpen (Online.WebfileURL WebFilePath])
 )
+
+(PSEUDOHOST 'WEBFILES (CONCAT LOGINDIR "/webfiles"))
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (414 2055 (ShellHttpGet 424 . 2053)))))
+  (FILEMAP (NIL (671 3259 (ShellHttpGet 681 . 2310) (Online.WebfileURL 2312 . 2817) (Online.OpenWebfile 
+2819 . 3257)))))
 STOP
