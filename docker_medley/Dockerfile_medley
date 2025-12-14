@@ -118,6 +118,9 @@ COPY scripts/* ${ONLINE_BINDIR}
 RUN chmod ugo+x ${ONLINE_BINDIR}/* \
     && ln -s ${ONLINE_BINDIR}/request_new_tab.sh ${ONLINE_BINDIR}/request_new_tab
 
+# copy online-specific files into medley/library
+COPY --chown=${USER_NAME}:${USER_NAME} library/ONLINEUTILS ${MEDLEY_INSTALLDIR}/library
+COPY --chown=${USER_NAME}:${USER_NAME} library/ONLINEUTILS.LCOM ${MEDLEY_INSTALLDIR}/library
 
 # copy INIT file into home directory
 COPY --chown=${USER_NAME}:${USER_NAME} init/INIT ${MEDLEY_USERDIR}

@@ -20,6 +20,7 @@ const {userModel, loginModel} = require('./mongodb');
 const validateEmail = require('email-addresses').parseOneAddress;
 const crypto = require('crypto');
 const gmailSend = require('./gmail-send')({user: config.gmailUsername, pass: config.gmailPassword, from: config.gmailFrom });
+const util = require('util');
 
 //
 //  The router
@@ -101,7 +102,10 @@ function passportAuthenticate(req, res, next) {
 
             if (!user) {
                 console.dir(info);
-                return res.redirect('/user/login?info=' + info);
+                let redirectTo = "/user/login";
+                if ((info !== undefined) && (info != ""))
+                  redirectTo = redirectTo + "?info=" + encodeURIComponent(info);
+                return res.redirect(redirectTo);
             }
 
 
@@ -120,18 +124,8 @@ function passportAuthenticate(req, res, next) {
                         } catch (err) {
                             console.log("Error in logging login: " + err);
                         }
-                        if(user.uname)
-                            if ((user.uname == "guest") && (req.query.autologin != undefined)) {
-                                const newQuery={};
-                                newQuery.autologin="";
-                                if(req.query.notecards != undefined) newQuery.notecards="";
-                                if(req.query.rooms != undefined) newQuery.rooms="";
-                                return res.redirect(url.format({pathname:"/main", query: newQuery}));
-                            }
-                            else
-                                return res.redirect('/main');
-                        else
-                            return res.render('reregister', {isNCO: config.isNCO(req)});
+                        if(user.uname) return res.redirect(req.session.returnTo);
+                        else return res.render('reregister', {isNCO: config.isNCO(req)});
                     }
                 }
             );
@@ -140,7 +134,13 @@ function passportAuthenticate(req, res, next) {
 }
 
 userRouter.post('/login', passportAuthenticate);
-userRouter.get('/autologin', passportAuthenticate);
+userRouter.get('/autologin',
+                 (req, res, next) => {
+                     if(req.query.logout !== undefined) req.logout();
+                     next();
+                 },
+                 passportAuthenticate
+              );
 
 userRouter.get('/login',
     (req, res) => {
