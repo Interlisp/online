@@ -11,9 +11,11 @@
 #
 #set -x
 
+TLS_CERT_FILE=/etc/letsencrypt/live/online.interlisp.org/fullchain.pem
+TLS_KEY_FILE=/etc/letsencrypt/live/online.interlisp.org/privkey.pem
+
 if [ -z "${NCO}" ]; then export NCO="false"; fi
 if [ -z "${MEDLEY_EXEC}" ]; then export MEDLEY_EXEC="common"; fi
-
 RELEASE_SYSOUT_PATH="${MEDLEY_INSTALLDIR}/loadups/apps.sysout"
 CUSTOM_SYSOUT_PATH="${MEDLEY_USERDIR}/sysout/online.sysout"
 RELEASE_INIT_PATH="${MEDLEY_INSTALLDIR}/greetfiles/ONLINE-INIT.LCOM"
@@ -146,8 +148,8 @@ export FILEBROWSER_DATABASE=/usr/local/filebrowser/filebrowser.db
 export FILEBROWSER_PORT=3${PORT}
 if [ ${SUPPORT_HTTPS} = "yes" ];
 then
-  export FILEBROWSER_CERT="--cert /etc/letsencrypt/live/online.interlisp.org/fullchain.pem"
-  export FILEBROWSER_KEY="--key /etc/letsencrypt/live/online.interlisp.org/privkey.pem"
+  export FILEBROWSER_CERT="--cert ${TLS_CERT_FILE}"
+  export FILEBROWSER_KEY="--key ${TLS_KEY_FILE}"
 else
   export FILEBROWSER_CERT=""
   export FILEBROWSER_KEY=""
@@ -157,6 +159,27 @@ fi
 /usr/local/bin/filebrowser -d ${FILEBROWSER_DATABASE} --port ${FILEBROWSER_PORT} \
           ${FILEBROWSER_CERT} ${FILEBROWSER_KEY} &
 export OIO_FB_URL="${OIO_FB_URL}:${FILEBROWSER_PORT}/files/il?u=${MEDLEY_UNAME}&p=${SFTP_PWD}"
+#
+#  Start http server
+#
+# need to create WEBDIR here (if needed) and not in Dockerfile_medley since file system might be remaining
+# from before WEBDIR was intrduced
+if [ ! -e "${MEDLEY_WEBDIR}" ]
+then
+    mkdir -p "${MEDLEY_WEBDIR}"
+    chown ${MEDLEY_UNAME}:medley "${MEDLEY_WEBDIR}"
+    cp -rp "${OIO_INSTALLDIR}"/misc/test.html  "${MEDLEY_WEBDIR}"
+    chown ${MEDLEY_UNAME}:medley "${MEDLEY_WEBDIR}"/test.html
+fi
+HTTP_PORT=4${PORT}
+if [ ${SUPPORT_HTTPS} = "yes" ]
+then
+   "${OIO_INSTALLDIR}"/bin/https.py \
+        "${HTTP_PORT}" "${TLS_CERT_FILE}" "${TLS_KEY_FILE}" "${MEDLEY_WEBDIR}" &
+else
+  /usr/bin/python3 -m http.server ${HTTP_PORT} -d "${MEDLEY_WEBDIR}" &
+fi
+export OIO_WEBFILES_PORT=${HTTP_PORT}
 #
 #
 #
