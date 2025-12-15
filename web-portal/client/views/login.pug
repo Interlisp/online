@@ -41,7 +41,7 @@ block headeradds
         
             if(info) {
               const errorMessage = document.getElementById("error-message");
-              errorMessage.innerText = info;
+              errorMessage.innerText = decodeURIComponent(info);
               //errorMessage.style.display = "block";
             } else if("#{verificationNotice}" == "true") {
                 const dlg = document.getElementById("verification-dialog");

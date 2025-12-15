@@ -1,10 +1,13 @@
 (DEFINE-FILE-INFO PACKAGE "INTERLISP" READTABLE "INTERLISP" BASE 10)
 
-(FILECREATED "18-Mar-2025 22:45:51" {DSK}<home>medley>il>ONLINE-INIT.;1 10668  
+(FILECREATED "18-Nov-2025 23:19:56" {DSK}<home>frank>il>online>docker_medley>init>ONLINE-INIT.;51 10938  
 
-      :EDIT-BY "guest"
+      :EDIT-BY "FGH"
 
-      :PREVIOUS-DATE "17-Mar-2025 17:06:18" {DSK}<home>medley>il>ONLINE-INIT.;1)
+      :CHANGES-TO (VARS ONLINE-INITCOMS)
+
+      :PREVIOUS-DATE "29-Oct-2025 23:56:02" 
+{DSK}<home>frank>il>online>docker_medley>init>ONLINE-INIT.;50)
 
 
 (PRETTYCOMPRINT ONLINE-INITCOMS)
@@ -14,6 +17,8 @@
                APPS-INIT)
         (FILES (SYSLOAD)
                VTCHAT)
+        (FILES (SYSLOAD)
+               ONLINEUTILS)
         (GLOBALVARS Online.LogoutTimeout Online.SftpPort Online.SftpPassword Online.SftpDisplay 
                IDLE.PROFILE IDLE.BOUNCING.BOX Online.SftpDisplayMenu ONLINEP ShellBrowser ShellOpener
                CLHS.OPENER MEDLEYDIR)
@@ -30,6 +35,9 @@
 
 (FILESLOAD (SYSLOAD)
        VTCHAT)
+
+(FILESLOAD (SYSLOAD)
+       ONLINEUTILS)
 (DECLARE%: DOEVAL@COMPILE DONTCOPY
 
 (GLOBALVARS Online.LogoutTimeout Online.SftpPort Online.SftpPassword Online.SftpDisplay IDLE.PROFILE
@@ -149,6 +157,8 @@
 (Online.DoInit
   [LAMBDA NIL
 
+    (* ;; "Edited 29-Oct-2025 23:55 by FGH")
+
     (* ;; "Edited 16-Mar-2025 23:26 by guest")
 
     (* ;; "Edited 25-Feb-2024 11:37 by fgh")
@@ -217,14 +227,15 @@
            (RPLACA (CAR CHAT.DISPLAYTYPES)
                   NIL)
 
-           (* ;; 
- "Setup NOTECARDSDIRECTORIES.  Should be done it APPS-INIT.  But until thats done, we'll do it here.")
-
-           (Online.SetUpNOTECARDSDIRECTORIES)
-
            (* ;; "Create File Import/Export Button")
 
-           (Online.FileButton])
+           (Online.FileButton)
+
+           (* ;; "If there is a start-script file, load it ")
+
+           (LET [(START-SCRIPT (UNIX-GETENV 'START_SCRIPT]
+                (IF START-SCRIPT
+                    THEN (LOAD START-SCRIPT])
 
 (ONLINEP
   [LAMBDA NIL                                                (* ; "Edited 24-Feb-2024 22:31 by fgh")
@@ -239,7 +250,7 @@
 (BKSYSBUF " ")
 )
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (1640 10532 (Online.SftpInitInfo 1650 . 2523) (Online.SftpUpdateInfo 2525 . 2780) (
-Online.SetUpNOTECARDSDIRECTORIES 2782 . 4490) (Online.FileButton 4492 . 7320) (Online.DoInit 7322 . 
-10393) (ONLINEP 10395 . 10530)))))
+  (FILEMAP (NIL (1828 10802 (Online.SftpInitInfo 1838 . 2711) (Online.SftpUpdateInfo 2713 . 2968) (
+Online.SetUpNOTECARDSDIRECTORIES 2970 . 4678) (Online.FileButton 4680 . 7508) (Online.DoInit 7510 . 
+10663) (ONLINEP 10665 . 10800)))))
 STOP
