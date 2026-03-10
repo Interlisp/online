@@ -1,3 +1,5 @@
+# .gitignore for submodules - medley/online
+
 /.c9
 /log
 
@@ -5,3 +7,26 @@
 *~
 *\#
 \.\#*
+
+
+*.pdf
+index.html
+
+# manual cross-reference files
+
+*.IMPTR
+
+# (Accidentally) created sysouts at any level
+*.sysout
+*.SYSOUT
+
+# older versions
+
+*~
+
+# emacs detritus
+*\#
+\.\#*
+
+# Mac OS detritus
+.DS_Store
