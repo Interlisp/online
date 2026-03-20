@@ -12,6 +12,7 @@ name: 'Deploy Online-Medley Docker Image'
 
 on:
   workflow_dispatch:
+    inputs:
       draft:
         description: "Deploy to Development"
         type: boolean
