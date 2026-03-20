@@ -121,14 +121,13 @@ jobs:
       - name: Get info from latest Medley image
         id: release_info
         run: |
-          set -x
           if [ "${{ inputs.github_release_tag }}" = "Latest" ] || [ "${{ inputs.github_release_tag }}" = "latest" ]
           then
             DOCKER_TAG=latest
           else
             DOCKER_TAG="${{ inputs.github_release_tag }}"
             DOCKER_TAG="${DOCKER_TAG##medley-}"
-          endif
+          fi
           DOCKER_NAMESPACE=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
           echo "docker_namespace=${DOCKER_NAMESPACE}" >> $GITHUB_OUTPUT
           docker pull "${DOCKER_NAMESPACE}/medley:${DOCKER_TAG}"
