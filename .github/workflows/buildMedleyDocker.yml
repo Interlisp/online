@@ -20,7 +20,7 @@ on:
   workflow_dispatch:
     inputs:
       draft:
-        description: "Deploy to Development"
+        description: "Mark as Development"
         type: boolean
         default: false
       github_release_tag:
