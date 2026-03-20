@@ -19,7 +19,7 @@ on:
         type: boolean
         default: false
       github_release_tag:
-        description: "The tag of the Github Release from the Medley repo to use to build Online Medlet image"
+        description: "Github Release tag from the Medley repo to use"
         type: string
         default: 'Latest'  
       platform:
