@@ -19,6 +19,14 @@ name: 'Build/Push Online-Medley Docker Image'
 on:
   workflow_dispatch:
     inputs:
+      draft:
+        description: "Deploy to Development instead of Production"
+        type: boolean
+        default: false
+      github_release_tag:
+        description: "The tag of the Github Release from the Medley repo to use to build Online Medlet image"
+        type: string
+        default: 'Latest'
       platform:
         type: choice
         options:
@@ -30,6 +38,16 @@ on:
       CCRYPT_KEY:
         required: true
     inputs:
+      draft:
+        description: "Deploy to Development instead of Production"
+        type: boolean
+        default: false
+        required: false
+      github_release_tag:
+        description: "The tag of the Github Release from the Medley repo to use to build Online Medlet image"
+        type: string
+        default: 'Latest'
+        required: false  
       platform:
           description: "linux/amd64 or linux/arm64"
           type: string
@@ -47,7 +65,7 @@ jobs:
     steps:
       # Checkout the actions for this repo_owner
       - name: Checkout Actions
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: ${{ github.repository_owner }}/.github
           path: ./Actions_${{ github.sha }}
@@ -56,7 +74,7 @@ jobs:
       # Fetch cached LFS files
       - name: Cache LFS files
         id: cache-lfs
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
             path: |
                 docker_medley/filebrowser/filebrowser
@@ -71,7 +89,7 @@ jobs:
 
       # Checkout latest commit
       - name: Checkout Online code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           lfs: ${{ steps.cache-lfs.outputs.cache-hit != 'true' }}
 
@@ -103,9 +121,16 @@ jobs:
       - name: Get info from latest Medley image
         id: release_info
         run: |
+          if [ "${{ inputs.github_release_tag }}" = "Latest" ] || [ "${{ inputs.github_release_tag }}" = "latest" ]
+          then
+            DOCKER_TAG=latest
+          else
+            DOCKER_TAG="${{ inputs.github_release_tag }}"
+            DOCKER_TAG="${DOCKER_TAG##medley-}"
+          endif
           DOCKER_NAMESPACE=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
           echo "docker_namespace=${DOCKER_NAMESPACE}" >> $GITHUB_OUTPUT
-          docker pull ${DOCKER_NAMESPACE}/medley:latest
+          docker pull "${DOCKER_NAMESPACE}/medley:${DOCKER_TAG}"
           RELEASE_INFO=$(docker run --entrypoint /bin/bash ${DOCKER_NAMESPACE}/medley:latest -c "echo \${MAIKO_RELEASE}::::\${MEDLEY_RELEASE}")
           MAIKO_RELEASE=${RELEASE_INFO%::::*}
           MEDLEY_RELEASE=${RELEASE_INFO#*::::}
@@ -116,7 +141,7 @@ jobs:
 
       # Checkout the latest Notecards commit
       - name: Checkout Notecards
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: "${{ github.repository_owner }}/notecards"
           path: "./docker_medley/notecards"
@@ -141,26 +166,31 @@ jobs:
           DOCKER_NAMESPACE=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
           echo "docker_namespace=${DOCKER_NAMESPACE}" >> ${GITHUB_OUTPUT}
           DOCKER_REPO=${DOCKER_REGISTRY}${DOCKER_NAMESPACE}/${{ steps.tag.outputs.repo_name }}-medley
-          if [ "${{ github.ref_name }}" = "main" ]; then devOrProd=production; else devOrProd=development; fi
-          DOCKER_TAGS="${DOCKER_REPO}:${devOrProd},${DOCKER_REPO}:${RELEASE_TAG#*-}_${MEDLEY_RELEASE#*-}_${MAIKO_RELEASE#*-}"
+          if [ "${{ inputs.draft }}" = true ]
+          then
+            devOrProd=development
+          else
+            devOrProd=production
+          fi
+          DOCKER_TAGS="${DOCKER_REPO}:${devOrProd},${DOCKER_REPO}:${MEDLEY_RELEASE#*-}_${MAIKO_RELEASE#*-}"
           echo "build_time=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> ${GITHUB_OUTPUT}
           echo "docker_tags=${DOCKER_TAGS}" >> ${GITHUB_OUTPUT}
 
       # Setup the Docker Machine Emulation environment.  
       - name: Set up QEMU
         if: ${{ inputs.platform == 'linux/arm64' }}
-        uses: docker/setup-qemu-action@master
+        uses: docker/setup-qemu-action@v4
         with:
           platforms: linux/arm64
 
       # Setup the Docker Buildx funtion
       - name: Set up Docker Buildx
         id: buildx
-        uses: docker/setup-buildx-action@master
+        uses: docker/setup-buildx-action@v4
 
       # Login to ghcr.io
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
@@ -176,7 +206,7 @@ jobs:
       # checked out and the release tars just downloaded.
       # Push the result to Docker Hub
       - name: Build Docker Image for Push to Docker Hub
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v7
         with:
           builder: ${{ steps.buildx.outputs.name }}
           build-args: |

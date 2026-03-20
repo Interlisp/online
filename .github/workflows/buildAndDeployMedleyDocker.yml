@@ -14,6 +14,14 @@ name: 'Build and Deploy Online-Medley Docker Image'
 on:
   workflow_dispatch:
     inputs:
+      draft:
+        description: "Deploy to Development instead of Production"
+        type: boolean
+        default: false
+      github_release_tag:
+        description: "The tag of the Github Release from the Medley repo to use to build Online Medlet image"
+        type: string
+        default: 'Latest'  
       platform:
         type: choice
         options:
@@ -27,11 +35,21 @@ on:
       OIO_SSH_KEY:
         required: true
     inputs:
+      draft:
+        description: "Deploy to Development instead of Production"
+        type: boolean
+        default: false
+        required: false
+      github_release_tag:
+        description: "The tag of the Github Release from the Medley repo to use to build Online Medlet image"
+        type: string
+        default: 'Latest'
+        required: false  
       platform:
-          description: "linux/amd64 or linux/arm64"
-          type: string
-          default: 'linux/amd64'
-          required: false
+        description: "linux/amd64 or linux/arm64"
+        type: string
+        default: 'linux/amd64'
+        required: false
 
 defaults:
   run:
@@ -41,12 +59,17 @@ jobs:
   build:
     uses: ./.github/workflows/buildMedleyDocker.yml
     with:
+      draft: ${{ inputs.draft }}
+      github.release.tag: ${{ inputs.github.release.tag }}
       platform: ${{ inputs.platform }}
     secrets:
       CCRYPT_KEY: ${{ secrets.CCRYPT_KEY }}
   deploy:
     needs: build
     uses: ./.github/workflows/deployMedleyDocker.yml
+    with:
+      draft: ${{ inputs.draft }}
+      github.release.tag: ${{ inputs.github.release.tag }}
     secrets:
       OIO_SSH_KEY: ${{ secrets.OIO_SSH_KEY }}
 
