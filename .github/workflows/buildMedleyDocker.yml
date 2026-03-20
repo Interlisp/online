@@ -20,11 +20,11 @@ on:
   workflow_dispatch:
     inputs:
       draft:
-        description: "Deploy to Development instead of Production"
+        description: "Deploy to Development"
         type: boolean
         default: false
       github_release_tag:
-        description: "Github Release tag from the Medley repo to use"
+        description: "Github Release tag from the Medley repo"
         type: string
         default: 'Latest'
       platform:
@@ -39,12 +39,12 @@ on:
         required: true
     inputs:
       draft:
-        description: "Deploy to Development instead of Production"
+        description: "Deploy to Development"
         type: boolean
         default: false
         required: false
       github_release_tag:
-        description: "Github Release tag from the Medley repo to use"
+        description: "Github Release tag from the Medley repo"
         type: string
         default: 'Latest'
         required: false  

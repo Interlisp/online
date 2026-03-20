@@ -13,7 +13,7 @@ name: 'Deploy Online-Medley Docker Image'
 on:
   workflow_dispatch:
       draft:
-        description: "Deploy to Development instead of Production"
+        description: "Deploy to Development"
         type: boolean
         default: false
 
@@ -23,7 +23,7 @@ on:
         required: true
     inputs:
       draft:
-        description: "Deploy to Development instead of Production"
+        description: "Deploy to Development"
         type: boolean
         default: false
         required: false
