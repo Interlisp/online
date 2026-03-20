@@ -131,9 +131,7 @@ jobs:
           DOCKER_NAMESPACE=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
           echo "docker_namespace=${DOCKER_NAMESPACE}" >> $GITHUB_OUTPUT
           docker pull "${DOCKER_NAMESPACE}/medley:${DOCKER_TAG}"
-          RELEASE_INFO= \
-               $(docker run --entrypoint /bin/bash ${DOCKER_NAMESPACE}/medley:${DOCKER_TAG} \
-               -c "echo \${MAIKO_RELEASE}::::\${MEDLEY_RELEASE}")
+          RELEASE_INFO=$(docker run --entrypoint /bin/bash ${DOCKER_NAMESPACE}/medley:${DOCKER_TAG} -c "echo \${MAIKO_RELEASE}::::\${MEDLEY_RELEASE}")
           MAIKO_RELEASE=${RELEASE_INFO%::::*}
           MEDLEY_RELEASE=${RELEASE_INFO#*::::}
           echo "MAIKO_RELEASE=${MAIKO_RELEASE}" >> ${GITHUB_ENV}
