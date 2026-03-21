@@ -60,7 +60,7 @@ jobs:
     uses: ./.github/workflows/buildMedleyDocker.yml
     with:
       draft: ${{ inputs.draft }}
-      github.release.tag: ${{ inputs.github.release.tag }}
+      github_release_tag: ${{ inputs.github_release_tag }}
       platform: ${{ inputs.platform }}
     secrets:
       CCRYPT_KEY: ${{ secrets.CCRYPT_KEY }}
@@ -69,7 +69,7 @@ jobs:
     uses: ./.github/workflows/deployMedleyDocker.yml
     with:
       draft: ${{ inputs.draft }}
-      github.release.tag: ${{ inputs.github.release.tag }}
+      github_release_tag: ${{ inputs.github_release_tag }}
     secrets:
       OIO_SSH_KEY: ${{ secrets.OIO_SSH_KEY }}
 
