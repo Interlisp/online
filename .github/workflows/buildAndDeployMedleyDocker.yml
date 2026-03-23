@@ -69,7 +69,6 @@ jobs:
     uses: ./.github/workflows/deployMedleyDocker.yml
     with:
       draft: ${{ inputs.draft }}
-      github_release_tag: ${{ inputs.github_release_tag }}
     secrets:
       OIO_SSH_KEY: ${{ secrets.OIO_SSH_KEY }}
 

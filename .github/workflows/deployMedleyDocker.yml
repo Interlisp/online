@@ -17,6 +17,10 @@ on:
         description: "Deploy to Development"
         type: boolean
         default: false
+      platform:
+          description: "linux/amd64 or linux/arm64"
+          type: string
+          default: 'linux/amd64'
 
   workflow_call:
     secrets:
