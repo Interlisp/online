@@ -130,7 +130,7 @@ jobs:
 
       # Login to ghcr.io
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
@@ -152,7 +152,7 @@ jobs:
       # Do the Production Docker Build using the Dockerfile_production
       # Push the result to Docker Hub
       - name: Build Docker Image for Push to Docker Hub
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v7
         with:
           builder: ${{ steps.buildx.outputs.name }}
           build-args: |
@@ -186,7 +186,7 @@ jobs:
       # Do the Development Docker Build using the Dockerfile_development
       # Push the result to Docker Hub
       - name: Build Docker Image for Push to Docker Hub
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v7
         with:
           builder: ${{ steps.buildx.outputs.name }}
           build-args: |
