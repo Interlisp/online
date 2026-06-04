@@ -73,7 +73,7 @@ jobs:
 
       # Checkout the actions for this repo_owner
       - name: Checkout Actions
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: ${{ github.repository_owner }}/.github
           path: ./Actions_${{ github.sha }}
@@ -81,7 +81,7 @@ jobs:
 
       # Checkout latest commit to depth 1 for production
       - name: Checkout Web-portal code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 1
 
@@ -143,7 +143,7 @@ jobs:
 
       # Get novnc
       - name: Checkout novnc code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: 'novnc/noVNC.git'
           ref: 'v1.3.0'
@@ -166,7 +166,7 @@ jobs:
 
       # Recheckout latest commit with fetch_depth of 0 for development image
       - name: Checkout Web-portal code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -177,7 +177,7 @@ jobs:
 
       # Get novnc
       - name: Checkout novnc code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: 'novnc/noVNC.git'
           ref: 'v1.3.0'

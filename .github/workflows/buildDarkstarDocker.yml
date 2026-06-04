@@ -64,7 +64,7 @@ jobs:
     steps:
       # Checkout the actions for this repo_owner
       - name: Checkout Actions
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
         with:
           repository: ${{ github.repository_owner }}/.github
           path: ./Actions_${{ github.sha }}
@@ -88,7 +88,7 @@ jobs:
 
       # Checkout latest commit
       - name: Checkout Online code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
         with:
           lfs: ${{ steps.cache-lfs.outputs.cache-hit != 'true' }}
 
@@ -135,7 +135,7 @@ jobs:
 
       # Checkout the latest Notecards commit
       - name: Checkout Notecards
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
         with:
           repository: "${{ github.repository_owner }}/notecards"
           path: "./docker_medley/notecards"
