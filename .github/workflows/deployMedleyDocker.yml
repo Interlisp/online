@@ -12,12 +12,26 @@ name: 'Deploy Online-Medley Docker Image'
 
 on:
   workflow_dispatch:
+    inputs:
+      draft:
+        description: "Deploy to Development"
+        type: boolean
+        default: false
+      platform:
+          description: "linux/amd64 or linux/arm64"
+          type: string
+          default: 'linux/amd64'
 
   workflow_call:
     secrets:
       OIO_SSH_KEY:
         required: true
     inputs:
+      draft:
+        description: "Deploy to Development"
+        type: boolean
+        default: false
+        required: false
       platform:
           description: "linux/amd64 or linux/arm64"
           type: string
@@ -34,7 +48,13 @@ jobs:
         run: |
           eval $(ssh-agent)
           ssh-add - <<< "${SSH_KEY}"
-          ssh -o StrictHostKeyChecking=no ubuntu@online.interlisp.org /home/ubuntu/bin/oio medley pullprod
+          if [ "${{ inputs.draft }}" = true ]
+          then
+            pull=pulldev
+          else
+            pull=pullprod
+          fi
+          ssh -o StrictHostKeyChecking=no ubuntu@online.interlisp.org /home/ubuntu/bin/oio medley ${pull}
         env:
           SSH_KEY: ${{ secrets.OIO_SSH_KEY }}
 

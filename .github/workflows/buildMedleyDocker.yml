@@ -19,6 +19,14 @@ name: 'Build/Push Online-Medley Docker Image'
 on:
   workflow_dispatch:
     inputs:
+      draft:
+        description: "Mark as Development"
+        type: boolean
+        default: false
+      github_release_tag:
+        description: "Github Release tag from the Medley repo"
+        type: string
+        default: 'Latest'
       platform:
         type: choice
         options:
@@ -30,6 +38,16 @@ on:
       CCRYPT_KEY:
         required: true
     inputs:
+      draft:
+        description: "Deploy to Development"
+        type: boolean
+        default: false
+        required: false
+      github_release_tag:
+        description: "Github Release tag from the Medley repo"
+        type: string
+        default: 'Latest'
+        required: false  
       platform:
           description: "linux/amd64 or linux/arm64"
           type: string
@@ -103,10 +121,17 @@ jobs:
       - name: Get info from latest Medley image
         id: release_info
         run: |
+          if [ "${{ inputs.github_release_tag }}" = "Latest" ] || [ "${{ inputs.github_release_tag }}" = "latest" ]
+          then
+            DOCKER_TAG=latest
+          else
+            DOCKER_TAG="${{ inputs.github_release_tag }}"
+            DOCKER_TAG="${DOCKER_TAG##medley-}"
+          fi
           DOCKER_NAMESPACE=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
           echo "docker_namespace=${DOCKER_NAMESPACE}" >> $GITHUB_OUTPUT
-          docker pull ${DOCKER_NAMESPACE}/medley:latest
-          RELEASE_INFO=$(docker run --entrypoint /bin/bash ${DOCKER_NAMESPACE}/medley:latest -c "echo \${MAIKO_RELEASE}::::\${MEDLEY_RELEASE}")
+          docker pull "${DOCKER_NAMESPACE}/medley:${DOCKER_TAG}"
+          RELEASE_INFO=$(docker run --entrypoint /bin/bash ${DOCKER_NAMESPACE}/medley:${DOCKER_TAG} -c "echo \${MAIKO_RELEASE}::::\${MEDLEY_RELEASE}")
           MAIKO_RELEASE=${RELEASE_INFO%::::*}
           MEDLEY_RELEASE=${RELEASE_INFO#*::::}
           echo "MAIKO_RELEASE=${MAIKO_RELEASE}" >> ${GITHUB_ENV}
@@ -141,22 +166,27 @@ jobs:
           DOCKER_NAMESPACE=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
           echo "docker_namespace=${DOCKER_NAMESPACE}" >> ${GITHUB_OUTPUT}
           DOCKER_REPO=${DOCKER_REGISTRY}${DOCKER_NAMESPACE}/${{ steps.tag.outputs.repo_name }}-medley
-          if [ "${{ github.ref_name }}" = "main" ]; then devOrProd=production; else devOrProd=development; fi
-          DOCKER_TAGS="${DOCKER_REPO}:${devOrProd},${DOCKER_REPO}:${RELEASE_TAG#*-}_${MEDLEY_RELEASE#*-}_${MAIKO_RELEASE#*-}"
+          if [ "${{ inputs.draft }}" = true ]
+          then
+            devOrProd=development
+          else
+            devOrProd=production
+          fi
+          DOCKER_TAGS="${DOCKER_REPO}:${devOrProd},${DOCKER_REPO}:${MEDLEY_RELEASE#*-}_${MAIKO_RELEASE#*-}"
           echo "build_time=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> ${GITHUB_OUTPUT}
           echo "docker_tags=${DOCKER_TAGS}" >> ${GITHUB_OUTPUT}
 
       # Setup the Docker Machine Emulation environment.  
       - name: Set up QEMU
         if: ${{ inputs.platform == 'linux/arm64' }}
-        uses: docker/setup-qemu-action@master
+        uses: docker/setup-qemu-action@v4
         with:
           platforms: linux/arm64
 
       # Setup the Docker Buildx funtion
       - name: Set up Docker Buildx
         id: buildx
-        uses: docker/setup-buildx-action@master
+        uses: docker/setup-buildx-action@v4
 
       # Login to ghcr.io
       - name: Login to GitHub Container Registry
