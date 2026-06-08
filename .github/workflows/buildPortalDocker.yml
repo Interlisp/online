@@ -73,7 +73,7 @@ jobs:
 
       # Checkout the actions for this repo_owner
       - name: Checkout Actions
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: ${{ github.repository_owner }}/.github
           path: ./Actions_${{ github.sha }}
@@ -81,7 +81,7 @@ jobs:
 
       # Checkout latest commit to depth 1 for production
       - name: Checkout Web-portal code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 1
 
@@ -130,7 +130,7 @@ jobs:
 
       # Login to ghcr.io
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
@@ -143,7 +143,7 @@ jobs:
 
       # Get novnc
       - name: Checkout novnc code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: 'novnc/noVNC.git'
           ref: 'v1.3.0'
@@ -152,7 +152,7 @@ jobs:
       # Do the Production Docker Build using the Dockerfile_production
       # Push the result to Docker Hub
       - name: Build Docker Image for Push to Docker Hub
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v7
         with:
           builder: ${{ steps.buildx.outputs.name }}
           build-args: |
@@ -166,7 +166,7 @@ jobs:
 
       # Recheckout latest commit with fetch_depth of 0 for development image
       - name: Checkout Web-portal code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -177,7 +177,7 @@ jobs:
 
       # Get novnc
       - name: Checkout novnc code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: 'novnc/noVNC.git'
           ref: 'v1.3.0'
@@ -186,7 +186,7 @@ jobs:
       # Do the Development Docker Build using the Dockerfile_development
       # Push the result to Docker Hub
       - name: Build Docker Image for Push to Docker Hub
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v7
         with:
           builder: ${{ steps.buildx.outputs.name }}
           build-args: |
