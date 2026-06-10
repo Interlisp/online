@@ -123,21 +123,23 @@ jobs:
         run: |
           if [ "${{ inputs.github_release_tag }}" = "Latest" ] || [ "${{ inputs.github_release_tag }}" = "latest" ]
           then
-            DOCKER_TAG=latest
+            MEDLEY_DOCKER_IMAGE_TAG=latest
           else
-            DOCKER_TAG="${{ inputs.github_release_tag }}"
-            DOCKER_TAG="${DOCKER_TAG##medley-}"
+            MEDLEY_DOCKER_IMAGE_TAG="${{ inputs.github_release_tag }}"
+            MEDLEY_DOCKER_IMAGE_TAG="${MEDLEY_DOCKER_IMAGE_TAG##medley-}"
           fi
           DOCKER_NAMESPACE=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
           echo "docker_namespace=${DOCKER_NAMESPACE}" >> $GITHUB_OUTPUT
-          docker pull "${DOCKER_NAMESPACE}/medley:${DOCKER_TAG}"
-          RELEASE_INFO=$(docker run --entrypoint /bin/bash ${DOCKER_NAMESPACE}/medley:${DOCKER_TAG} -c "echo \${MAIKO_RELEASE}::::\${MEDLEY_RELEASE}")
+          docker pull "${DOCKER_NAMESPACE}/medley:${MEDLEY_DOCKER_IMAGE_TAG}"
+          RELEASE_INFO=$(docker run --entrypoint /bin/bash ${DOCKER_NAMESPACE}/medley:${MEDLEY_DOCKER_IMAGE_TAG} -c "echo \${MAIKO_RELEASE}::::\${MEDLEY_RELEASE}")
           MAIKO_RELEASE=${RELEASE_INFO%::::*}
           MEDLEY_RELEASE=${RELEASE_INFO#*::::}
           echo "MAIKO_RELEASE=${MAIKO_RELEASE}" >> ${GITHUB_ENV}
           echo "maiko_release=${MAIKO_RELEASE}" >> ${GITHUB_OUTPUT}
           echo "MEDLEY_RELEASE=${MEDLEY_RELEASE}" >> ${GITHUB_ENV}
           echo "medley_release=${MEDLEY_RELEASE}" >> ${GITHUB_OUTPUT}
+          echo "MEDLEY_DOCKER_IMAGE_TAG=${MEDLEY_DOCKER_IMAGE_TAG}" >> ${GITHUB_ENV}
+          echo "medley_docker_image_tag=${MEDLEY_DOCKER_IMAGE_TAG}" >> ${GITHUB_OUTPUT}
 
       # Checkout the latest Notecards commit
       - name: Checkout Notecards
@@ -218,6 +220,7 @@ jobs:
             REPO_OWNER=${{ github.repository_owner }}
             NOTECARDS_RELEASE=${{ steps.nc_release_info.outputs.nc_release_tag }}
             PLATFORM=${{ steps.platform_var.outputs.platform }}
+            MEDLEY_DOCKER_IMAGE_TAG=${{ steps.release_info.outputs.medley_docker_image_tag }}
           context: ./docker_medley
           file: ./docker_medley/Dockerfile_medley
           platforms: ${{ inputs.platform }}
