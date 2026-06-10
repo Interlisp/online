@@ -14,15 +14,14 @@
 # 
 #
 # *****************************************************************************/
-ARG FROM_TAG=latest
+ARG MEDLEY_DOCKER_IMAGE_TAG=latest
 ARG DOCKER_NAMESPACE=interlisp
 
-FROM ${DOCKER_NAMESPACE}/medley:${FROM_TAG}
+FROM ${DOCKER_NAMESPACE}/medley:${MEDLEY_DOCKER_IMAGE_TAG}
 
 SHELL ["/bin/bash", "-c"]
 USER root:root
 
-ARG FROM_TAG
 ARG BUILD_DATE=unknown
 ARG RELEASE_TAG=unknown
 ARG MAIKO_RELEASE=unknown
