@@ -215,9 +215,9 @@
            (* ;; 
      "set the opener for accesssing the Common Lisp Hyperspec - for use in HELPSYS LispUsers package")
 
-           (SETQ CLHS.OPENER "/usr/local/interlisp/online/bin/request_new_tab")
-           (SETQ ShellOpener "/usr/local/interlisp/online/bin/request_new_tab")
-           (SETQ ShellBrowser "/usr/local/interlisp/online/bin/request_new_tab")
+           (SETQ CLHS.OPENER "/usr/local/interlisp/online/bin/request-new-tab")
+           (SETQ ShellOpener "/usr/local/interlisp/online/bin/request-new-tab")
+           (SETQ ShellBrowser "/usr/local/interlisp/online/bin/request-new-tab")
 
            (* ;; " get rid of Notecards logout prevention")
 

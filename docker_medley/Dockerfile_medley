@@ -115,7 +115,7 @@ RUN mkdir -p ${ONLINE_BINDIR} \
     && chown root:root ${ONLINE_BINDIR}
 COPY scripts/* ${ONLINE_BINDIR}
 RUN chmod ugo+x ${ONLINE_BINDIR}/* \
-    && ln -s ${ONLINE_BINDIR}/request_new_tab.sh ${ONLINE_BINDIR}/request_new_tab
+    && ln -s ${ONLINE_BINDIR}/request-new-tab.sh ${ONLINE_BINDIR}/request-new-tab
 
 # copy online-specific files into medley/library
 COPY --chown=${USER_NAME}:${USER_NAME} library/ONLINEUTILS ${MEDLEY_INSTALLDIR}/library
