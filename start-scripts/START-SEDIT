@@ -1,0 +1,26 @@
+(DEFINE-FILE-INFO :PACKAGE "INTERLISP" :READTABLE "INTERLISP" :BASE 10)
+
+(FILECREATED "26-Jul-2026 14:24:49" {DSK}<home>frank>il>online>start-scripts>START-SEDIT.;1 722    
+
+      :EDIT-BY "FGH"
+
+      :CHANGES-TO (VARS START-SEDITCOMS)
+                  (FNS START-SEDIT))
+
+
+(PRETTYCOMPRINT START-SEDITCOMS)
+
+(RPAQQ START-SEDITCOMS ((FNS START-SEDIT)
+                        (P (START-SEDIT))))
+(DEFINEQ
+
+(START-SEDIT
+  [LAMBDA NIL                                                (* ; "Edited 26-Jul-2026 14:24 by FGH")
+    (LOAD 'SEDIT-TOPLEVEL 'PROP)                             (* ; "Edited 26-Jul-2026 13:43 by FGH")
+    (ED 'SEDIT:SEDIT 'FNS])
+)
+
+(START-SEDIT)
+(DECLARE%: DONTCOPY
+  (FILEMAP (NIL (406 680 (START-SEDIT 416 . 678)))))
+STOP
