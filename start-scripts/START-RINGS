@@ -1,6 +1,6 @@
 (DEFINE-FILE-INFO :PACKAGE "INTERLISP" :READTABLE "INTERLISP" :BASE 10)
 
-(FILECREATED "26-Jul-2026 17:11:08" {DSK}<home>frank>il>online>start-scripts>START-RINGS.;2 1609   
+(FILECREATED "26-Jul-2026 21:36:24" {DSK}<home>frank>il>online>start-scripts>START-RINGS.;4 2284   
 
       :EDIT-BY "FGH"
 
@@ -18,10 +18,11 @@
 (DEFINEQ
 
 (START-RINGS
-  [LAMBDA NIL                                                (* ; "Edited 26-Jul-2026 17:10 by FGH")
+  [LAMBDA NIL                                                (* ; "Edited 26-Jul-2026 21:36 by FGH")
     (LET* [(RING.LISP (OUTFILEP "{CORE}RING.LISP"))
-           (WIDTH 480)
-           (HEIGHT 480)
+           (RINGS.TEDIT (OUTFILEP "{CORE}RINGS.TEDIT"))
+           (WIDTH 425)
+           (HEIGHT 425)
            (DIVIDER 10)
            (BOTTOM (IDIFFERENCE (IQUOTIENT SCREENHEIGHT 2)
                           (IQUOTIENT HEIGHT 2)))
@@ -30,17 +31,28 @@
                                BOTTOM WIDTH HEIGHT)))
            (W2 (CREATEW (CREATEREGION (IPLUS (IQUOTIENT SCREENWIDTH 2)
                                              DIVIDER)
-                               BOTTOM WIDTH HEIGHT]
+                               BOTTOM WIDTH HEIGHT)))
+           (TEDIT.WIDTH 750)
+           (TEDIT.HEIGHT 200)
+           (TEDIT.LEFT (IDIFFERENCE (IQUOTIENT SCREENWIDTH 2)
+                              (IQUOTIENT TEDIT.WIDTH 2)))
+           (TEDIT.BOTTOM (IPLUS (fetch TOP of (WINDOWPROP W1 'REGION))
+                                DIVIDER))
+           (TEDIT.WINDOW (CREATEW (CREATEREGION TEDIT.LEFT TEDIT.BOTTOM TEDIT.WIDTH TEDIT.HEIGHT]
           (ShellHttpGet 
          "https://raw.githubusercontent.com/Interlisp/online/refs/heads/main/start-scripts/RING.LISP"
                  RING.LISP)
+          (ShellHttpGet 
+       "https://raw.githubusercontent.com/Interlisp/online/refs/heads/main/start-scripts/RINGS.TEDIT"
+                 RINGS.TEDIT)
           (LOAD RING.LISP)
           (HUNGARIAN.RINGS W1 W2)
+          (TEDIT RINGS.TEDIT TEDIT.WINDOW NIL '(READ-ONLY T))
           (ADD.PROCESS (LIST 'PROGN '(DISMISS 500)
                              (LIST 'TOTOPW W1])
 )
 
 (START-RINGS)
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (508 1567 (START-RINGS 518 . 1565)))))
+  (FILEMAP (NIL (508 2242 (START-RINGS 518 . 2240)))))
 STOP
