@@ -1,6 +1,6 @@
 (DEFINE-FILE-INFO :PACKAGE "INTERLISP" :READTABLE "INTERLISP" :BASE 10)
 
-(FILECREATED "26-Jul-2026 21:36:24" {DSK}<home>frank>il>online>start-scripts>START-RINGS.;4 2284   
+(FILECREATED "26-Jul-2026 21:46:49" {DSK}<home>frank>il>online>start-scripts>START-RINGS.;5 2341   
 
       :EDIT-BY "FGH"
 
@@ -18,7 +18,7 @@
 (DEFINEQ
 
 (START-RINGS
-  [LAMBDA NIL                                                (* ; "Edited 26-Jul-2026 21:36 by FGH")
+  [LAMBDA NIL                                                (* ; "Edited 26-Jul-2026 21:46 by FGH")
     (LET* [(RING.LISP (OUTFILEP "{CORE}RING.LISP"))
            (RINGS.TEDIT (OUTFILEP "{CORE}RINGS.TEDIT"))
            (WIDTH 425)
@@ -49,10 +49,11 @@
           (HUNGARIAN.RINGS W1 W2)
           (TEDIT RINGS.TEDIT TEDIT.WINDOW NIL '(READ-ONLY T))
           (ADD.PROCESS (LIST 'PROGN '(DISMISS 500)
-                             (LIST 'TOTOPW W1])
+                             (LIST 'TOTOPW W1)
+                             (LIST 'TOTOPW TEDIT.WINDOW])
 )
 
 (START-RINGS)
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (508 2242 (START-RINGS 518 . 2240)))))
+  (FILEMAP (NIL (508 2299 (START-RINGS 518 . 2297)))))
 STOP
