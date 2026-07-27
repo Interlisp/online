@@ -1,11 +1,14 @@
 (DEFINE-FILE-INFO :PACKAGE "INTERLISP" :READTABLE "INTERLISP" :BASE 10)
 
-(FILECREATED "26-Jul-2026 16:08:34" {DSK}<home>frank>il>online>start-scripts>START-RINGS.;1 1356   
+(FILECREATED "26-Jul-2026 17:11:08" {DSK}<home>frank>il>online>start-scripts>START-RINGS.;2 1609   
 
       :EDIT-BY "FGH"
 
-      :CHANGES-TO (VARS START-RINGSCOMS)
-                  (FNS START-RINGS))
+      :CHANGES-TO (FNS START-RINGS)
+                  (VARS START-RINGSCOMS)
+
+      :PREVIOUS-DATE "26-Jul-2026 16:08:34" {DSK}<home>frank>il>online>start-scripts>START-RINGS.;1
+)
 
 
 (PRETTYCOMPRINT START-RINGSCOMS)
@@ -15,27 +18,29 @@
 (DEFINEQ
 
 (START-RINGS
-  [LAMBDA NIL                                                (* ; "Edited 26-Jul-2026 16:08 by FGH")
-    (LET* ((RING.LISP (OUTFILEP "{CORE}RING.LISP"))
+  [LAMBDA NIL                                                (* ; "Edited 26-Jul-2026 17:10 by FGH")
+    (LET* [(RING.LISP (OUTFILEP "{CORE}RING.LISP"))
            (WIDTH 480)
            (HEIGHT 480)
            (DIVIDER 10)
            (BOTTOM (IDIFFERENCE (IQUOTIENT SCREENHEIGHT 2)
                           (IQUOTIENT HEIGHT 2)))
-           (R1 (CREATEREGION (IDIFFERENCE (IQUOTIENT SCREENWIDTH 2)
-                                    (IPLUS WIDTH DIVIDER))
-                      BOTTOM WIDTH HEIGHT))
-           (R2 (CREATEREGION (IPLUS (IQUOTIENT SCREENWIDTH 2)
-                                    DIVIDER)
-                      BOTTOM WIDTH HEIGHT)))
+           (W1 (CREATEW (CREATEREGION (IDIFFERENCE (IQUOTIENT SCREENWIDTH 2)
+                                             (IPLUS WIDTH DIVIDER))
+                               BOTTOM WIDTH HEIGHT)))
+           (W2 (CREATEW (CREATEREGION (IPLUS (IQUOTIENT SCREENWIDTH 2)
+                                             DIVIDER)
+                               BOTTOM WIDTH HEIGHT]
           (ShellHttpGet 
          "https://raw.githubusercontent.com/Interlisp/online/refs/heads/main/start-scripts/RING.LISP"
                  RING.LISP)
           (LOAD RING.LISP)
-          (HUNGARIAN.RINGS R1 R2])
+          (HUNGARIAN.RINGS W1 W2)
+          (ADD.PROCESS (LIST 'PROGN '(DISMISS 500)
+                             (LIST 'TOTOPW W1])
 )
 
 (START-RINGS)
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (406 1314 (START-RINGS 416 . 1312)))))
+  (FILEMAP (NIL (508 1567 (START-RINGS 518 . 1565)))))
 STOP

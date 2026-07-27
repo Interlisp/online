@@ -1,17 +1,22 @@
 (DEFINE-FILE-INFO :PACKAGE "INTERLISP" :READTABLE "INTERLISP" :BASE 10)
 
-(FILECREATED "26-Jul-2026 14:48:14" {DSK}<home>frank>il>online>start-scripts>START-TEDIT.;1 1021   
+(FILECREATED "26-Jul-2026 16:49:24" {DSK}<home>frank>il>online>start-scripts>START-TEDIT.;2 1148   
 
       :EDIT-BY "FGH"
 
       :CHANGES-TO (VARS START-TEDITCOMS)
-                  (FNS START-TEDIT))
+
+      :PREVIOUS-DATE "26-Jul-2026 14:48:14" {DSK}<home>frank>il>online>start-scripts>START-TEDIT.;1
+)
 
 
 (PRETTYCOMPRINT START-TEDITCOMS)
 
-(RPAQQ START-TEDITCOMS ((FNS START-TEDIT)
+(RPAQQ START-TEDITCOMS ((FILES IMINDEX)
+                        (FNS START-TEDIT)
                         (P (START-TEDIT))))
+
+(FILESLOAD IMINDEX)
 (DEFINEQ
 
 (START-TEDIT
@@ -29,5 +34,5 @@
 
 (START-TEDIT)
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (406 979 (START-TEDIT 416 . 977)))))
+  (FILEMAP (NIL (533 1106 (START-TEDIT 543 . 1104)))))
 STOP
