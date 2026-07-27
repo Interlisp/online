@@ -1,6 +1,6 @@
 (DEFINE-FILE-INFO :PACKAGE "INTERLISP" :READTABLE "INTERLISP" :BASE 10)
 
-(FILECREATED "26-Jul-2026 21:46:49" {DSK}<home>frank>il>online>start-scripts>START-RINGS.;5 2341   
+(FILECREATED "26-Jul-2026 23:09:38" {DSK}<home>frank>il>online>start-scripts>START-RINGS.;6 2398   
 
       :EDIT-BY "FGH"
 
@@ -18,27 +18,29 @@
 (DEFINEQ
 
 (START-RINGS
-  [LAMBDA NIL                                                (* ; "Edited 26-Jul-2026 21:46 by FGH")
+  [LAMBDA NIL                                                (* ; "Edited 26-Jul-2026 22:57 by FGH")
     (LET* [(RING.LISP (OUTFILEP "{CORE}RING.LISP"))
            (RINGS.TEDIT (OUTFILEP "{CORE}RINGS.TEDIT"))
+           (DIVIDER 10)
+           (CLEARANCE 30)
+           (TEDIT.WIDTH 750)
+           (TEDIT.HEIGHT 200)
+           (TEDIT.LEFT (IDIFFERENCE (IQUOTIENT SCREENWIDTH 2)
+                              (IQUOTIENT TEDIT.WIDTH 2)))
+           (TEDIT.BOTTOM (IDIFFERENCE (IDIFFERENCE SCREENHEIGHT CLEARANCE)
+                                TEDIT.HEIGHT))
+           (TEDIT.WINDOW (CREATEW (CREATEREGION TEDIT.LEFT TEDIT.BOTTOM TEDIT.WIDTH TEDIT.HEIGHT)))
            (WIDTH 425)
            (HEIGHT 425)
-           (DIVIDER 10)
-           (BOTTOM (IDIFFERENCE (IQUOTIENT SCREENHEIGHT 2)
-                          (IQUOTIENT HEIGHT 2)))
+           (BOTTOM (IDIFFERENCE TEDIT.BOTTOM (IPLUS DIVIDER HEIGHT)))
            (W1 (CREATEW (CREATEREGION (IDIFFERENCE (IQUOTIENT SCREENWIDTH 2)
                                              (IPLUS WIDTH DIVIDER))
                                BOTTOM WIDTH HEIGHT)))
            (W2 (CREATEW (CREATEREGION (IPLUS (IQUOTIENT SCREENWIDTH 2)
                                              DIVIDER)
-                               BOTTOM WIDTH HEIGHT)))
-           (TEDIT.WIDTH 750)
-           (TEDIT.HEIGHT 200)
-           (TEDIT.LEFT (IDIFFERENCE (IQUOTIENT SCREENWIDTH 2)
-                              (IQUOTIENT TEDIT.WIDTH 2)))
-           (TEDIT.BOTTOM (IPLUS (fetch TOP of (WINDOWPROP W1 'REGION))
-                                DIVIDER))
-           (TEDIT.WINDOW (CREATEW (CREATEREGION TEDIT.LEFT TEDIT.BOTTOM TEDIT.WIDTH TEDIT.HEIGHT]
+                               BOTTOM WIDTH HEIGHT]
+          (PROMPTPRINT TEDIT.BOTTOM)
+          (PROMPTPRINT BOTTOM)
           (ShellHttpGet 
          "https://raw.githubusercontent.com/Interlisp/online/refs/heads/main/start-scripts/RING.LISP"
                  RING.LISP)
@@ -55,5 +57,5 @@
 
 (START-RINGS)
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (508 2299 (START-RINGS 518 . 2297)))))
+  (FILEMAP (NIL (508 2356 (START-RINGS 518 . 2354)))))
 STOP
