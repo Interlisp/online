@@ -1,10 +1,13 @@
 (DEFINE-FILE-INFO :PACKAGE "INTERLISP" :READTABLE "INTERLISP" :BASE 10)
 
-(FILECREATED "27-Jul-2026 00:15:40" {DSK}<home>frank>il>online>start-scripts>START-NOTECARDS.;1 1325   
+(FILECREATED "27-Jul-2026 00:24:59" {DSK}<home>frank>il>online>start-scripts>START-NOTECARDS.;2 1432   
 
       :EDIT-BY "FGH"
 
-      :CHANGES-TO (FNS START-NOTECARDS))
+      :CHANGES-TO (FNS START-NOTECARDS)
+
+      :PREVIOUS-DATE "27-Jul-2026 00:15:40" 
+{DSK}<home>frank>il>online>start-scripts>START-NOTECARDS.;1)
 
 
 (PRETTYCOMPRINT START-NOTECARDSCOMS)
@@ -14,7 +17,7 @@
 (DEFINEQ
 
 (START-NOTECARDS
-  [LAMBDA NIL                                                (* ; "Edited 27-Jul-2026 00:13 by FGH")
+  [LAMBDA NIL                                                (* ; "Edited 27-Jul-2026 00:24 by FGH")
     (LET* ((DEMO.NOTEFILE (CONCAT '{DSK} (UNIX-GETENV 'MEDLEY¬USERDIR)
                                  "/notefiles/DEMO.NOTEFILE"))
            (ICONW (CAR (FOR W in (OPENWINDOWS) WHEN (EQ (WINDOWPROP W 'BUTTONEVENTFN)
@@ -23,12 +26,12 @@
            (ICONREGION (WINDOWPROP ICONW 'REGION))
            (LEFT (fetch LEFT of ICONREGION))
            (BOTTOM (IDIFFERENCE (fetch BOTTOM of ICONREGION)
-                          50))
+                          100))
            (POSITION (CREATEPOSITION LEFT BOTTOM)))
           (NCP.OpenNoteFile DEMO.NOTEFILE NIL NIL NIL POSITION])
 )
 
 (START-NOTECARDS)
 (DECLARE%: DONTCOPY
-  (FILEMAP (NIL (393 1279 (START-NOTECARDS 403 . 1277)))))
+  (FILEMAP (NIL (499 1386 (START-NOTECARDS 509 . 1384)))))
 STOP
